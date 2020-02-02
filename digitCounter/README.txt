@@ -1,0 +1,2 @@
+JavaScript
+This code writes in words all numbers, starting with "one" and ending with your given number. It also returns the number of characters used in the count, skipping hyphens, spaces and commas. The input has a range from 1 to 1000.
