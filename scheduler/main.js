@@ -5,7 +5,7 @@ function main(){
     
     //----------------------------------------------declaration of varaibales
     let temp = document.getElementById('numberOfWeeksInSemestr').value;
-    let numberOfWeeksInSemestr = temp? parseInt(temp) : 15;
+    let numberOfWeeksInSemestr = temp? parseInt(temp) : 4;
     document.getElementById('weeks').innerHTML = numberOfWeeksInSemestr;
     
     temp = document.getElementById('numberOfDaysAWeek').value;
@@ -21,6 +21,9 @@ function main(){
     temp = document.getElementById('numberOfHoursInALesson').value;
     let numberOfHoursInALesson = temp? parseInt(temp) : 2;
     document.getElementById('hoursInLesson').innerHTML = numberOfHoursInALesson;
+
+    let splitRemains = true;
+    let everySecondWeek = false;
     
     let blueprint = [];
     let leftovers = {};
@@ -36,6 +39,7 @@ function main(){
     let program;
     let week;
     let classNumber;
+    let startDay;
 
     let NumberOfClassesAWeek;
 
@@ -44,10 +48,10 @@ function main(){
 
     let givenProgramsArray = 
     [ 
-    [   [60,"python","Sean"], [60,"html","Matt"], [60,"windows","Gord"], [60,"netw","Darlin"], [60,"sql","Gord"], [30,"comm1","Sheri"]     ],
+    [   [20,"python","Sean"], [16,"html","Matt"]/*, [60,"windows","Gord"], [60,"netw","Darlin"], [60,"sql","Gord"], [30,"comm1","Sheri"]     ],
     [   [60,"java","Sean"], [60,"serv","Matt"], [60,"proj","Matt"], [60,"js","Sean"], [60,"linux","Gord"],[30,"comm2","Sheri"]             ],
-    [   [60,"java2","Sean"], [60,"serv2","Matt"], [60,"proj2","Matt"], [60,"js2","Sean"], [60,"linux2","Gord"],[30,"comm4","Sheri"],[30,"asd","Ketrine"]             ]      
-    ];
+    [   [60,"java2","Sean"], [60,"serv2","Matt"], [60,"proj2","Matt"], [60,"js2","Sean"], [60,"linux2","Gord"],[30,"comm4","Sheri"],[30,"asd","Ketrine"]          */   ]      
+    ];  
     //--------------------------------------------------------------------------------------------------
 
 
@@ -56,12 +60,13 @@ function main(){
         
         for (let program=0; program < givenProgramsArray.length; program++) {
             for (let week=0; week < numberOfWeeksInSemestr; week++) {
-                console.log( window["ScheduleForProgram" + program + 0] );
+                console.log( window["ScheduleForProgram" + program + week] );
             }
             for(let course=0; course < givenProgramsArray[program].length; course++){
                 console.log( window[givenProgramsArray[program][course][2] + 0] );
             } 
         }
+        // console.log(leftovers.python);
     }
     //-----------------------------------------------------------------------------------------------------
 
@@ -85,10 +90,20 @@ function main(){
     //----------------------------------------------------------------------Listing days within a current week
     function changeDay() {
         
-        for (let dayOfAWeek = 0; dayOfAWeek < progSchedule.length; dayOfAWeek++){
+        for (let dayOfAWeek = startDay|0; dayOfAWeek < progSchedule.length; dayOfAWeek++){
 
             if (hoursLeft <= 0 ){
+                if (splitRemains && leftovers[programName]>0) {
+                    hoursLeft = leftovers[programName];
+                    leftovers[programName] = 0;
+                    NumberOfClassesAWeek+=1;
+                    startDay = 4*schedulePattern;
+                    if (hoursLeft == ( numberOfHoursInALesson * numberOfWeeksInSemestr )/2)
+                        everySecondWeek = true;
+                    changeWeek();
+                }
                 nextCourse = true;
+                startDay = 0;
                 return; // [0,true] hours ran out, need to swith course  
             } 
 
@@ -115,7 +130,7 @@ function main(){
         for (classNumber=0; classNumber < maximumNumbersOfClassesADay; classNumber++) {
 
             changeDay();
-
+            
             if (nextCourse || nextWeek) 
                 return;
         }
@@ -131,9 +146,10 @@ function main(){
 
             progSchedule = window["ScheduleForProgram" + program + week];
             teachSchedule = window[givenProgramsArray[program][course][2] + week];
-
+             
             changeClass();
-
+            if (everySecondWeek)
+                week++;
             nextWeek = false;
             if (nextCourse) 
                 return;
@@ -149,13 +165,14 @@ function main(){
         
         let temp = hoursLeft / ( numberOfHoursInALesson * numberOfWeeksInSemestr );
         let remains = 0;
-
+        
         if (Number.isInteger(temp)) { 
             NumberOfClassesAWeek = temp;
 
         } else {
             NumberOfClassesAWeek = Math.floor(temp);
             remains = leftovers[programName] = parseInt (hoursLeft % ( numberOfHoursInALesson * numberOfWeeksInSemestr ));
+            
             console.log(remains);
         }
         return remains;
@@ -174,7 +191,7 @@ function main(){
         remains = countNumberOfClassesAWeek();
 
         hoursLeft -= remains;
-
+        everySecondWeek = false;
         changeWeek();
 
         if (nextCourse) 
@@ -186,7 +203,8 @@ function main(){
 
     //----------------------------------------Listing courses 
     function courseSwitcher () {
-
+          
+        
         for (course=0; course < givenProgramsArray[program].length; course++) {
             emptyTeacherSchedule ();
             allocator();
