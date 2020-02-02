@@ -23,20 +23,30 @@ function main(){
     document.getElementById('hoursInLesson').innerHTML = numberOfHoursInALesson;
     
     let blueprint = [];
-    let param = {hoursLeft:0, nextWeek:false, nextCourse:false, programName:"",teacherName:""};
     let leftovers = {};
+
+    let hoursLeft = 0;
+    let programName = "";
+    let teacherName = "";
+
+    let nextWeek = false;
+    let nextCourse = false;
+ 
     let course;
     let program;
     let week;
     let classNumber;
+
     let NumberOfClassesAWeek;
+
+    let teachSchedule;
+    let progSchedule;
 
     let givenProgramsArray = 
     [ 
-    [   
-        [60,"python","Sean"], [60,"html","Matt"], [60,"windows","Gord"], [60,"netw","Darlin"], [60,"sql","Gord"], [30,"comm1","Sheri"]     ],
-    [   [60,"java","Sean"], [60,"serv","Matt"], [60,"proj","Matt"], [60,"js","Sean"], [60,"linux","Gord"],[30,"comm2","Sheri"]           
-    ]    
+    [   [60,"python","Sean"], [60,"html","Matt"], [60,"windows","Gord"], [60,"netw","Darlin"], [60,"sql","Gord"], [30,"comm1","Sheri"]     ],
+    [   [60,"java","Sean"], [60,"serv","Matt"], [60,"proj","Matt"], [60,"js","Sean"], [60,"linux","Gord"],[30,"comm2","Sheri"]             ],
+    [   [60,"java2","Sean"], [60,"serv2","Matt"], [60,"proj2","Matt"], [60,"js2","Sean"], [60,"linux2","Gord"],[30,"comm4","Sheri"],[30,"asd","Ketrine"]             ]      
     ];
     //--------------------------------------------------------------------------------------------------
 
@@ -46,7 +56,7 @@ function main(){
         
         for (let program=0; program < givenProgramsArray.length; program++) {
             for (let week=0; week < numberOfWeeksInSemestr; week++) {
-                console.log( window["ScheduleForProgram" + program + week] );
+                console.log( window["ScheduleForProgram" + program + 0] );
             }
             for(let course=0; course < givenProgramsArray[program].length; course++){
                 console.log( window[givenProgramsArray[program][course][2] + 0] );
@@ -61,9 +71,9 @@ function main(){
     //-------------------------------Checking a number of classes of given course in current week
     function checkNumberOfClassesAWeek () {
         let count = 0;
-        for(let day of param.progSchedule){
+        for(let day of progSchedule){
             for(let clas of day) {
-                clas == param.programName ? count++ : count += 0;
+                clas == programName ? count++ : count += 0;
             }
         }
         return count;  
@@ -75,23 +85,23 @@ function main(){
     //----------------------------------------------------------------------Listing days within a current week
     function changeDay() {
         
-        for (let dayOfAWeek = 0; dayOfAWeek < param.progSchedule.length; dayOfAWeek++){
+        for (let dayOfAWeek = 0; dayOfAWeek < progSchedule.length; dayOfAWeek++){
 
-            if (param.hoursLeft <= 0 ){
-                param.nextCourse = true;
+            if (hoursLeft <= 0 ){
+                nextCourse = true;
                 return; // [0,true] hours ran out, need to swith course  
             } 
 
             // check if there is free space in the schedule to accommodate classes of current course    
             if (checkNumberOfClassesAWeek () >= NumberOfClassesAWeek) {
-                param.nextWeek = true;
+                nextWeek = true;
                 return; // [1,true] hours still remain / need to switch week
                 
-            } else if ((param.progSchedule[dayOfAWeek][classNumber] == 0) && (param.teachSchedule[dayOfAWeek][classNumber] == 0)){
-                param.progSchedule[dayOfAWeek][classNumber] = param.programName;
-                param.teachSchedule[dayOfAWeek][classNumber] = param.teacherName;
+            } else if ((progSchedule[dayOfAWeek][classNumber] == 0) && (teachSchedule[dayOfAWeek][classNumber] == 0)){
+                progSchedule[dayOfAWeek][classNumber] = programName;
+                teachSchedule[dayOfAWeek][classNumber] = teacherName;
                 dayOfAWeek += schedulePattern;
-                param.hoursLeft -= numberOfHoursInALesson;    
+                hoursLeft -= numberOfHoursInALesson;    
             } 
         }
     }
@@ -106,7 +116,7 @@ function main(){
 
             changeDay();
 
-            if (param.nextCourse || param.nextWeek) 
+            if (nextCourse || nextWeek) 
                 return;
         }
     }   
@@ -119,13 +129,13 @@ function main(){
         
         for (week=0; week < numberOfWeeksInSemestr; week++) {    
 
-            param.progSchedule = window["ScheduleForProgram" + program + week];
-            param.teachSchedule = window[givenProgramsArray[program][course][2] + week];
+            progSchedule = window["ScheduleForProgram" + program + week];
+            teachSchedule = window[givenProgramsArray[program][course][2] + week];
 
             changeClass();
 
-            param.nextWeek = false;
-            if (param.nextCourse) 
+            nextWeek = false;
+            if (nextCourse) 
                 return;
         }
     }
@@ -137,7 +147,7 @@ function main(){
     //---------------------------------------------define Number Of Classes A Week
     function countNumberOfClassesAWeek (){
         
-        let temp = param.hoursLeft / ( numberOfHoursInALesson * numberOfWeeksInSemestr );
+        let temp = hoursLeft / ( numberOfHoursInALesson * numberOfWeeksInSemestr );
         let remains = 0;
 
         if (Number.isInteger(temp)) { 
@@ -145,7 +155,7 @@ function main(){
 
         } else {
             NumberOfClassesAWeek = Math.floor(temp);
-            remains = leftovers[param.programName] = parseInt (param.hoursLeft % ( numberOfHoursInALesson * numberOfWeeksInSemestr ));
+            remains = leftovers[programName] = parseInt (hoursLeft % ( numberOfHoursInALesson * numberOfWeeksInSemestr ));
             console.log(remains);
         }
         return remains;
@@ -157,17 +167,17 @@ function main(){
     //-------------------------------Processor.  Entery point to schedule
     function allocator() {
 
-        param.hoursLeft = givenProgramsArray[program][course][0];
-        param.programName = givenProgramsArray[program][course][1];
-        param.teacherName = givenProgramsArray[program][course][2];
+        hoursLeft = givenProgramsArray[program][course][0];
+        programName = givenProgramsArray[program][course][1];
+        teacherName = givenProgramsArray[program][course][2];
         
         remains = countNumberOfClassesAWeek();
 
-        param.hoursLeft -= remains;
+        hoursLeft -= remains;
 
         changeWeek();
 
-        if (param.nextCourse) 
+        if (nextCourse) 
             return;
     }
     //-----------------------------------------------------------------------------------------------------
@@ -180,7 +190,7 @@ function main(){
         for (course=0; course < givenProgramsArray[program].length; course++) {
             emptyTeacherSchedule ();
             allocator();
-            param.nextCourse = false;
+            nextCourse = false;
         }
     }
     //-----------------------------------------------------------------------------------------------------
@@ -200,7 +210,6 @@ function main(){
 
     //---------------------------------------------Create one empty week as frame
     function createWeekFrame (){
-        blueprint = [];
         
         for (let j = 0; j < numberOfDaysAWeek; j++ ) {
             let day = [];
@@ -219,12 +228,12 @@ function main(){
     //----------------------------------------Create programs empty weeks for entire semester 
     function emptyProgramSchedule() {
         for ( let numProg=0; numProg < givenProgramsArray.length; numProg++ ) {
-            if (givenProgramsArray[numProg]) {
+            // if (givenProgramsArray[numProg]) {
                 
                 for ( let numWeek=0; numWeek < numberOfWeeksInSemestr; numWeek++ ) {
                     window["ScheduleForProgram" + numProg + numWeek] = JSON.parse(JSON.stringify(blueprint)); 
                 }
-            }
+            // }
         }
     }
     //-----------------------------------------------------------------------------------------------------
