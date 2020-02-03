@@ -3,6 +3,7 @@
 
 function main(){
     
+
     //----------------------------------------------declaration of varaibales
     let temp = document.getElementById('numberOfWeeksInSemestr').value;
     let numberOfWeeksInSemestr = temp? parseInt(temp) : 4;
@@ -40,6 +41,7 @@ function main(){
     let week;
     let classNumber;
     let startDay;
+    let startClass;
 
     let NumberOfClassesAWeek;
 
@@ -48,12 +50,37 @@ function main(){
 
     let givenProgramsArray = 
     [ 
-    [   [20,"python","Sean"], [16,"html","Matt"]/*, [60,"windows","Gord"], [60,"netw","Darlin"], [60,"sql","Gord"], [30,"comm1","Sheri"]     ],
+    [   [20,"python","Sean"]/*, [16,"html","Matt"], [16,"windows","Gord"], [60,"netw","Darlin"], [60,"sql","Gord"], [30,"comm1","Sheri"]     ],
     [   [60,"java","Sean"], [60,"serv","Matt"], [60,"proj","Matt"], [60,"js","Sean"], [60,"linux","Gord"],[30,"comm2","Sheri"]             ],
     [   [60,"java2","Sean"], [60,"serv2","Matt"], [60,"proj2","Matt"], [60,"js2","Sean"], [60,"linux2","Gord"],[30,"comm4","Sheri"],[30,"asd","Ketrine"]          */   ]      
     ];  
     //--------------------------------------------------------------------------------------------------
 
+    //----------------------------------------------Show schedule table for user
+    function showPreliminaryScheduleTable(){
+        let scheduleTable = document.getElementById('tableBody');
+        scheduleTable.innerHTML = "";
+        
+        for (let j = 0; j < maximumNumbersOfClassesADay; j++ ) {
+
+            let row = document.createElement("TR");
+            row.setAttribute("id",`row${j}`);
+            scheduleTable.appendChild(row);
+
+            let newTH = document.createElement("TH");
+            newTH.classList.add("table-light");
+            row.appendChild(newTH);
+            newTH.innerHTML=`${j+1}`;
+            
+            for (let i = 0; i < numberOfDaysAWeek; i++ ) {  
+                
+                let newCell = document.createElement("TD");
+                newCell.setAttribute("id",`cell${j}${i}`);
+                row.appendChild(newCell);
+            }
+        }
+    }
+    //--------------------------------------------------------------------------------------------------
 
     //-----------------------------------------------------------Print output result
     function printScedule(){
@@ -67,10 +94,19 @@ function main(){
             } 
         }
         // console.log(leftovers.python);
+
     }
     //-----------------------------------------------------------------------------------------------------
 
-
+    function findLastClass(){
+        for (let day = numberOfDaysAWeek-1; day >= 0; day--) {
+            let spotClass = progSchedule[day].indexOf(programName);
+            if (spotClass >= 0){
+                console.log (day,spotClass);
+                return [day,spotClass];
+            }
+        }
+    }
 
 
     //-------------------------------Checking a number of classes of given course in current week
@@ -86,22 +122,40 @@ function main(){
     //-----------------------------------------------------------------------------------------------------
 
 
+    //--------------------------------------Split inappropriate number of remaining hours within semestr
+    function splitRemainingHours(){
+        if (splitRemains && leftovers[programName] > 0) {
+
+            hoursLeft = leftovers[programName];
+
+            if (hoursLeft == ( numberOfHoursInALesson * numberOfWeeksInSemestr ) / 2)
+            everySecondWeek = true;
+
+            [day,spotClass] = findLastClass();
+            let temp  = day + schedulePattern * 2;
+            if (temp +1 > numberOfDaysAWeek){
+                startClass = spotClass+1;
+            } else {
+                startDay = temp;
+            }
+
+            
+            leftovers[programName] = 0;
+            NumberOfClassesAWeek += 1;
+
+            changeWeek();
+        }
+    }
+    //-----------------------------------------------------------------------------------------------------
+
 
     //----------------------------------------------------------------------Listing days within a current week
-    function changeDay() {
+    function changeDay(start=0) {
         
-        for (let dayOfAWeek = startDay|0; dayOfAWeek < progSchedule.length; dayOfAWeek++){
+        for (let dayOfAWeek = start; dayOfAWeek < progSchedule.length; dayOfAWeek++){
 
             if (hoursLeft <= 0 ){
-                if (splitRemains && leftovers[programName]>0) {
-                    hoursLeft = leftovers[programName];
-                    leftovers[programName] = 0;
-                    NumberOfClassesAWeek+=1;
-                    startDay = 4*schedulePattern;
-                    if (hoursLeft == ( numberOfHoursInALesson * numberOfWeeksInSemestr )/2)
-                        everySecondWeek = true;
-                    changeWeek();
-                }
+                splitRemainingHours();
                 nextCourse = true;
                 startDay = 0;
                 return; // [0,true] hours ran out, need to swith course  
@@ -113,23 +167,25 @@ function main(){
                 return; // [1,true] hours still remain / need to switch week
                 
             } else if ((progSchedule[dayOfAWeek][classNumber] == 0) && (teachSchedule[dayOfAWeek][classNumber] == 0)){
+                // startDay = 0;
                 progSchedule[dayOfAWeek][classNumber] = programName;
                 teachSchedule[dayOfAWeek][classNumber] = teacherName;
                 dayOfAWeek += schedulePattern;
                 hoursLeft -= numberOfHoursInALesson;    
             } 
         }
+        // startDay = 0;
     }
     //-----------------------------------------------------------------------------------------------------
 
 
 
     //---------------------------------------------Listing class order number from 8:30-10:30, 10:30-12:30, 13:30-15:30
-    function changeClass() {
+    function changeClass(start=0) {
             
-        for (classNumber=0; classNumber < maximumNumbersOfClassesADay; classNumber++) {
-
-            changeDay();
+        for (classNumber=start; classNumber < maximumNumbersOfClassesADay; classNumber++) {
+            
+            changeDay(startDay);
             
             if (nextCourse || nextWeek) 
                 return;
@@ -147,7 +203,11 @@ function main(){
             progSchedule = window["ScheduleForProgram" + program + week];
             teachSchedule = window[givenProgramsArray[program][course][2] + week];
              
-            changeClass();
+            changeClass(startClass);
+
+            // console.log(progSchedule);
+            // console.log(teachSchedule);
+
             if (everySecondWeek)
                 week++;
             nextWeek = false;
@@ -204,11 +264,11 @@ function main(){
     //----------------------------------------Listing courses 
     function courseSwitcher () {
           
-        
         for (course=0; course < givenProgramsArray[program].length; course++) {
             emptyTeacherSchedule ();
             allocator();
             nextCourse = false;
+
         }
     }
     //-----------------------------------------------------------------------------------------------------
@@ -235,9 +295,9 @@ function main(){
             for (let i = 0; i < maximumNumbersOfClassesADay; i++ ) {    
                 day.push(0);
             }
+
             blueprint = blueprint.concat([day]);
-        }
-        
+        } 
     }
     //-----------------------------------------------------------------------------------------------------
 
@@ -271,9 +331,10 @@ function main(){
     //-----------------------------------------------------------------------------------------------------
 
     createWeekFrame();
+    showPreliminaryScheduleTable();
     emptyProgramSchedule();
     programSwitcher ();
     printScedule();
 }
 
-main();
+document.getElementById('firstButton').addEventListener('click',main);
