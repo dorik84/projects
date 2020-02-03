@@ -58,6 +58,7 @@ function main(){
 
     //----------------------------------------------Show schedule table for user
     function showPreliminaryScheduleTable(){
+
         let scheduleTable = document.getElementById('tableBody');
         scheduleTable.innerHTML = "";
         
@@ -93,11 +94,11 @@ function main(){
                 console.log( window[givenProgramsArray[program][course][2] + 0] );
             } 
         }
-        // console.log(leftovers.python);
-
     }
     //-----------------------------------------------------------------------------------------------------
 
+
+    //--------------------------------------find the last class of current course in the program schedule
     function findLastClass(){
         for (let day = numberOfDaysAWeek-1; day >= 0; day--) {
             let spotClass = progSchedule[day].indexOf(programName);
@@ -107,6 +108,7 @@ function main(){
             }
         }
     }
+    //--------------------------------------------------------------------------------------------------
 
 
     //-------------------------------Checking a number of classes of given course in current week
@@ -128,18 +130,17 @@ function main(){
 
             hoursLeft = leftovers[programName];
 
-            if (hoursLeft == ( numberOfHoursInALesson * numberOfWeeksInSemestr ) / 2)
+            if (hoursLeft == ( numberOfHoursInALesson * numberOfWeeksInSemestr ) / 2)  // if remaining hours can be splitet equally and added to every second week instead of evey week
             everySecondWeek = true;
 
             [day,spotClass] = findLastClass();
             let temp  = day + schedulePattern * 2;
-            if (temp +1 > numberOfDaysAWeek){
+            if (temp + 1 > numberOfDaysAWeek){           // if it can be added in one day
                 startClass = spotClass+1;
-            } else {
+            } else {                                     // or the same day but different class
                 startDay = temp;
             }
 
-            
             leftovers[programName] = 0;
             NumberOfClassesAWeek += 1;
 
@@ -155,9 +156,9 @@ function main(){
         for (let dayOfAWeek = start; dayOfAWeek < progSchedule.length; dayOfAWeek++){
 
             if (hoursLeft <= 0 ){
-                splitRemainingHours();
-                nextCourse = true;
-                startDay = 0;
+                splitRemainingHours(); 
+                nextCourse = true;         
+                startDay = 0;              //return to starting day to Monday
                 return; // [0,true] hours ran out, need to swith course  
             } 
 
@@ -205,12 +206,11 @@ function main(){
              
             changeClass(startClass);
 
-            // console.log(progSchedule);
-            // console.log(teachSchedule);
+            nextWeek = false;     //week is switched to next. return value to default
 
-            if (everySecondWeek)
+            if (everySecondWeek)  //skipping one week for spreding remains hours evry second week
                 week++;
-            nextWeek = false;
+
             if (nextCourse) 
                 return;
         }
@@ -226,10 +226,10 @@ function main(){
         let temp = hoursLeft / ( numberOfHoursInALesson * numberOfWeeksInSemestr );
         let remains = 0;
         
-        if (Number.isInteger(temp)) { 
+        if (Number.isInteger(temp)) {     // if course hours can be spreaded during weeks evenly
             NumberOfClassesAWeek = temp;
 
-        } else {
+        } else {                          //  else define what part can be devided equally and what remains
             NumberOfClassesAWeek = Math.floor(temp);
             remains = leftovers[programName] = parseInt (hoursLeft % ( numberOfHoursInALesson * numberOfWeeksInSemestr ));
             
@@ -252,6 +252,7 @@ function main(){
 
         hoursLeft -= remains;
         everySecondWeek = false;
+
         changeWeek();
 
         if (nextCourse) 
@@ -265,10 +266,10 @@ function main(){
     function courseSwitcher () {
           
         for (course=0; course < givenProgramsArray[program].length; course++) {
+
             emptyTeacherSchedule ();
             allocator();
             nextCourse = false;
-
         }
     }
     //-----------------------------------------------------------------------------------------------------
@@ -306,12 +307,10 @@ function main(){
     //----------------------------------------Create programs empty weeks for entire semester 
     function emptyProgramSchedule() {
         for ( let numProg=0; numProg < givenProgramsArray.length; numProg++ ) {
-            // if (givenProgramsArray[numProg]) {
                 
                 for ( let numWeek=0; numWeek < numberOfWeeksInSemestr; numWeek++ ) {
                     window["ScheduleForProgram" + numProg + numWeek] = JSON.parse(JSON.stringify(blueprint)); 
                 }
-            // }
         }
     }
     //-----------------------------------------------------------------------------------------------------
