@@ -5,25 +5,14 @@
     
 
 //----------------------------------------------declaration of varaibales
-let temp = document.getElementById('numberOfWeeksInSemestr').value;
-let numberOfWeeksInSemestr = temp? parseInt(temp) : 15;
-document.getElementById('weeks').innerHTML = numberOfWeeksInSemestr;
 
-temp = document.getElementById('numberOfDaysAWeek').value;
-let numberOfDaysAWeek = temp? parseInt(temp) : 5;
-document.getElementById('days').innerHTML = numberOfDaysAWeek;
+let numberOfWeeksInSemestr;
+let numberOfDaysAWeek;
+let maximumNumbersOfClassesADay;
+let schedulePattern;
+let numberOfHoursInALesson;
 
-temp = document.getElementById('maximumNumbersOfClassesADay').value;
-let maximumNumbersOfClassesADay = temp? parseInt(temp) : 3;
-document.getElementById('classes').innerHTML = maximumNumbersOfClassesADay;
-
-let schedulePattern = parseInt(document.querySelector('input[name="schedulePattern"]:checked').value);
-
-temp = document.getElementById('numberOfHoursInALesson').value;
-let numberOfHoursInALesson = temp? parseInt(temp) : 2;
-document.getElementById('hoursInLesson').innerHTML = numberOfHoursInALesson;
-
-let splitRemains = true;
+let splitRemains;
 let everySecondWeek = false;
 
 let blueprint = [];
@@ -50,7 +39,7 @@ let progSchedule;
 
 let givenProgramsArray = 
 [ 
-[   [60,"python","Sean"], [60,"html","Matt"], [60,"windows","Gord"], [60,"netw","Darlin"], [60,"sql","Gord"], [30,"comm1","Sheri"] /*    ],
+[   [75,"python","Sean"]/*, [60,"html","Matt"], [60,"windows","Gord"], [60,"netw","Darlin"], [60,"sql","Gord"], [30,"comm1","Sheri"]     ],
 [   [60,"java","Sean"], [60,"serv","Matt"], [60,"proj","Matt"], [60,"js","Sean"], [60,"linux","Gord"],[30,"comm2","Sheri"]             ],
 [   [60,"java2","Sean"], [60,"serv2","Matt"], [60,"proj2","Matt"], [60,"js2","Sean"], [60,"linux2","Gord"],[30,"comm4","Sheri"],[30,"asd","Ketrine"]          */   ]      
 ];  
@@ -150,7 +139,6 @@ function changeDay(start=0) {
             hoursLeft -= numberOfHoursInALesson;    
         } 
     }
-    // startDay = 0;
 }
 //-----------------------------------------------------------------------------------------------------
 
@@ -331,25 +319,71 @@ function showPreliminaryScheduleTable(){
 //--------------------------------------------------------------------------------------------------
 
 
+//------------------------------------------------------------------get initial general data from the user
+function getInitialData (){
+    let temp = document.getElementById('numberOfWeeksInSemestr').value;
+    numberOfWeeksInSemestr = temp? parseInt(temp) : 15;
+    document.getElementById('weeks').innerHTML = numberOfWeeksInSemestr;
+
+    temp = document.getElementById('numberOfDaysAWeek').value;
+    numberOfDaysAWeek = temp? parseInt(temp) : 5;
+    document.getElementById('days').innerHTML = numberOfDaysAWeek;
+
+    temp = document.getElementById('maximumNumbersOfClassesADay').value;
+    maximumNumbersOfClassesADay = temp? Number(temp) : 3;
+    document.getElementById('classes').innerHTML = maximumNumbersOfClassesADay;
+
+    schedulePattern = parseInt(document.querySelector('input[name="schedulePattern"]:checked').value);
+
+    temp = document.getElementById('numberOfHoursInALesson').value;
+    numberOfHoursInALesson = temp? parseInt(temp) : 2;
+    document.getElementById('hoursInLesson').innerHTML = numberOfHoursInALesson;
+
+    splitRemains = document.getElementById('customSwitch').checked;
+    
+}
+//-------------------------------------------------------------------------------------------------------
+
+
+// function resetInitData(){
+//     numberOfWeeksInSemestr = 0;
+//     document.getElementById('numberOfWeeksInSemestr').innerHTML = "";
+
+//     numberOfDaysAWeek = 0;
+//     document.getElementById('numberOfDaysAWeek').innerHTML = "";
+
+//     maximumNumbersOfClassesADay = 0;
+//     document.getElementById('maximumNumbersOfClassesADay').innerHTML = "";
+    
+//     numberOfHoursInALesson = 0;
+//     document.getElementById('numberOfHoursInALesson').innerHTML = "";
+
+//     splitRemains =false;
+// }
+
+
 //------------------------------------------------check off cells in the schedule
 function onClickTd (event){
     let td = event.target;
     td.classList.toggle("table-danger");  
 }
-//-------------------------------------------------------------------------------------------------------
+//------------------------------------------------------MAIN1
+function main1(){
+    getInitialData ();
+    showPreliminaryScheduleTable();
+}
 
-
-//------------------------------------------------------MAIN
-function main(){
+//------------------------------------------------------MAIN2
+function main2(){
     createWeekFrame();
     emptyProgramSchedule();
     programSwitcher ();
     printScedule();
 }
-//-------------------------------------------------------------------------------------------------------
+//------------------------------------------------------event listeners
 
-
-
-document.getElementById('btnGgraphSchedule').addEventListener('click',main);
+document.getElementById('btnGgraphSchedule').addEventListener('click',main2);
 document.getElementById('tableToShow').addEventListener('click',onClickTd);
-document.getElementById('firstButton').addEventListener('click',showPreliminaryScheduleTable);
+
+document.getElementById('firstButton').addEventListener('click',main1);
+// document.getElementById('firstButtonReset').addEventListener('click',resetInitData);
