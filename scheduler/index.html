@@ -19,10 +19,11 @@
           <div class="col-12 col-md-3">  
             <div class="form-group row">
               <label class="col-2 col-form-label col-form-label-sm text-nowrap" id="weeks" for="numberOfWeeksInSemestr">##</label>
+              
               <div class="col-10">
-                <input type="text" class="form-control form-control-sm" id="numberOfWeeksInSemestr" placeholder="Enter number of weeks within semestr">
-                </div>
-              <small id="emailHelp" class="form-text text-muted"></small>
+                <input type="text" class="form-control form-control-sm" id="numberOfWeeksInSemestr" placeholder="Enter number of weeks">
+              </div>
+              <small  class="form-text text-muted"></small>
             </div>
             <!-- ########################## -->
             <div class="form-group row">
@@ -39,6 +40,7 @@
               <div class="col-10">
                 <input type="text" class="form-control form-control-sm" id="maximumNumbersOfClassesADay" placeholder="Enter a maximum number of classes a day">
               </div>
+              <small  class="form-text text-muted"></small>
             </div>
             <!-- ########################## -->
             <div class="form-group row">
@@ -46,6 +48,7 @@
               <div class="col-10">
                 <input type="text" class="form-control form-control-sm" id="numberOfHoursInALesson" placeholder="Enter number of hours in one lesson">
               </div>
+              <small  class="form-text text-muted"></small>
             </div>          
             <!-- ########################## -->           
           </div>
@@ -80,22 +83,23 @@
   <div class= "container-fluid mt-3">
     <div class="card mx-auto">
       <div  style="background-color: #F5F5F5;" class="card-body">
-        <table class="table table-sm table-light table-bordered">
+        <table class="table table-sm table-light table-bordered" id="tableToShow">
           <thead class="thead-light">
             <tr>
               <th scope="col">Class #</th>
-              <th scope="col">Monday</th>
-              <th scope="col">Tuesday</th>
-              <th scope="col">Wednesday</th>
-              <th scope="col">Thursday</th>
-              <th scope="col">Friday</th>
-              <th scope="col">Saturday</th>
-              <th scope="col">Sanday</th>
+              <th scope="col">MON</th>
+              <th scope="col">TUE</th>
+              <th scope="col">WED</th>
+              <th scope="col">THU</th>
+              <th scope="col">FRI</th>
+              <th scope="col">SAT</th>
+              <th scope="col">SAN</th>
             </tr>
           </thead>
-          <tbody class="table-info" id=tableBody>
+          <tbody  id=tableBody>
           </tbody>
         </table>
+        <button class="btn btn-primary mx-auto" id="btnGgraphSchedule" type="button">ok</button>
       </div>
     </div>
   </div>
