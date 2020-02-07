@@ -37,13 +37,33 @@ let NumberOfClassesAWeek;
 let teachSchedule;
 let progSchedule;
 
-let givenProgramsArray = 
-[ 
-[   [75,"python","Sean"]/*, [60,"html","Matt"], [60,"windows","Gord"], [60,"netw","Darlin"], [60,"sql","Gord"], [30,"comm1","Sheri"]     ],
-[   [60,"java","Sean"], [60,"serv","Matt"], [60,"proj","Matt"], [60,"js","Sean"], [60,"linux","Gord"],[30,"comm2","Sheri"]             ],
-[   [60,"java2","Sean"], [60,"serv2","Matt"], [60,"proj2","Matt"], [60,"js2","Sean"], [60,"linux2","Gord"],[30,"comm4","Sheri"],[30,"asd","Ketrine"]          */   ]      
-];  
+let givenProgramsArray = [];
+//  = 
+// [ 
+// [   [75,"python","Sean"], [60,"html","Matt"], [60,"windows","Gord"], [60,"netw","Darlin"], [60,"sql","Gord"], [30,"comm1","Sheri"]     ],
+// [   [60,"java","Sean"], [60,"serv","Matt"], [60,"proj","Matt"], [60,"js","Sean"], [60,"linux","Gord"],[30,"comm2","Sheri"]             ],
+// [   [60,"java2","Sean"], [60,"serv2","Matt"], [60,"proj2","Matt"], [60,"js2","Sean"], [60,"linux2","Gord"],[30,"comm4","Sheri"],[30,"asd","Ketrine"]          */   ]      
+// ];  
 //--------------------------------------------------------------------------------------------------
+
+function createProgramsArray(){
+    let programCourses =[];
+    
+    for (let courseNum = 1; courseNum <= 10; courseNum++){
+        let course = [];
+        let h = document.getElementById(`hours${courseNum}`).value;
+        let c = document.getElementById(`course${courseNum}`).value;
+        let t = document.getElementById(`teacher${courseNum}`).value;
+        if (h && c && t) {
+            course.push(h, c, t);
+            programCourses.push(course);
+        } else
+            break;
+        
+    }
+    givenProgramsArray.push(programCourses);
+    console.log(givenProgramsArray);
+}
 
 
 //-----------------------------------------------------------Print output result
@@ -386,4 +406,4 @@ document.getElementById('btnGgraphSchedule').addEventListener('click',main2);
 document.getElementById('tableToShow').addEventListener('click',onClickTd);
 
 document.getElementById('firstButton').addEventListener('click',main1);
-// document.getElementById('firstButtonReset').addEventListener('click',resetInitData);
+document.getElementById('addProgram').addEventListener('click',createProgramsArray);
