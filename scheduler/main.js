@@ -44,8 +44,55 @@ let givenProgramsArray = [];
 // [   [60,"java","Sean"], [60,"serv","Matt"], [60,"proj","Matt"], [60,"js","Sean"], [60,"linux","Gord"],[30,"comm2","Sheri"]             ],
 // [   [60,"java2","Sean"], [60,"serv2","Matt"], [60,"proj2","Matt"], [60,"js2","Sean"], [60,"linux2","Gord"],[30,"comm4","Sheri"],[30,"asd","Ketrine"]          */   ]      
 // ];  
-//--------------------------------------------------------------------------------------------------
 
+//-----------------------------------------------------------Print programs array to user
+function printProgramsArray(){
+    let output = document.getElementById('output');
+    output.innerHTML="";
+   
+    givenProgramsArray.forEach(program => {
+
+        let table = document.createElement("TABLE");
+        output.appendChild(table);
+        table.className += "table table-sm table-light table-bordered border border-success rounded my-1";
+
+        let thead = document.createElement("THEAD");
+        table.appendChild(thead);
+        thead.classList.add("thead-light");
+
+        let bigRow = document.createElement("TR");
+        thead.appendChild(bigRow);
+
+        let th1 = document.createElement("TH");
+        th1.innerHTML = "Hours";
+        let th2 = document.createElement("TH");
+        th2.innerHTML = "Course";
+        let th3 = document.createElement("TH");
+        th3.innerHTML = "Name";
+        bigRow.appendChild(th1);
+        bigRow.appendChild(th2);
+        bigRow.appendChild(th3);
+
+        program.forEach(course => {
+
+            let row = document.createElement("TR");
+            table.appendChild(row);
+
+            course.forEach(value => {
+
+                let cell = document.createElement("TD");
+                cell.innerHTML = value;
+                row.appendChild(cell);
+            })
+        })
+    });
+
+
+}
+//---------------------------------------------------------------
+
+
+//----------------------------------------------------------------create programs Arrey from users input
 function createProgramsArray(){
     let programCourses =[];
     
@@ -58,12 +105,13 @@ function createProgramsArray(){
             course.push(h, c, t);
             programCourses.push(course);
         } else
-            break;
-        
+            break; 
     }
     givenProgramsArray.push(programCourses);
     console.log(givenProgramsArray);
+    printProgramsArray();
 }
+//-----------------------------------------------------------
 
 
 //-----------------------------------------------------------Print output result
@@ -315,6 +363,7 @@ function showPreliminaryScheduleTable(){
 
     let scheduleTable = document.getElementById('tableBody');
     scheduleTable.innerHTML = "";
+
     
     for (let j = 0; j < maximumNumbersOfClassesADay; j++ ) {
 
