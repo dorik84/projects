@@ -38,28 +38,25 @@ let teachSchedule;
 let progSchedule;
 
 let givenProgramsArray = [];
-//  = 
-// [ 
-// [   [75,"python","Sean"], [60,"html","Matt"], [60,"windows","Gord"], [60,"netw","Darlin"], [60,"sql","Gord"], [30,"comm1","Sheri"]     ],
-// [   [60,"java","Sean"], [60,"serv","Matt"], [60,"proj","Matt"], [60,"js","Sean"], [60,"linux","Gord"],[30,"comm2","Sheri"]             ],
-// [   [60,"java2","Sean"], [60,"serv2","Matt"], [60,"proj2","Matt"], [60,"js2","Sean"], [60,"linux2","Gord"],[30,"comm4","Sheri"],[30,"asd","Ketrine"]          */   ]      
-// ];  
+let programCourses =[];
 
-//-----------------------------------------------------------Print programs array to user
+//-----------------------------------------------------------Show program info to user by removing  included courses
 function printProgramsArray(){
     let output = document.getElementById('output');
     let tables = output.getElementsByTagName('table');
 
+    //remove all tables in the output node
     tables = Array.from(tables);
     tables.forEach(child => {
         output.removeChild(child);
     })
     
+    //build program table based on givenProgramsArray
     givenProgramsArray.forEach(program => {
 
         let table = document.createElement("TABLE");
         output.insertBefore(table,output.querySelector('div:nth-last-child(2)'));
-        table.className += "table table-sm table-light table-bordered border border-success rounded my-1";
+        table.className += "table table-sm table-light table-bordered border border-success rounded my-1 mx-3";
 
         let thead = document.createElement("THEAD");
         table.appendChild(thead);
@@ -92,8 +89,6 @@ function printProgramsArray(){
             })
         })
     });
-
-
 }
 //---------------------------------------------------------------
 
@@ -104,20 +99,22 @@ function onDeleteBtn(e){
     let nodeList = document.getElementById('output').querySelectorAll('[class="table-warning"]');
     nodeList = Array.from(nodeList);
     nodeList= nodeList.map(tr=>tr.parentElement);
-    let index = nodeList.indexOf(table); //retrieving index of deleting table
+    let index = nodeList.indexOf(table); //retrieving index of deleted table
     console.log(index);
-    programCourses.splice(index,1);
+    programCourses.splice(index,1); // remove course array from array of courses
 
-    document.getElementById('output').removeChild(table); //only visual deleting
+    document.getElementById('output').removeChild(table); //only visual deletion
 }
 //---------------------------------------------------------------
 
 
-//------------------------------------------------------------print course data from users input
+//------------------------------------------------------------show course data from users input
 function printCourse(course) {
+    
     let output = document.getElementById('output');
     let table = document.createElement("TABLE");
-    table.className += "table table-sm table-light table-bordered border rounded my-2";
+    table.className += "table table-sm table-light table-bordered border rounded my-2 mx-3";
+    //insert this course tablein front of input form
     output.insertBefore(table,output.querySelector('div:nth-last-child(2)'));
 
     let row = document.createElement("TR");
@@ -134,6 +131,7 @@ function printCourse(course) {
     btn.innerHTML = "delete";
     btn.setAttribute('type','button');
     row.appendChild(btn);
+    //add event listener to each red button next to course
     btn.addEventListener('click',onDeleteBtn);
     
 }
@@ -141,7 +139,7 @@ function printCourse(course) {
 
 
 //-----------------------------------------------------------get input from user about each course
-let programCourses =[];
+
 function createCourseArray(){
     
     let course = [];
