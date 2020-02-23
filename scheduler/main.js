@@ -48,12 +48,17 @@ let givenProgramsArray = [];
 //-----------------------------------------------------------Print programs array to user
 function printProgramsArray(){
     let output = document.getElementById('output');
-    output.innerHTML="";
-   
+    let tables = output.getElementsByTagName('table');
+
+    tables = Array.from(tables);
+    tables.forEach(child => {
+        output.removeChild(child);
+    })
+    
     givenProgramsArray.forEach(program => {
 
         let table = document.createElement("TABLE");
-        output.appendChild(table);
+        output.insertBefore(table,output.querySelector('div:nth-last-child(2)'));
         table.className += "table table-sm table-light table-bordered border border-success rounded my-1";
 
         let thead = document.createElement("THEAD");
@@ -81,6 +86,7 @@ function printProgramsArray(){
             course.forEach(value => {
 
                 let cell = document.createElement("TD");
+                // cell.className += "w-25";
                 cell.innerHTML = value;
                 row.appendChild(cell);
             })
@@ -92,29 +98,78 @@ function printProgramsArray(){
 //---------------------------------------------------------------
 
 
-//----------------------------------------------------------------create programs Arrey from users input
-function createProgramsArray(){
-    let programCourses =[];
+//------------------------------------------------------------delete course upon pressing delete button
+function onDeleteBtn(e){
+    let table = e.target.parentElement.parentElement;
+    let nodeList = document.getElementById('output').querySelectorAll('[class="table-warning"]');
+    nodeList = Array.from(nodeList);
+    nodeList= nodeList.map(tr=>tr.parentElement);
+    let index = nodeList.indexOf(table); //retrieving index of deleting table
+    console.log(index);
+    programCourses.splice(index,1);
+
+    document.getElementById('output').removeChild(table); //only visual deleting
+}
+//---------------------------------------------------------------
+
+
+//------------------------------------------------------------print course data from users input
+function printCourse(course) {
+    let output = document.getElementById('output');
+    let table = document.createElement("TABLE");
+    table.className += "table table-sm table-light table-bordered border rounded my-2";
+    output.insertBefore(table,output.querySelector('div:nth-last-child(2)'));
+
+    let row = document.createElement("TR");
+    table.appendChild(row);
+    row.className += "table-warning";
+    course.forEach(value => {
+        let cell = document.createElement("TD");
+        cell.className += "w-25";
+        cell.innerHTML = value;
+        row.appendChild(cell);
+    })
+    let btn = document.createElement("button");
+    btn.className += "btn btn-danger btn-block";
+    btn.innerHTML = "delete";
+    btn.setAttribute('type','button');
+    row.appendChild(btn);
+    btn.addEventListener('click',onDeleteBtn);
     
-    for (let courseNum = 1; courseNum <= 10; courseNum++){
-        let course = [];
-        let h = document.getElementById(`hours${courseNum}`).value;
-        let c = document.getElementById(`course${courseNum}`).value;
-        let t = document.getElementById(`teacher${courseNum}`).value;
-        if (h && c && t) {
-            course.push(h, c, t);
-            programCourses.push(course);
-        } else
-            break; 
-    }
+}
+//-----------------------------------------------------------
+
+
+//-----------------------------------------------------------get input from user about each course
+let programCourses =[];
+function createCourseArray(){
+    
+    let course = [];
+    let h = document.getElementById(`hours1`).value;
+    let c = document.getElementById(`course1`).value;
+    let t = document.getElementById(`teacher1`).value;
+    if (h && c && t) {
+        course.push(h, c, t);
+        programCourses.push(course);
+    } 
+         
+    console.log(programCourses);
+    printCourse(course);
+}
+//-----------------------------------------------------------
+
+
+//-----------------------------------------------------------add courses to program / create program
+function createProgramsArray(){
     givenProgramsArray.push(programCourses);
+    programCourses = [];
     console.log(givenProgramsArray);
     printProgramsArray();
 }
 //-----------------------------------------------------------
 
 
-//-----------------------------------------------------------Print output result
+//-----------------------------------------------------------Print final result of the schedule
 function printScedule(){
     
     for (let program=0; program < givenProgramsArray.length; program++) {
@@ -364,7 +419,6 @@ function showPreliminaryScheduleTable(){
     let scheduleTable = document.getElementById('tableBody');
     scheduleTable.innerHTML = "";
 
-    
     for (let j = 0; j < maximumNumbersOfClassesADay; j++ ) {
 
         let row = document.createElement("TR");
@@ -414,23 +468,6 @@ function getInitialData (){
 //-------------------------------------------------------------------------------------------------------
 
 
-// function resetInitData(){
-//     numberOfWeeksInSemestr = 0;
-//     document.getElementById('numberOfWeeksInSemestr').innerHTML = "";
-
-//     numberOfDaysAWeek = 0;
-//     document.getElementById('numberOfDaysAWeek').innerHTML = "";
-
-//     maximumNumbersOfClassesADay = 0;
-//     document.getElementById('maximumNumbersOfClassesADay').innerHTML = "";
-    
-//     numberOfHoursInALesson = 0;
-//     document.getElementById('numberOfHoursInALesson').innerHTML = "";
-
-//     splitRemains =false;
-// }
-
-
 //------------------------------------------------check off cells in the schedule
 function onClickTd (event){
     let td = event.target;
@@ -456,3 +493,5 @@ document.getElementById('tableToShow').addEventListener('click',onClickTd);
 
 document.getElementById('firstButton').addEventListener('click',main1);
 document.getElementById('addProgram').addEventListener('click',createProgramsArray);
+document.getElementById('addCourse').addEventListener('click',createCourseArray);
+
