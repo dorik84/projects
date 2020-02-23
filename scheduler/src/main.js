@@ -1,5 +1,11 @@
-// importing the sass stylesheet for bundling
-// import "./../sass/styles.scss";
+
+import "./../node_modules/bootstrap/dist/css/bootstrap.min.css";
+import "./../node_modules/bootstrap/dist/js/bootstrap.min.js";
+import "./../node_modules/jquery/dist/jquery.min.js";
+import "./../node_modules/popper.js/dist/popper.min.js";
+import "./../node_modules/@fortawesome/fontawesome-free/css/all.css"
+import "./../node_modules/@fortawesome/fontawesome-free/js/all.js"
+import "./../sass/styles.scss";
 
 
     
@@ -40,6 +46,24 @@ let progSchedule;
 let givenProgramsArray = [];
 let programCourses =[];
 
+
+//-----------------------------------------------------------Print result of the filled out schedule
+function printScedule(){
+    
+    for (let program=0; program < givenProgramsArray.length; program++) {
+        for (let week=0; week < numberOfWeeksInSemestr; week++) {
+            console.log( window["ScheduleForProgram" + program + week] );
+            printNestedArray(window["ScheduleForProgram" + program + week]);
+        }
+        for(let course=0; course < givenProgramsArray[program].length; course++){
+            console.log( window[givenProgramsArray[program][course][2] + 0] );
+            printNestedArray(window[givenProgramsArray[program][course][2] + 0]);
+        } 
+    }
+}
+//-----------------------------------------------------------------------------------------------------
+
+
 //-----------------------------------------------------------Show program info to user by removing  included courses
 function printProgramsArray(){
     let output = document.getElementById('output');
@@ -56,7 +80,7 @@ function printProgramsArray(){
 
         let table = document.createElement("TABLE");
         output.insertBefore(table,output.querySelector('div:nth-last-child(2)'));
-        table.className += "table table-sm table-light table-bordered border border-success rounded my-1 mx-3";
+        table.className += "table table-sm table-light table-bordered mb-3 mx-3";
 
         let thead = document.createElement("THEAD");
         table.appendChild(thead);
@@ -97,10 +121,12 @@ function printProgramsArray(){
 function onDeleteBtn(e){
     let table = e.target.parentElement.parentElement;
     let nodeList = document.getElementById('output').querySelectorAll('[class="table-warning"]');
+
     nodeList = Array.from(nodeList);
     nodeList= nodeList.map(tr=>tr.parentElement);
+
     let index = nodeList.indexOf(table); //retrieving index of deleted table
-    console.log(index);
+    
     programCourses.splice(index,1); // remove course array from array of courses
 
     document.getElementById('output').removeChild(table); //only visual deletion
@@ -113,8 +139,8 @@ function printCourse(course) {
     
     let output = document.getElementById('output');
     let table = document.createElement("TABLE");
-    table.className += "table table-sm table-light table-bordered border rounded my-2 mx-3";
-    //insert this course tablein front of input form
+    table.className += "table table-sm table-light table-bordered border rounded mb-3 mx-3";
+    //insert this course table in front of the input form
     output.insertBefore(table,output.querySelector('div:nth-last-child(2)'));
 
     let row = document.createElement("TR");
@@ -127,11 +153,11 @@ function printCourse(course) {
         row.appendChild(cell);
     })
     let btn = document.createElement("button");
-    btn.className += "btn btn-danger btn-block";
+    btn.className += "btn btn-danger btn-sm btn-block";
     btn.innerHTML = "delete";
     btn.setAttribute('type','button');
     row.appendChild(btn);
-    //add event listener to each red button next to course
+    //add event listener to each red "delete" button next to course
     btn.addEventListener('click',onDeleteBtn);
     
 }
@@ -160,26 +186,15 @@ function createCourseArray(){
 //-----------------------------------------------------------add courses to program / create program
 function createProgramsArray(){
     givenProgramsArray.push(programCourses);
+    
     programCourses = [];
     console.log(givenProgramsArray);
     printProgramsArray();
+    
 }
+
 //-----------------------------------------------------------
 
-
-//-----------------------------------------------------------Print final result of the schedule
-function printScedule(){
-    
-    for (let program=0; program < givenProgramsArray.length; program++) {
-        for (let week=0; week < numberOfWeeksInSemestr; week++) {
-            console.log( window["ScheduleForProgram" + program + week] );
-        }
-        for(let course=0; course < givenProgramsArray[program].length; course++){
-            console.log( window[givenProgramsArray[program][course][2] + 0] );
-        } 
-    }
-}
-//-----------------------------------------------------------------------------------------------------
 
 
 //--------------------------------------find the last class of current course in the program schedule
@@ -327,7 +342,7 @@ function allocator() {
     programName = givenProgramsArray[program][course][1];
     teacherName = givenProgramsArray[program][course][2];
     
-    remains = countNumberOfClassesAWeek();
+    let remains = countNumberOfClassesAWeek();
 
     hoursLeft -= remains;
     everySecondWeek = false;
@@ -388,7 +403,7 @@ function emptyProgramSchedule() {
 //-----------------------------------------------------------------------------------------------------
 
 
-//---------------------------------------------Create one empty week as frame
+//---------------------------------------------Create one empty week as frame after recession notations 
 function createWeekFrame (){
     
     for (let j = 0; j < numberOfDaysAWeek; j++ ) {
@@ -466,7 +481,7 @@ function getInitialData (){
 //-------------------------------------------------------------------------------------------------------
 
 
-//------------------------------------------------check off cells in the schedule
+//------------------------------------------------checking off cells in the schedule to note recessions
 function onClickTd (event){
     let td = event.target;
     td.classList.toggle("table-danger");  
@@ -488,8 +503,30 @@ function main2(){
 
 document.getElementById('btnGgraphSchedule').addEventListener('click',main2);
 document.getElementById('tableToShow').addEventListener('click',onClickTd);
-
 document.getElementById('firstButton').addEventListener('click',main1);
 document.getElementById('addProgram').addEventListener('click',createProgramsArray);
 document.getElementById('addCourse').addEventListener('click',createCourseArray);
 
+function printNestedArray(myArray){
+    let weekTable = document.getElementById('tableToShow').cloneNode(true);
+    weekTable.removeAttribute("id");
+    console.log(weekTable);
+    // let scheduleTable = document.getElementById('tableBody');
+    let lastForm = document.querySelector('#lastForm');
+    lastForm.appendChild(weekTable);
+    console.log(lastForm);
+
+    let tbody = weekTable.querySelector('tbody');
+    tbody.removeAttribute("id");
+    console.log(tbody);
+
+    for (let j = 0; j < myArray[0].length; j++ ) {
+
+        for (let i = 0; i < myArray.length; i++ ) {  
+            
+            let cell = tbody.querySelector(`#cell${j}${i}`);
+            console.log(cell)
+            cell.innerHTML = (myArray[i][j] != 0 && myArray[i][j] != 1)?myArray[i][j]:"";
+        }
+    }
+}
