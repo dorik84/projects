@@ -47,21 +47,6 @@ let givenProgramsArray = [];
 let programCourses =[];
 
 
-//-----------------------------------------------------------Print result of the filled out schedule
-function printScedule(){
-    
-    for (let program=0; program < givenProgramsArray.length; program++) {
-        for (let week=0; week < numberOfWeeksInSemestr; week++) {
-            console.log( window["ScheduleForProgram" + program + week] );
-            printNestedArray(window["ScheduleForProgram" + program + week]);
-        }
-        for(let course=0; course < givenProgramsArray[program].length; course++){
-            console.log( window[givenProgramsArray[program][course][2] + 0] );
-            printNestedArray(window[givenProgramsArray[program][course][2] + 0]);
-        } 
-    }
-}
-//-----------------------------------------------------------------------------------------------------
 
 
 //-----------------------------------------------------------Show program info to user by removing  included courses
@@ -497,7 +482,8 @@ function main2(){
     createWeekFrame();
     emptyProgramSchedule();
     programSwitcher ();
-    printScedule();
+    testFunction();
+    // printScedule();
 }
 //------------------------------------------------------event listeners
 
@@ -507,26 +493,84 @@ document.getElementById('firstButton').addEventListener('click',main1);
 document.getElementById('addProgram').addEventListener('click',createProgramsArray);
 document.getElementById('addCourse').addEventListener('click',createCourseArray);
 
-function printNestedArray(myArray){
+function print2DArray(myArray){
     let weekTable = document.getElementById('tableToShow').cloneNode(true);
     weekTable.removeAttribute("id");
-    console.log(weekTable);
+    
     // let scheduleTable = document.getElementById('tableBody');
     let lastForm = document.querySelector('#lastForm');
     lastForm.appendChild(weekTable);
-    console.log(lastForm);
+    
 
     let tbody = weekTable.querySelector('tbody');
     tbody.removeAttribute("id");
-    console.log(tbody);
+    
 
     for (let j = 0; j < myArray[0].length; j++ ) {
 
         for (let i = 0; i < myArray.length; i++ ) {  
             
             let cell = tbody.querySelector(`#cell${j}${i}`);
-            console.log(cell)
+            
             cell.innerHTML = (myArray[i][j] != 0 && myArray[i][j] != 1)?myArray[i][j]:"";
         }
     }
 }
+
+function testFunction(){
+    let lastForm = document.querySelector('#lastForm');
+    lastForm.innerHTML = `
+    <form class="form-inline">
+    <label class="my-1 mr-2" for="weeks">Schedule to show</label>
+    <select class="custom-select my-1 mr-sm-2" id="weeks">
+        <option value="1">One week</option>
+        <option value="2">Two Weeks</option>
+        <option value=\"${numberOfWeeksInSemestr}\">All weeks</option>
+    </select>
+    <button type="button" class="btn btn-primary my-1">Submit</button>
+    </form>`;
+    
+
+
+    lastForm.getElementsByTagName('button')[0].addEventListener('click',onSubmit);
+}
+
+function onSubmit(){
+    
+    let weekOptions = document.querySelector('#lastForm').querySelector('#weeks').children;
+    let weeks;
+    weekOptions = Array.from(weekOptions);
+    weekOptions.forEach(option => {
+        if (option.selected == true) weeks = option.value;
+    });
+
+
+    for (let program=0; program < givenProgramsArray.length; program++) {
+        for (let week=0; week < weeks; week++) {
+            console.log( window["ScheduleForProgram" + program + week] );
+            print2DArray(window["ScheduleForProgram" + program + week]);
+        }
+        for(let course=0; course < givenProgramsArray[program].length; course++){
+            console.log( window[givenProgramsArray[program][course][2] + 0] );
+            print2DArray(window[givenProgramsArray[program][course][2] + 0]);
+            
+        } 
+    }
+}
+
+//-----------------------------------------------------------Print result of the filled out schedule
+// function printScedule(numberOfWeeks){
+
+    
+//     for (let program=0; program < givenProgramsArray.length; program++) {
+//         for (let week=0; week < numberOfWeeks; week++) {
+//             console.log( window["ScheduleForProgram" + program + week] );
+//             print2DArray(window["ScheduleForProgram" + program + week]);
+//         }
+//         for(let course=0; course < givenProgramsArray[program].length; course++){
+//             console.log( window[givenProgramsArray[program][course][2] + 0] );
+//             print2DArray(window[givenProgramsArray[program][course][2] + 0]);
+//         } 
+//     }
+// }
+//-----------------------------------------------------------------------------------------------------
