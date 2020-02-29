@@ -49,7 +49,7 @@ let programCourses =[];
 
 
 
-//-----------------------------------------------------------Show program info to user by removing  included courses
+//-----------------------------------------------------------Show program info to user after pressing Create Program button
 function printProgramsArray(){
     let output = document.getElementById('output');
     let tables = output.getElementsByTagName('table');
@@ -119,7 +119,7 @@ function onDeleteBtn(e){
 //---------------------------------------------------------------
 
 
-//------------------------------------------------------------show course data from users input
+//------------------------------------------------------------show course info after users input
 function printCourse(course) {
     
     let output = document.getElementById('output');
@@ -149,7 +149,18 @@ function printCourse(course) {
 //-----------------------------------------------------------
 
 
-//-----------------------------------------------------------get input from user about each course
+
+//-----------------------------------------------------------add courses to program / create program
+function createProgramsArray(){
+    givenProgramsArray.push(programCourses);
+    programCourses = [];
+    printProgramsArray();
+}
+//-----------------------------------------------------------
+
+
+
+//-----------------------------------------------------------get input from user (objects info)
 
 function createCourseArray(){
     
@@ -161,28 +172,12 @@ function createCourseArray(){
         course.push(h, c, t);
         programCourses.push(course);
     } 
-         
-    console.log(programCourses);
     printCourse(course);
 }
 //-----------------------------------------------------------
 
 
-//-----------------------------------------------------------add courses to program / create program
-function createProgramsArray(){
-    givenProgramsArray.push(programCourses);
-    
-    programCourses = [];
-    console.log(givenProgramsArray);
-    printProgramsArray();
-    
-}
-
-//-----------------------------------------------------------
-
-
-
-//--------------------------------------find the last class of current course in the program schedule
+//--------------------------------------find the last distributed class of the current course in the current week
 function findLastClass(){
     for (let day = numberOfDaysAWeek-1; day >= 0; day--) {
         let spotClass = progSchedule[day].indexOf(programName);
@@ -195,7 +190,7 @@ function findLastClass(){
 //--------------------------------------------------------------------------------------------------
 
 
-//-------------------------------Checking a number of classes of given course in current week
+//-------------------------------Checking a number of already distributed classes of given course in the current week
 function checkNumberOfClassesAWeek () {
     let count = 0;
     for(let day of progSchedule){
@@ -264,7 +259,7 @@ function changeDay(start=0) {
 //-----------------------------------------------------------------------------------------------------
 
 
-//---------------------------------------------Listing class order number from 8:30-10:30, 10:30-12:30, 13:30-15:30
+//---------------------------------------------Listing class order number from first to last
 function changeClass(start=0) {
         
     for (classNumber=start; classNumber < maximumNumbersOfClassesADay; classNumber++) {
@@ -300,7 +295,7 @@ function changeWeek(){
 //-----------------------------------------------------------------------------------------------------
 
 
-//---------------------------------------------define Number Of Classes A Week
+//---------------------------------------------calculate number of classes a week for current object
 function countNumberOfClassesAWeek (){
     
     let temp = hoursLeft / ( numberOfHoursInALesson * numberOfWeeksInSemestr );
@@ -320,7 +315,7 @@ function countNumberOfClassesAWeek (){
 //-----------------------------------------------------------------------------------------------------
 
 
-//-------------------------------Processor. Entery point to schedule
+//-----------------------------------------------------Processor. Entery point to schedule
 function allocator() {
 
     hoursLeft = givenProgramsArray[program][course][0];
@@ -353,29 +348,6 @@ function emptyTeacherSchedule () {
 //-----------------------------------------------------------------------------------------------------
 
 
-//----------------------------------------Listing courses 
-function courseSwitcher () {
-        
-    for (course=0; course < givenProgramsArray[program].length; course++) {
-
-        emptyTeacherSchedule ();
-        allocator();
-        nextCourse = false;
-    }
-}
-//-----------------------------------------------------------------------------------------------------
-
-
-//-------------------------------------------Listing programs 
-function programSwitcher () {
-
-    for (program=0; program < givenProgramsArray.length; program++) {
-        courseSwitcher ();
-    }
-}
-//-----------------------------------------------------------------------------------------------------
-
-
 //----------------------------------------Create programs empty weeks for entire semester 
 function emptyProgramSchedule() {
     for ( let numProg=0; numProg < givenProgramsArray.length; numProg++ ) {
@@ -388,7 +360,30 @@ function emptyProgramSchedule() {
 //-----------------------------------------------------------------------------------------------------
 
 
-//---------------------------------------------Create one empty week as frame after recession notations 
+//----------------------------------------Listing courses 
+function courseSwitcher () {
+        
+    for (course=0; course < givenProgramsArray[program].length; course++) {
+
+        emptyTeacherSchedule ();
+        allocator();
+        nextCourse = false;
+    }
+}
+//-----------------------------------------------------------------------------------------------------
+ 
+
+//-------------------------------------------Listing programs 
+function programSwitcher () {
+
+    for (program=0; program < givenProgramsArray.length; program++) {
+        courseSwitcher ();
+    }
+}
+//-----------------------------------------------------------------------------------------------------
+
+
+//---------------------------------------------Create one empty week as a template after recession notations 
 function createWeekFrame (){
     
     for (let j = 0; j < numberOfDaysAWeek; j++ ) {
@@ -411,7 +406,7 @@ function createWeekFrame (){
 //-----------------------------------------------------------------------------------------------------
 
 
-//----------------------------------------------Show schedule table for user
+//----------------------------------------------Show first visual empty schedule table for user
 function showPreliminaryScheduleTable(){
 
     let scheduleTable = document.getElementById('tableBody');
@@ -440,7 +435,7 @@ function showPreliminaryScheduleTable(){
 //--------------------------------------------------------------------------------------------------
 
 
-//------------------------------------------------------------------get initial general data from the user
+//-------------------------------------------------------initial input /get initial general data from the user
 function getInitialData (){
     let temp = document.getElementById('numberOfWeeksInSemestr').value;
     numberOfWeeksInSemestr = temp? parseInt(temp) : 15;
@@ -466,7 +461,7 @@ function getInitialData (){
 //-------------------------------------------------------------------------------------------------------
 
 
-//------------------------------------------------checking off cells in the schedule to note recessions
+//------------------------------------------------checking off cells in the visual schedule to note recessions
 function onClickTd (event){
     let td = event.target;
     td.classList.toggle("table-danger");  
@@ -482,30 +477,33 @@ function main2(){
     createWeekFrame();
     emptyProgramSchedule();
     programSwitcher ();
-    testFunction();
-    // printScedule();
+    createDropdowns();
 }
-//------------------------------------------------------event listeners
 
+//------------------------------------------------------event listeners
 document.getElementById('btnGgraphSchedule').addEventListener('click',main2);
 document.getElementById('tableToShow').addEventListener('click',onClickTd);
 document.getElementById('firstButton').addEventListener('click',main1);
 document.getElementById('addProgram').addEventListener('click',createProgramsArray);
 document.getElementById('addCourse').addEventListener('click',createCourseArray);
+//----------------------------------------------------------------------------
 
-function print2DArray(myArray){
+
+//--------------------------------------------------------populate schedule tables with content
+function populateScheduleTable(myArray){
+    let lastForm = document.querySelectorAll('form')[3];
+
+
+
     let weekTable = document.getElementById('tableToShow').cloneNode(true);
     weekTable.removeAttribute("id");
     
-    // let scheduleTable = document.getElementById('tableBody');
-    let lastForm = document.querySelector('#lastForm');
+
     lastForm.appendChild(weekTable);
     
-
     let tbody = weekTable.querySelector('tbody');
     tbody.removeAttribute("id");
     
-
     for (let j = 0; j < myArray[0].length; j++ ) {
 
         for (let i = 0; i < myArray.length; i++ ) {  
@@ -516,61 +514,62 @@ function print2DArray(myArray){
         }
     }
 }
+//----------------------------------------------------------------------------
 
-function testFunction(){
+
+//---------------------------------------------------call populateScheduleTable according to users choice
+function onChangeSelect(){
+    
+    let weekOptions = document.querySelector('#lastForm').querySelectorAll('select')[1];
+
+    let weeks;
+    // console.log(weekOptions);
+  
+    for (let option of weekOptions) {
+        if (option.selected == true) weeks = option.value;
+    };
+
+    let program = document.querySelector('#lastForm').querySelectorAll('select')[0].selectedIndex;
+    document.querySelectorAll('form')[3].innerHTML = "";
+
+    for (let week=0; week < weeks; week++) {
+        // console.log(window["ScheduleForProgram" + program + week]);
+        populateScheduleTable(window["ScheduleForProgram" + program + week]);
+    }
+
+    for(let course=0; course < givenProgramsArray[program].length; course++){
+        populateScheduleTable(window[givenProgramsArray[program][course][2] + 0]); 
+    } 
+}
+//----------------------------------------------------------------------------
+
+
+
+//--------------------------------------------------create weeks options dropdowns
+function createDropdowns(){
     let lastForm = document.querySelector('#lastForm');
     lastForm.innerHTML = `
     <form class="form-inline">
-    <label class="my-1 mr-2" for="weeks">Schedule to show</label>
-    <select class="custom-select my-1 mr-sm-2" id="weeks">
-        <option value="1">One week</option>
-        <option value="2">Two Weeks</option>
-        <option value=\"${numberOfWeeksInSemestr}\">All weeks</option>
-    </select>
-    <button type="button" class="btn btn-primary my-1">Submit</button>
+        <label class="my-1 mr-2">Select program</label>
+        <select class="custom-select my-1 mr-sm-2"></select>
+        <label class="my-1 mr-2">Select weeks to show</label>
+        <select class="custom-select my-1 mr-sm-2">
+            <option value="1">One week</option>
+            <option value="2">Two Weeks</option>
+            <option value=\"${numberOfWeeksInSemestr}\">All weeks</option>
+        </select>
     </form>`;
-    
 
+    let programOptions = lastForm.querySelectorAll('select')[0].options;
 
-    lastForm.getElementsByTagName('button')[0].addEventListener('click',onSubmit);
-}
-
-function onSubmit(){
-    
-    let weekOptions = document.querySelector('#lastForm').querySelector('#weeks').children;
-    let weeks;
-    weekOptions = Array.from(weekOptions);
-    weekOptions.forEach(option => {
-        if (option.selected == true) weeks = option.value;
-    });
-
-
-    for (let program=0; program < givenProgramsArray.length; program++) {
-        for (let week=0; week < weeks; week++) {
-            console.log( window["ScheduleForProgram" + program + week] );
-            print2DArray(window["ScheduleForProgram" + program + week]);
-        }
-        for(let course=0; course < givenProgramsArray[program].length; course++){
-            console.log( window[givenProgramsArray[program][course][2] + 0] );
-            print2DArray(window[givenProgramsArray[program][course][2] + 0]);
-            
-        } 
+    for (let i = 0; i < givenProgramsArray.length; i++) {
+        let option = document.createElement("option");
+        option.innerHTML = i+1;
+        programOptions.add(option);
     }
+
+    lastForm.getElementsByTagName('select')[0].addEventListener('change',onChangeSelect);
+    lastForm.getElementsByTagName('select')[1].addEventListener('change',onChangeSelect);
+    onChangeSelect();
 }
-
-//-----------------------------------------------------------Print result of the filled out schedule
-// function printScedule(numberOfWeeks){
-
-    
-//     for (let program=0; program < givenProgramsArray.length; program++) {
-//         for (let week=0; week < numberOfWeeks; week++) {
-//             console.log( window["ScheduleForProgram" + program + week] );
-//             print2DArray(window["ScheduleForProgram" + program + week]);
-//         }
-//         for(let course=0; course < givenProgramsArray[program].length; course++){
-//             console.log( window[givenProgramsArray[program][course][2] + 0] );
-//             print2DArray(window[givenProgramsArray[program][course][2] + 0]);
-//         } 
-//     }
-// }
-//-----------------------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------
