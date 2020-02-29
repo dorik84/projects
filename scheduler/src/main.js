@@ -8,8 +8,6 @@ import "./../node_modules/@fortawesome/fontawesome-free/js/all.js"
 import "./../sass/styles.scss";
 
 
-    
-
 //----------------------------------------------declaration of varaibales
 
 let numberOfWeeksInSemestr;
@@ -44,28 +42,134 @@ let teachSchedule;
 let progSchedule;
 
 let givenProgramsArray = [];
-let programCourses =[];
+let programCourses = [];
+
+let teacherNameList = [];
+let programNameList = [];
+let obj = {};
+
+//--------------------------------------------------------populate schedule tables with content
+function populateScheduleTable(myArray){
+    let lastForm = document.querySelectorAll('form')[3];
+
+    let weekTable = document.getElementById('tableToShow').cloneNode(true);
+    weekTable.removeAttribute("id");
+    
+
+    lastForm.appendChild(weekTable);
+    
+    let tbody = weekTable.querySelector('tbody');
+    tbody.removeAttribute("id");
+    
+    for (let j = 0; j < myArray[0].length; j++ ) {
+
+        for (let i = 0; i < myArray.length; i++ ) {  
+            
+            let cell = tbody.querySelector(`#cell${j}${i}`);
+            
+            cell.innerHTML = (myArray[i][j] != 0 && myArray[i][j] != 1)?myArray[i][j]:"";
+        }
+    }
+}
+//----------------------------------------------------------------------------
 
 
+//---------------------------------------------------call populateScheduleTable according to users choice
+function onChangeSelect(){
+    
+    let weekOptions = document.querySelector('#lastForm').querySelectorAll('select')[1];
+
+    let weeks;
+    // console.log(weekOptions);
+  
+    for (let option of weekOptions) {
+        if (option.selected == true) weeks = option.value;
+    };
+
+    let firstSelectNone = document.querySelector('#lastForm').querySelectorAll('select')[0];
+    let programORteacher = firstSelectNone.options[firstSelectNone.selectedIndex].text;
+    console.log("text of option",programORteacher);
+    document.querySelectorAll('form')[3].innerHTML = "";
+
+    
+    for (let week=0; week < weeks; week++) {
+        // console.log("grafik",obj["schedule_" + programORteacher +"_"+ week]);
+        populateScheduleTable(obj["schedule_" + programORteacher +"_"+ week]);
+        // console.log(obj);
+    }
+
+}
+//----------------------------------------------------------------------------
 
 
-//-----------------------------------------------------------Show program info to user after pressing Create Program button
+//--------------------------------------------------create weeks options dropdowns
+function createDropdowns(){
+    let lastForm = document.querySelector('#lastForm');
+    lastForm.innerHTML = `
+    <form class="form-inline">
+        <label class="my-1 mr-2">Select program or teacher</label>
+        <select class="custom-select my-1 mr-sm-2"></select>
+        <label class="my-1 mr-2">Select weeks to show</label>
+        <select class="custom-select my-1 mr-sm-2">
+            <option value="1">One week</option>
+            <option value="2">Two Weeks</option>
+            <option value=\"${numberOfWeeksInSemestr}\">All weeks</option>
+        </select>
+    </form>`;
+
+    let programOptions = lastForm.querySelectorAll('select')[0].options;
+
+    for (let name of programNameList) {
+        let option = document.createElement("option");
+        option.innerHTML = name;
+        programOptions.add(option);
+    }
+    for (let teacher of teacherNameList) {
+        let option = document.createElement("option");
+        option.innerHTML = teacher;
+        programOptions.add(option);
+    }
+
+    lastForm.getElementsByTagName('select')[0].addEventListener('change',onChangeSelect);
+    lastForm.getElementsByTagName('select')[1].addEventListener('change',onChangeSelect);
+    onChangeSelect();
+}
+//----------------------------------------------------------------------------
+
+
+//---------------------------------------------Show program info to user after pressing Create Program button
 function printProgramsArray(){
     let output = document.getElementById('output');
-    let tables = output.getElementsByTagName('table');
-
-    //remove all tables in the output node
-    tables = Array.from(tables);
-    tables.forEach(child => {
-        output.removeChild(child);
-    })
+    output.innerHTML="";
+    document.getElementById('output2').innerHTML = "";
     
     //build program table based on givenProgramsArray
     givenProgramsArray.forEach(program => {
 
+        let card = document.createElement("div");
+        card.className += "card promoting-card d-flex p-3 MB-3";
+        output.appendChild(card);
+
+        let cardBody = document.createElement("div");
+        cardBody.className += "card-body d-flex flex-row p-0";
+        card.appendChild(cardBody);
+
+        let div = document.createElement("div");
+        cardBody.appendChild(div);
+
+        let h4 = document.createElement("h4");
+        h4.className += "card-title font-weight-bold text-center m-0";
+        div.appendChild(h4);
+
+        let span = document.createElement("span");
+        span.innerHTML = document.querySelectorAll("#programName")[0].value;
+        span.className += "badge badge-primary";
+        h4.appendChild(span);
+
         let table = document.createElement("TABLE");
-        output.insertBefore(table,output.querySelector('div:nth-last-child(2)'));
-        table.className += "table table-sm table-light table-bordered mb-3 mx-3";
+
+        div.appendChild(table);
+        table.className += "table table-sm table-light table-bordered my-0";
 
         let thead = document.createElement("THEAD");
         table.appendChild(thead);
@@ -92,7 +196,6 @@ function printProgramsArray(){
             course.forEach(value => {
 
                 let cell = document.createElement("TD");
-                // cell.className += "w-25";
                 cell.innerHTML = value;
                 row.appendChild(cell);
             })
@@ -105,7 +208,7 @@ function printProgramsArray(){
 //------------------------------------------------------------delete course upon pressing delete button
 function onDeleteBtn(e){
     let table = e.target.parentElement.parentElement;
-    let nodeList = document.getElementById('output').querySelectorAll('[class="table-warning"]');
+    let nodeList = document.getElementById('output2').querySelectorAll('[class="table-warning"]');
 
     nodeList = Array.from(nodeList);
     nodeList= nodeList.map(tr=>tr.parentElement);
@@ -114,7 +217,7 @@ function onDeleteBtn(e){
     
     programCourses.splice(index,1); // remove course array from array of courses
 
-    document.getElementById('output').removeChild(table); //only visual deletion
+    document.getElementById('output2').removeChild(table); //only visual deletion
 }
 //---------------------------------------------------------------
 
@@ -122,11 +225,12 @@ function onDeleteBtn(e){
 //------------------------------------------------------------show course info after users input
 function printCourse(course) {
     
-    let output = document.getElementById('output');
+    let output = document.getElementById('output2');
     let table = document.createElement("TABLE");
-    table.className += "table table-sm table-light table-bordered border rounded mb-3 mx-3";
+    table.className += "table table-sm table-light table-bordered border rounded m-0";
     //insert this course table in front of the input form
-    output.insertBefore(table,output.querySelector('div:nth-last-child(2)'));
+    output.insertBefore(table, output.querySelector('input'));
+    // output.appendChild(table);
 
     let row = document.createElement("TR");
     table.appendChild(row);
@@ -152,27 +256,48 @@ function printCourse(course) {
 
 //-----------------------------------------------------------add courses to program / create program
 function createProgramsArray(){
-    givenProgramsArray.push(programCourses);
-    programCourses = [];
-    printProgramsArray();
+
+    if (programCourses[0]) {
+        givenProgramsArray.push(programCourses);
+        //todo programName
+        programCourses = [];
+        printProgramsArray();
+
+        //display button Generate Schedule
+        document.querySelector('#btnGgraphSchedule').style.display = "block";
+    }
+    let progrName = document.querySelectorAll("#programName")[0].value;
+
+    if (!programNameList.some(name=> name == progrName)) {
+        programNameList.push(progrName);
+        console.log ("programNameList:",programNameList);
+        document.querySelectorAll("#programName")[0].value ="";
+    } 
+    console.log("givenProgramsArray",givenProgramsArray);
 }
 //-----------------------------------------------------------
 
 
 
 //-----------------------------------------------------------get input from user (objects info)
-
 function createCourseArray(){
     
     let course = [];
     let h = document.getElementById(`hours1`).value;
     let c = document.getElementById(`course1`).value;
     let t = document.getElementById(`teacher1`).value;
+
     if (h && c && t) {
         course.push(h, c, t);
         programCourses.push(course);
-    } 
-    printCourse(course);
+        console.log("programCorse", programCourses);
+     
+        document.getElementById(`hours1`).value="";
+        document.getElementById(`course1`).value="";
+        document.getElementById(`teacher1`).value="";
+
+        printCourse(course);
+    }
 }
 //-----------------------------------------------------------
 
@@ -212,7 +337,7 @@ function splitRemainingHours(){
         if (hoursLeft == ( numberOfHoursInALesson * numberOfWeeksInSemestr ) / 2)   // if remaining hours can be splitet equally and added to every second week instead of evey week
         everySecondWeek = true;
 
-        [day,spotClass] = findLastClass();
+        let [day,spotClass] = findLastClass();
         let temp  = day + schedulePattern * 2;
         if (temp + 1 > numberOfDaysAWeek){           // if it can be added in one day
             startClass = spotClass+1;
@@ -277,9 +402,9 @@ function changeClass(start=0) {
 function changeWeek(){
     
     for (week=0; week < numberOfWeeksInSemestr; week++) {    
-
-        progSchedule = window["ScheduleForProgram" + program + week];
-        teachSchedule = window[givenProgramsArray[program][course][2] + week];
+        let progName = programNameList[program]
+        progSchedule = obj["schedule_" + progName +"_"+ week];
+        teachSchedule = obj["schedule_" + givenProgramsArray[program][course][2] +"_"+  week];
             
         changeClass(startClass);
 
@@ -337,12 +462,19 @@ function allocator() {
 
 //------------------------------------------Create teachers empty weeks for entire semester
 function emptyTeacherSchedule () {
-    
+    let instructorName = givenProgramsArray[program][course][2];
+
     for (let week=0; week < numberOfWeeksInSemestr; week++) {
-        if (window[givenProgramsArray[program][course][2] + week]) {
+        if (obj["schedule_" + instructorName +"_"+  week]) {
             break;
         }
-        window[givenProgramsArray[program][course][2] + week] = JSON.parse(JSON.stringify(blueprint));
+        obj["schedule_" + instructorName +"_"+  week] = JSON.parse(JSON.stringify(blueprint));
+
+        if (!teacherNameList.some(name=> name==instructorName)) {
+            teacherNameList.push(instructorName);
+            console.log ("teachers list:",teacherNameList);
+        } 
+  
     }
 }
 //-----------------------------------------------------------------------------------------------------
@@ -351,10 +483,10 @@ function emptyTeacherSchedule () {
 //----------------------------------------Create programs empty weeks for entire semester 
 function emptyProgramSchedule() {
     for ( let numProg=0; numProg < givenProgramsArray.length; numProg++ ) {
-            
-            for ( let numWeek=0; numWeek < numberOfWeeksInSemestr; numWeek++ ) {
-                window["ScheduleForProgram" + numProg + numWeek] = JSON.parse(JSON.stringify(blueprint)); 
-            }
+        let progName = programNameList[numProg]; 
+        for ( let numWeek=0; numWeek < numberOfWeeksInSemestr; numWeek++ ) {
+            obj["schedule_" + progName +"_"+ numWeek] = JSON.parse(JSON.stringify(blueprint)); 
+        }
     }
 }
 //-----------------------------------------------------------------------------------------------------
@@ -456,7 +588,6 @@ function getInitialData (){
     document.getElementById('hoursInLesson').innerHTML = numberOfHoursInALesson;
 
     splitRemains = document.getElementById('customSwitch').checked;
-    
 }
 //-------------------------------------------------------------------------------------------------------
 
@@ -467,109 +598,42 @@ function onClickTd (event){
     td.classList.toggle("table-danger");  
 }
 //------------------------------------------------------MAIN1
+
+
+//-----------------------------------------------------
 function main1(){
+    //display two another blocks
+    let containers = document.querySelector('body').children;
+    containers[1].style.display = "block";
+    containers[2].style.display = "block";
+
     getInitialData ();
     showPreliminaryScheduleTable();
 }
+//-----------------------------------------------------
+
 
 //------------------------------------------------------MAIN2
 function main2(){
+
+    let containers = document.querySelector('body').children;
+    containers[3].style.display = "block";
+    containers[4].style.display = "block";
+
     createWeekFrame();
     emptyProgramSchedule();
     programSwitcher ();
     createDropdowns();
 }
-
 //------------------------------------------------------event listeners
-document.getElementById('btnGgraphSchedule').addEventListener('click',main2);
-document.getElementById('tableToShow').addEventListener('click',onClickTd);
+
+
+//-----------------------------------------------------
 document.getElementById('firstButton').addEventListener('click',main1);
-document.getElementById('addProgram').addEventListener('click',createProgramsArray);
+document.getElementById('tableToShow').addEventListener('click',onClickTd);
 document.getElementById('addCourse').addEventListener('click',createCourseArray);
+document.getElementById('addProgram').addEventListener('click',createProgramsArray);
+document.getElementById('btnGgraphSchedule').addEventListener('click',main2);
 //----------------------------------------------------------------------------
 
 
-//--------------------------------------------------------populate schedule tables with content
-function populateScheduleTable(myArray){
-    let lastForm = document.querySelectorAll('form')[3];
-
-
-
-    let weekTable = document.getElementById('tableToShow').cloneNode(true);
-    weekTable.removeAttribute("id");
-    
-
-    lastForm.appendChild(weekTable);
-    
-    let tbody = weekTable.querySelector('tbody');
-    tbody.removeAttribute("id");
-    
-    for (let j = 0; j < myArray[0].length; j++ ) {
-
-        for (let i = 0; i < myArray.length; i++ ) {  
-            
-            let cell = tbody.querySelector(`#cell${j}${i}`);
-            
-            cell.innerHTML = (myArray[i][j] != 0 && myArray[i][j] != 1)?myArray[i][j]:"";
-        }
-    }
-}
-//----------------------------------------------------------------------------
-
-
-//---------------------------------------------------call populateScheduleTable according to users choice
-function onChangeSelect(){
-    
-    let weekOptions = document.querySelector('#lastForm').querySelectorAll('select')[1];
-
-    let weeks;
-    // console.log(weekOptions);
-  
-    for (let option of weekOptions) {
-        if (option.selected == true) weeks = option.value;
-    };
-
-    let program = document.querySelector('#lastForm').querySelectorAll('select')[0].selectedIndex;
-    document.querySelectorAll('form')[3].innerHTML = "";
-
-    for (let week=0; week < weeks; week++) {
-        // console.log(window["ScheduleForProgram" + program + week]);
-        populateScheduleTable(window["ScheduleForProgram" + program + week]);
-    }
-
-    for(let course=0; course < givenProgramsArray[program].length; course++){
-        populateScheduleTable(window[givenProgramsArray[program][course][2] + 0]); 
-    } 
-}
-//----------------------------------------------------------------------------
-
-
-
-//--------------------------------------------------create weeks options dropdowns
-function createDropdowns(){
-    let lastForm = document.querySelector('#lastForm');
-    lastForm.innerHTML = `
-    <form class="form-inline">
-        <label class="my-1 mr-2">Select program</label>
-        <select class="custom-select my-1 mr-sm-2"></select>
-        <label class="my-1 mr-2">Select weeks to show</label>
-        <select class="custom-select my-1 mr-sm-2">
-            <option value="1">One week</option>
-            <option value="2">Two Weeks</option>
-            <option value=\"${numberOfWeeksInSemestr}\">All weeks</option>
-        </select>
-    </form>`;
-
-    let programOptions = lastForm.querySelectorAll('select')[0].options;
-
-    for (let i = 0; i < givenProgramsArray.length; i++) {
-        let option = document.createElement("option");
-        option.innerHTML = i+1;
-        programOptions.add(option);
-    }
-
-    lastForm.getElementsByTagName('select')[0].addEventListener('change',onChangeSelect);
-    lastForm.getElementsByTagName('select')[1].addEventListener('change',onChangeSelect);
-    onChangeSelect();
-}
-//----------------------------------------------------------------------------

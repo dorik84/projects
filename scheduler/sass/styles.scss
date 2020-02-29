@@ -1,2 +1,10 @@
 // Sass Styling goes here
 // ...
+
+body> :not(:first-child){
+    display: none;
+}
+
+#btnGgraphSchedule {
+    display: none;
+}
