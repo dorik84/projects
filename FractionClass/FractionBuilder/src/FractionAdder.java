@@ -236,12 +236,12 @@ public class FractionAdder {
 		
 		if (validator.check()) {
 			
-			FirstWhole = Integer.parseInt((txtFirstWhole.getText().equals(""))?"0":txtFirstWhole.getText());
-			SecondWhole =  Integer.parseInt((txtSecondWhole.getText().equals(""))?"0":txtSecondWhole.getText());
-			FirstNum =  Integer.parseInt((txtFirstNum.getText().equals(""))?"0":txtFirstNum.getText());
-			SecondNum =  Integer.parseInt((txtSecondNum.getText().equals(""))?"0":txtSecondNum.getText());
-			FirstDen =  Integer.parseInt((txtFirstDen.getText().equals(""))?"0":txtFirstDen.getText());
-			SecondDen =  Integer.parseInt((txtSecondDen.getText().equals(""))?"0":txtSecondDen.getText());
+			FirstWhole = Integer.parseInt((txtFirstWhole.getText().matches("\\d+"))?txtFirstWhole.getText():"0");
+			SecondWhole =  Integer.parseInt((txtSecondWhole.getText().matches("\\\\d+"))?txtSecondWhole.getText():"0");
+			FirstNum =  Integer.parseInt((txtFirstNum.getText().matches("\\d+"))?txtFirstNum.getText():"0");
+			SecondNum =  Integer.parseInt((txtSecondNum.getText().matches("\\d+"))?txtSecondNum.getText():"0");
+			FirstDen =  Integer.parseInt((txtFirstDen.getText().matches("\\d+"))?txtFirstDen.getText():"0");
+			SecondDen =  Integer.parseInt((txtSecondDen.getText().matches("\\d+"))?txtSecondDen.getText():"0");
 			
 			fraction1 = new Fraction(FirstWhole, FirstNum, FirstDen);
 			fraction2 = new Fraction(SecondWhole, SecondNum, SecondDen);
