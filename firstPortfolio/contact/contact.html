@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Contact</title>
+	<link rel="stylesheet" type="text/css" href="style_contact.css">
+	<link rel="stylesheet" type="text/css" href="../style.css">
+	<link href="https://fonts.googleapis.com/css?family=Kanit&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="background_top">
+		<nav>
+			<ul>
+				<li><a href="../about/index.html">ABOUT</a></li>
+				<li><a href="../resume/resume.html">RESUME</a></li>
+				<li><a href="../skills/skills.html">SKILLS</a></li>
+				<li class="active"><a href="">CONTACT</a></li>
+				<li><a href="../biography/biography.html">BIOGRAPHY</a></li>
+				<li><a href="../certificates/certificates.html">CERTIFICATES</a></li>
+			</ul>
+		</nav>
+		<div class="outer-section" >
+			<section>
+				<div class="contacts">
+					<div class="contact-left">
+						<p>ADDRESS</p>  
+						<p>EMAIL</p>  
+						<p>PHONE</p>  
+
+					</div>
+					<div class="contact-right"> 
+						<p>Truro</p>  
+						<p><a href="mailto:w0436283@nscc.ca">dorya2005@mail.ru</a></p>  
+						<p>902-305-5882</p> 							
+					</div>
+				</div>
+
+				<form action="http://matt.nscctruro.ca/handler.php" method="POST">
+
+					<fieldset>
+						<legend>Fill out this form to contact me</legend>
+						<div class="contact-form">
+							<label for="firstname">Firstname</label>
+							<input type="text" name="Firstname"  id="firstname" placeholder="John"><br>
+						</div>
+
+						<div class="contact-form">
+							<label for="lastname">Lastname</label>
+							<input type="text" name="Lastname"  id="lastname" placeholder="Smith"><br>	
+						</div>
+					
+						<div class="contact-form">
+							<label for="company">Company</label>
+							<input type="text" name="Company"  id="company" placeholder="Coca Cola Inc."><br>	
+						</div>
+
+						<div class="contact-form">
+							<label for="phone">Contact phone number</label>
+							<input type="tel" name="Phone_number"  id="phone" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" placeholder="123-456-7890"><br>
+						</div>
+
+						<div class="contact-form">
+							<label for="email">E-mail</label>
+							<input type="email" name="Email"  id="email"  placeholder="johnsmith@mail.com"><br>
+						</div>
+
+						<div class="contact-form">
+							<label for="subject">Message</label>
+							<textarea id="subject" name="subject" placeholder="Write your message..." style="height:200px"></textarea><br>
+						</div>
+					</fieldset>
+					<input type="submit" value="Submit">
+					<input type="reset" value="Reset">
+				</form>
+
+
+
+				<footer>
+                    <a href="https://api.whatsapp.com/send?phone=19023055882" target="_blank"><img src="../my-icons-collection/001-whatsapp.png" alt="whatsapp"></a>
+                    <a href="" ><img src="../my-icons-collection/002-teams.png" alt="teams"></a>
+                    <a href="" ><img src="../my-icons-collection/003-telegram.png" alt="telegram"></a>
+                    <a href="https://www.facebook.com/profile.php?id=100001557447433" target="_blank"><img src="../my-icons-collection/004-facebook.png" alt="facebook"></a>
+                    <a href="https://www.linkedin.com/in/oleksandr-doroshchuk-4817867b/" target="_blank"><img src="../my-icons-collection/005-linkedin.png" alt="linkedin"></a>
+                    <a href="https://www.instagram.com/oleksandr.dorik/" target="_blank"><img src="../my-icons-collection/006-instagram.png" alt="instagram"></a>
+				</footer>
+			</section>
+		</div>
+	</div>
+	<div class="background_bottom">
+
+	</div>
+</body>
+</html>
