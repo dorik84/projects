@@ -1,0 +1,59 @@
+// :root {
+//     --delay:0;
+//   }
+body{
+    overflow: hidden;
+}
+
+.screen{
+    left:0px;
+    right:0px;
+    top:0px;
+    bottom:0px;
+    width: 100%;
+    height: 100vh;
+    background-color: lightcyan;
+    border: 1px solid black;
+    overflow: hidden;
+}
+
+dot{
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    display: block;
+    background-color: black;
+    filter: blur(1px);
+    border-radius: 50%;
+    
+    box-shadow: 0 0 0 0px rgba(0, 0, 0, 1);
+
+    animation:  0.5s infinite alternate pulsation;
+    // , 10s linear var(--delay)s infinite alternate move;
+} 
+
+@keyframes pulsation {
+    0% {
+        box-shadow: 0 0 2px 1px rgba(0, 0, 0, 0.60);
+    }
+    85% {
+        box-shadow: 0 0 2px 3px rgba(0, 0, 0, 0.9);
+    }
+    100% {
+        box-shadow: 0 0 2px 4px rgba(0, 0, 0, 0.95);
+    }
+}
+
+// @keyframes move{
+// 0%  {transform: translate(1px,10px);}
+// 10% {transform: translate(5px,5px);}
+// 20%{transform: translate(2px,0px);}
+// 30% {transform: translate(3px,7px);}
+// 40% {transform: translate(2px,8px);}
+// 50%{transform: translate(9px,2px);}
+// 60%{transform: translate(3px,8px);}
+// 70% {transform: translate(6px,2px);}
+// 80%{transform: translate(4px,1px);}
+// 90% {transform: translate(0px,4px);}
+// 100% {transform: translate(9px,0px);}
+// }
