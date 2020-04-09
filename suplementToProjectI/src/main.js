@@ -13,7 +13,7 @@ import "./../node_modules/@fortawesome/fontawesome-free/js/all.js"
 import "./../sass/styles.scss";
 
 let beams;
-let numberOfBeams = 36;
+let numberOfBeams = 2;
 let blackHole;
 
 

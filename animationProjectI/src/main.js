@@ -16,7 +16,7 @@ import "./../sass/styles.scss";
 let containerWidth;
 let containerHeight;
 
-const NUMBER_OF_DOTS = 10;
+const NUMBER_OF_DOTS = 2;
 const MAX_DELAY = 20;
 const DURATION_MIN=5;
 const DURATION_MAX=10;
@@ -82,27 +82,35 @@ function randPlus(){
     return random;
 }
 
+
 function getRndPlusMinus(min, max) {
     return randPlus()*Math.floor(Math.random() * (max - min + 1) ) + min;
 }
+
 
 function getRndInteger(min, max) {
     return (Math.random() * (max - min + 1) ) + min;
 }
 
 
-
 function mouseClick(e){
     let x = e.clientX;     
     let y = e.clientY; 
-    console.log(x, y);
 
-    let dotNodes=document.querySelectorAll("dot");
-    for (let dot of dotNodes) {
-        dot.style.transition= "all 2s";
-        dot.style.left = `${x}px`;
-        dot.style.top = `${y}px`;
-    }
+    $("dot").css("transition","all 2s");
+    $("dot").css({"left":`${x}px`,
+                 "top":`${y}px`});
+
+    $(".blackHole").show();   
+    addBeams();
+    spreadBeamsEvenly();
+    speedUpAnimation();
+
+    let half = $(".blackHole").width()/2;
+
+    $(".blackHole").css({"left":`${x-half}px`,
+                        "top":`${y-half}px`});
+    
     var timeoutID = window.setTimeout(spreadDots, 2000);
 }
 
@@ -130,11 +138,79 @@ function main() {
         initialPosition(dot);
         move(dot);
     }
+//------------------
+    blackHole = document.querySelectorAll(".blackHole")[0];
+    
+    addBeams();
+    spreadBeamsEvenly();
+    speedUpAnimation();
+//---------------------------
 }
-
-main();
 
 $(".screen").click(mouseClick);
 document.querySelectorAll(".screen")[0].addEventListener('touchstart', mouseClick);
-
 window.addEventListener('resize', onResize);
+
+//#######################################################################################
+function rnd (min,max){
+    return Math.random() * (max - min) + min;
+}
+
+
+let beams;
+let numberOfBeams = 36;
+let blackHole;
+let BEAM_DELAY = 1;
+let BEAM_ANIM_DURATION = 1;
+
+function spreadBeamsEvenly(){
+    let degToIncrement = 360/numberOfBeams;
+    let deg=0;
+    for(let beam of beams){   
+        console.log("spreadbeems");
+        deg += degToIncrement;
+        beam.style.transform = `rotate(${deg}deg)`;
+    }
+}
+
+
+function addBeams(){
+
+    blackHole.innerHTML = "";
+    console.log("before for");
+
+    for (let i = 0; i < numberOfBeams; i++){
+        let beam = document.createElement("div");
+        beam.classList.add("beam");
+        console.log("addBeams");
+        beam.style.animationDelay = "2s";
+        beam.style.setProperty('--i', `${rnd (0,BEAM_DELAY)}s`);
+        beam.style.setProperty('--d', `${BEAM_ANIM_DURATION}s`);
+        
+        blackHole.appendChild(beam);
+    }
+
+    beams = document.querySelectorAll(".beam");
+}
+
+
+function speedUpAnimation(){
+
+    let time = 1;
+    let timeoutID  = setInterval (function (){
+        $(".beam").css('--d', `${time}s`);
+        console.log("speedUP");
+        time-=0.1
+        if (time <= 0.1){
+            clearTimeout(timeoutID);
+            let timeout  = setTimeout (function(){resetSpeed()}, 1000);
+        }
+    },300);   
+}
+
+function resetSpeed(){
+    $(".beam").css('--d', `1s`);
+}
+
+
+main();
