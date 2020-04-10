@@ -4499,7 +4499,7 @@ dot {
   height: 100%;
   z-index: 2;
   filter: blur(2px);
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: black;
   animation: out 2s linear 0s normal forwards; }
 
 .blackHole:after {
@@ -4514,7 +4514,7 @@ dot {
   filter: blur(2px); }
 
 .exploide {
-  animation: wave 0.5s linear 2s normal forwards, shake 1s linear 1s normal infinite; }
+  animation: wave 0.3s linear 2s normal forwards, shake 1s linear 1s normal infinite; }
 
 .beam {
   position: relative;
@@ -4554,7 +4554,7 @@ dot {
     opacity: 0; }
   100% {
     transform: scale(0.3);
-    opacity: 0.5; } }
+    opacity: 1; } }
 
 @keyframes shake {
   0% {
@@ -4592,4 +4592,5 @@ dot {
   0% { }
   100% {
     opacity: 0;
-    box-shadow: 0 0 0 50px black; } }
+    filter: blur(1px);
+    box-shadow: 0 0 20px 100px black, inset 0 0 20px 40px black; } }

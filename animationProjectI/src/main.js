@@ -85,7 +85,6 @@ function initialPosition(object){
     let x = getRndInteger(1, containerWidth);
     let y = getRndInteger(1, containerHeight);
 
-    console.log("initial position",x,y);
     object.style.left = `${x}px`;
     object.style.top = `${y}px`;
 }
@@ -105,12 +104,10 @@ function spreadDots(){
 function addBeams(){
 
     blackHole.innerHTML = "";
-    console.log("before for");
 
     for (let i = 0; i < NUMBER_OF_BEAMS; i++){
         let beam = document.createElement("div");
         beam.classList.add("beam");
-        console.log("addBeams");
         beam.style.animationDelay = "2s";
         beam.style.setProperty('--i', `${rnd (0,BEAM_DELAY)}s`);
         beam.style.setProperty('--d', `${BEAM_ANIM_DURATION}s`);
@@ -126,7 +123,6 @@ function spreadBeamsEvenly(){
     let degToIncrement = 360/NUMBER_OF_BEAMS;
     let deg=0;
     for(let beam of beams){   
-        console.log("spreadbeems");
         deg += degToIncrement;
         beam.style.transform = `rotate(${deg}deg)`;
     }

@@ -55,7 +55,7 @@ dot{
     height: 100%;
     z-index: 2;
     filter: blur(2px);
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 1);
     animation: 
             out 2s linear 0s normal forwards;
             
@@ -75,7 +75,7 @@ dot{
 
 .exploide{
     animation: 
-        wave 0.5s linear 2s normal forwards,
+        wave 0.3s linear 2s normal forwards,
         shake 1s linear 1s normal infinite;
 }
 
@@ -127,7 +127,7 @@ dot{
     }
     100% {
         transform: scale(0.3);
-        opacity: 0.5;
+        opacity: 1;
     }
 }
 
@@ -164,6 +164,9 @@ dot{
     }
     100%{
         opacity: 0;
-        box-shadow: 0 0 0 50px rgba(0, 0, 0, 1);
+        filter: blur(1px);
+        box-shadow:
+            0 0 20px 100px rgba(0, 0, 0, 1),
+            inset 0 0 20px 40px rgba(0, 0, 0, 1);
     }
 }
