@@ -1,0 +1,21 @@
+/* .validator{
+    position: relative;
+    --content:null;
+    --top:null;
+    --fsize:null;
+    margin: auto;
+}
+
+.validator:after{
+    
+    display: inline-block;
+    position: absolute;
+    color: red;
+    width: 100%;
+    height: 100%;
+    top: var(--top);
+    font-size: var(--fsize);
+    z-index: 99;
+    background-color: blue;
+    content: "";
+} */
