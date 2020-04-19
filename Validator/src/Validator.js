@@ -1,21 +1,32 @@
 class Validator {
     constructor(regexp, message, className){
         this.regExp = RegExp(regexp);
+        //--------------------------------------------Creaing a wrapper around the input text field
+        this.wrapper = document.createElement("div");
+        this.wrapper.style.cssText = `position:relative; display:flex;`;
 
+        let cloneInput = document.querySelectorAll(`.${className}`)[0].cloneNode(true);
+        this.wrapper.appendChild(cloneInput);
+        (document.querySelectorAll(`.${className}`)[0].parentNode).replaceChild(this.wrapper, document.querySelectorAll(`.${className}`)[0]);
+        
+        //-------------------------------------------Initializing input field 
         this.input = document.querySelectorAll(`.${className}`)[0];
-        this.input.style.cssText = `transition: all 0.5s;`;
-        this.height = this.input.clientHeight;
-        this.width = this.input.clientWidth;
+        this.input.style.cssText = `display:inline-block; transition:all 0.5s;`;
 
-        this.msg = document.createElement("p");
-        this.msg.style.cssText = `color:#d9534f; margin:0; padding:0; font-size: 0.6rem; position:absolute; transform: translateY(${this.height+2}px); opacity:0; transition: all 0.5s;`;
+
+        let height = this.input.clientHeight;
+
+        //-------------------------------------------Creating warning message element
+        this.msg = document.createElement("span");
+        this.msg.style.cssText = `color:#d9534f; margin:0; padding:0; font-size: 0.6rem; position:absolute; transform: translateY(${height+2}px); opacity:0; display:block; transition: all 0.5s; z-index:5;`;
         this.msg.textContent = message;
-        this.input.parentElement.insertBefore(this.msg, this.input);
+        this.wrapper.appendChild(this.msg);
 
+        //-------------------------------------------Creating CheckMark sign element
         this.mark = document.createElement("span");
-        this.mark.style.cssText = `color:#5cb85c; margin:0; padding:0; font-size: 1rem; position:absolute; line-height:${this.height}px ; transform:translateX(${this.width+5}px); opacity:0; transition: all 0.5s;`;
+        this.mark.style.cssText = `color:#5cb85c; margin:0; padding:0 0 0 5px; font-size: 1rem;  line-height:${height}px ; opacity:0; display:inline; transition: all 0.5s; z-index:5;`;
         this.mark.innerHTML = "&#10003;";
-        (this.input.parentElement).insertBefore(this.mark, this.input);
+        this.wrapper.appendChild(this.mark);
     }
 
 //-------------------------------------------------------------------public methods
