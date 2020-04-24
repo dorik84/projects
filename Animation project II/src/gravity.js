@@ -2,7 +2,7 @@ class Gravity {
 
     constructor(x,y,a){
         //----------------------------------------parameters
-        this.acc = a; 
+        this.acceleration = a; 
         this.incrTime = 0.2;
         this.animationAndFunctionInterval = 1000;
         this.speedDecreaseIndex = 1;
@@ -12,27 +12,31 @@ class Gravity {
         this.current = {};
         this.next = {};
         this.initial = {};
+        this.acc = {};
+        this.speed = {};
+        this.timer = {};
+        this.totalDistance = {};
 
-        this.totalDistanceX = 0;
-        this.totalDistanceY = 0;
+        this.totalDistance.x = 0;
+        this.totalDistance.y = 0;
 
-        this.accX = a;
-        this.accY = a;
+        this.acc.x = a;
+        this.acc.y = a;
 
-        this.tX = 0;
-        this.tY = 0;
+        this.timer.x = 0;
+        this.timer.y = 0;
 
         this.initial.x = 0;
         this.initial.y = 0;
 
-        this.speedX = 0;
-        this.speedY = 0;
+        this.speed.x = 0;
+        this.speed.y = 0;
 
-        this.before.x = 0;
-        this.before.y = 0;
+        this.before.x = x;
+        this.before.y = y;
 
-        this.current.x = 0;
-        this.current.y = 0;
+        this.current.x = x;
+        this.current.y = y;
 
         //----------------------------------------DOM element
         this.grav = document.createElement("div");
@@ -60,71 +64,56 @@ class Gravity {
 
         if (!this.repeat){
             this.repeat = setInterval(()=> {
-                this.tX += this.incrTime;
-                this.tY += this.incrTime;
+                this.timer.x += this.incrTime;
+                this.timer.y += this.incrTime;
                 this.before = this.grav.getBoundingClientRect();
 
-                this.totalDistanceX = this.initial.x + (this.speedX / this.incrTime) * this.tX + (this.accX * Math.pow(this.tX, 2)) / 2;
-                this.totalDistanceY = this.initial.y + (this.speedY / this.incrTime) * this.tY + (this.accY * Math.pow(this.tY, 2)) / 2;
-                this.grav.style.transform = `translate(${this.totalDistanceX}px, ${this.totalDistanceY}px)`;
+                this.totalDistance.x = this.initial.x + (this.speed.x / this.incrTime) * this.timer.x + (this.acc.x * Math.pow(this.timer.x, 2)) / 2;
+                this.totalDistance.y = this.initial.y + (this.speed.y / this.incrTime) * this.timer.y + (this.acc.y * Math.pow(this.timer.y, 2)) / 2;
+                this.grav.style.transform = `translate(${this.totalDistance.x}px, ${this.totalDistance.y}px)`;
         
-                
-        
-                console.log(`totalDistanceX ${this.totalDistanceX} = ${this.initial.x} + (${this.speedX}/${this.incrTime})*${this.tX} + (${this.accX} * ${this.tX}^2))/2 `); 
-                console.log(`totalDistanceY ${this.totalDistanceY} = ${this.initial.y} + (${this.speedY}/${this.incrTime})*${this.tY} + (${this.accY} * ${this.tY}^2))/2 `); 
+                // console.log(`totalDistanceX ${this.totalDistance.x} = ${this.initial.x} + (${this.speed.x}/${this.incrTime})*${this.timer.x} + (${this.acc.x} * ${this.timer.x}^2))/2 `); 
+                // console.log(`totalDistanceY ${this.totalDistance.y} = ${this.initial.y} + (${this.speed.y}/${this.incrTime})*${this.timer.y} + (${this.acc.y} * ${this.timer.y}^2))/2 `); 
             }, this.animationAndFunctionInterval);
         }
     }
     
 
     //-----------------------------------------------------------------------------
-    defineAcceleration(){
-
-        let tempAccX = 0;
-        let tempAccY = 0;
-
+    defineAcceleration(z){
+        let tempAccZ = this.acceleration;
         let differenceX = this.next.x - this.current.x; // + right
         let differenceY = this.next.y - this.current.y; // + down
         let ratio = Math.abs(differenceX / differenceY);
-        
-        if (ratio >= 1) {
-            ratio = 1/ratio;
-            tempAccX = this.acc;
-            tempAccY = ratio * this.acc;
-        } else if (ratio < 1) {
-            tempAccX = ratio * this.acc;
-            tempAccY = this.acc;
-        }
 
+        let diff = this.next[z] - this.current[z];
+        
+        if (ratio < 1) {
+            tempAccZ = ratio * this.acceleration;
+        }
         //define acceleration and direction
-        this.accX = (differenceX > 0) ? tempAccX : -tempAccX ;
-        this.accY = (differenceY > 0) ? tempAccY : -tempAccY ;
+        this.acc[z] = (diff > 0) ? tempAccZ : -tempAccZ ;
+    }
+
+
+    shouldChange(z){
+        console.log(`${z}(${this.before[z]} < ${this.current[z]} && ${this.current[z]} > ${this.next[z]} && ${this.acc[z]} > 0)`);
+        
+        this.current = this.grav.getBoundingClientRect();
+        if ((this.before[z] < this.current[z] && this.current[z] > this.next[z] && this.acc[z] > 0) || (this.before[z] > this.current[z] && this.current[z] < this.next[z] && this.acc[z] < 0)){
+            this.defineAcceleration(z);
+
+            this.timer[z] = this.incrTime;
+            this.speed[z] = (this.current[z] - this.before[z]) * this.speedDecreaseIndex;
+            this.initial[z] = this.totalDistance[z]; 
+        }
     }
 
     //-----------------------------------------------------------------------------
     changeDirection(){
-        this.current = this.grav.getBoundingClientRect();
-        
-        console.log(`y(${this.before.y} < ${this.current.y} && ${this.current.y} > ${this.next.y} && ${this.accY} > 0)`);
 
-
-        if ((this.before.x < this.current.x && this.current.x > this.next.x && this.accX > 0) || (this.before.x > this.current.x && this.current.x < this.next.x  && this.accX < 0)){
-            this.defineAcceleration();
-
-            this.tX = this.incrTime;
-            this.speedX = (this.current.x - this.before.x) * this.speedDecreaseIndex;
-            this.initial.x = this.totalDistanceX;
-        }
-
-        if ((this.before.y < this.current.y && this.current.y > this.next.y && this.accY > 0) || (this.before.y > this.current.y && this.current.y < this.next.y && this.accY < 0)){
-            this.defineAcceleration();
-
-            this.tY = this.incrTime;
-            this.speedY = (this.current.y - this.before.y) * this.speedDecreaseIndex;
-            this.initial.y = this.totalDistanceY; 
-        }
-        console.log("this.totalDistanceX ",this.initial.x, this.totalDistanceX);
-        console.log("this.totalDistanceY ",this.initial.y, this.totalDistanceY);
+        this.shouldChange("x");
+        this.shouldChange("y");
     }
 //#################################################################################################
 
