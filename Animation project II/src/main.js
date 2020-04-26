@@ -14,12 +14,12 @@ import "./../sass/styles.scss";
 
 import {Gravity} from "./gravity.js";
 
-let obj = new Gravity(100,150,20);
+let obj = new Gravity(100,150,1);
 
 document.addEventListener("mousedown", (event)=>{
     let x = event.clientX;
     let y = event.clientY;
-    console.log (x,y);
+    // console.log (x,y);
     obj.run(x,y);
 });
 
