@@ -4,8 +4,6 @@ import "./../node_modules/bootstrap/dist/js/bootstrap.min.js";
 import $ from "jquery";
 import dragula from "dragula";
 
-import THREELib from "three-js";
-import * as dat from 'dat.gui';
 
 import "./../node_modules/popper.js/dist/popper.min.js";
 import "./../node_modules/@fortawesome/fontawesome-free/css/all.css"
