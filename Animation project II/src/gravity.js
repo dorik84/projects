@@ -3,18 +3,17 @@ class Gravity {
     constructor(x,y,a){
         //----------------------------------------parameters
         this.acceleration = a; 
-        this.incrTime = 0.2;
-        this.animationAndFunctionInterval = 100;
-        this.speedDecreaseIndex = 0.98;
+        this.incrTime = 0.1;
+        this.animationAndFunctionInterval = 500;
+        this.speedDecreaseIndex = 0.95;
         this.repeat = 0;
+        this.scan = 0;
+        this.gravArray = [];
 
-        this.before = {};
         this.current = {};
         this.next = {};
-        this.initial = {};
         this.acc = {};
         this.speed = {};
-        this.timer = {};
         this.totalDistance = {};
 
         this.totalDistance.x = 0;
@@ -23,20 +22,13 @@ class Gravity {
         this.acc.x = a;
         this.acc.y = a;
 
-        this.timer.x = 0;
-        this.timer.y = 0;
-
-        this.initial.x = 0;
-        this.initial.y = 0;
-
         this.speed.x = 0;
         this.speed.y = 0;
 
-        this.before.x = x;
-        this.before.y = y;
-
         this.current.x = x;
         this.current.y = y;
+
+        this.event = new Event('move');
 
         //----------------------------------------DOM element
         this.grav = document.createElement("div");
@@ -53,76 +45,103 @@ class Gravity {
         this.grav.style.cssText = cssStack;
         document.querySelectorAll("body")[0].appendChild(this.grav);
     }
-    
 
+    //----------------------------------------------------- get | set method
+    get x() {
+        return this.current.x;
+    }
+
+    get y() {
+        return this.current.y;
+    }
+
+    //----------------------------------------------------- public method
     run (x,y){
         
         this.next.x = x;
         this.next.y = y;
 
-        
-
         if (!this.repeat){
             this.repeat = setInterval(()=> {
+                this.grav.dispatchEvent(this.event);
                 this.changeDirection();
-                this.timer.x += this.incrTime;
-                this.timer.y += this.incrTime;
-                this.before = this.grav.getBoundingClientRect();
 
-                // this.totalDistance.x = this.initial.x + (this.speed.x / this.incrTime) * this.timer.x ;
-                // this.totalDistance.y = this.initial.y + (this.speed.y / this.incrTime) * this.timer.y ;
-                
-                this.totalDistance.x = this.initial.x + (this.speed.x / this.incrTime) * this.timer.x + (this.acc.x * Math.pow(this.timer.x, 2)) / 2;
-                this.totalDistance.y = this.initial.y + (this.speed.y / this.incrTime) * this.timer.y + (this.acc.y * Math.pow(this.timer.y, 2)) / 2;
+                this.totalDistance.x = this.totalDistance.x + this.speed.x + (this.acc.x * Math.pow(this.incrTime, 2)) / 2;
+                this.totalDistance.y = this.totalDistance.y + this.speed.y + (this.acc.y * Math.pow(this.incrTime, 2)) / 2;
                 this.grav.style.transform = `translate(${this.totalDistance.x}px, ${this.totalDistance.y}px)`;
         
-                console.log(`totalDistanceX ${this.totalDistance.x} = ${this.initial.x} + (${this.speed.x}/${this.incrTime})*${this.timer.x} + (${this.acc.x} * ${this.timer.x}^2))/2 `); 
-                console.log(`totalDistanceY ${this.totalDistance.y} = ${this.initial.y} + (${this.speed.y}/${this.incrTime})*${this.timer.y} + (${this.acc.y} * ${this.timer.y}^2))/2 `); 
+                // console.log(`totalDistanceX ${this.totalDistance.x} =  ${this.speed.x} + (${this.acc.x} * ${this.incrTime}^2))/2 `); 
+                // console.log(`totalDistanceY ${this.totalDistance.y} =  ${this.speed.y} + (${this.acc.y} * ${this.incrTime}^2))/2 `); 
+           
+                
             }, this.animationAndFunctionInterval);
         }
     }
+
+    scanAndFollow(radius){
+        this.scanNcreateArray();
+        
+        if (!this.scan){
+            this.scan = setInterval(() => {
+                
+                for (let grav of this.gravArray) {
+                    if (this.isClose(radius,grav)){
+                        grav.addEventListener("move", ()=>{
+                            let coord = grav.getBoundingClientRect();
+                            let x = coord.x;
+                            let y = coord.y;
+                            this.run(x,y);
+                        });
+                    }
+                }
+            }, this.animationAndFunctionInterval);
+        }
+
+    }
     
+    //--------------------------------------------------------- private methods
+    isClose(radius,elem){
+        let rect = elem.getBoundingClientRect();
+        let close = false;
+        if (Math.abs(rect.x - this.current.x) <= radius && Math.abs(rect.y - this.current.y) <= radius){
+            close = true;
+        }
+        // console.log(close);
+        return close;
+        
+    }
 
-    //-----------------------------------------------------------------------------
-    defineAcceleration(z){
-        let tempAccZ = this.acceleration; //Radius
+    scanNcreateArray(){
+        this.gravArray =  Array.from(document.querySelectorAll(".grav"));
+        let index = this.gravArray.indexOf(this.grav);
+        this.gravArray.splice(index, 1);
+    }
 
+    defineAcceleration(){
+        // find the intersection points of the line and the circle, where the radius of the circle is the acceleration,
+        // and the line connects the center of the circle and the point of final destination.
+        
         let differenceX = this.next.x - this.current.x; // + right
         let differenceY = this.next.y - this.current.y; // + down
 
+        let d = Math.pow(differenceX * this.acceleration, 2) / ( Math.pow(differenceY,2) + Math.pow(differenceX,2) ) ;
+        let x = (differenceX > 0) ? this.current.x + Math.sqrt(d) / 2 : this.current.x - Math.sqrt(d) / 2; 
+        let y = this.current.y + differenceY * (x - this.current.x) / differenceX;
 
-        let ratio = Math.abs(differenceX / differenceY);
-        let diff = this.next[z] - this.current[z];
-        
-        if (ratio < 1) {
-            tempAccZ = ratio * this.acceleration;
-        }
-        //define acceleration and direction
-        this.acc[z] = (diff > 0) ? tempAccZ : -tempAccZ ;
-    }
+        this.acc.x = x - this.current.x;
+        this.acc.y = y - this.current.y;
 
-
-    shouldChange(z){
-        this.current = this.grav.getBoundingClientRect();
-        // console.log(`${z}(${this.before[z]} < ${this.current[z]} && ${this.current[z]} > ${this.next[z]} && ${this.acc[z]} > 0)`);     
-        this.defineAcceleration(z);
-        // if ((this.before[z] < this.current[z] && this.current[z] > this.next[z] && this.acc[z] > 0) || (this.before[z] > this.current[z] && this.current[z] < this.next[z] && this.acc[z] < 0)){
-            
-
-            this.timer[z] = 0;
-            this.speed[z] = (this.speed[z] + this.acc[z]) * this.speedDecreaseIndex;;
-            // this.speed[z] = (this.current[z] - this.before[z]) * this.speedDecreaseIndex;
-            this.initial[z] = this.totalDistance[z]; 
-        // }
+        // console.log (this.acc.x , this.acc.y );
     }
 
     //-----------------------------------------------------------------------------
     changeDirection(){
+        this.current = this.grav.getBoundingClientRect();
 
-        this.shouldChange("x");
-        this.shouldChange("y");
+        this.defineAcceleration();
+
+        this.speed.x = (this.speed.x + this.acc.x) * this.speedDecreaseIndex;
+        this.speed.y = (this.speed.y + this.acc.y) * this.speedDecreaseIndex;
     }
-//#################################################################################################
-
 }
 export {Gravity};
