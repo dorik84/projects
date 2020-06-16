@@ -56,7 +56,7 @@ class Gravity {
     }
 
     //----------------------------------------------------- public method
-    run (x,y){
+    goTo (x,y){
         
         this.next.x = x;
         this.next.y = y;
@@ -90,7 +90,7 @@ class Gravity {
                             let coord = grav.getBoundingClientRect();
                             let x = coord.x;
                             let y = coord.y;
-                            this.run(x,y);
+                            this.goTo(x,y);
                         });
                     }
                 }

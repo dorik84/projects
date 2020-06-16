@@ -63,6 +63,9 @@ class Character {
 
         this.ship.style.cssText = cssStackShip;
         this.hero.appendChild(this.ship);
+
+        this.go();
+        this.focusOnCursor();
     }
 //-------------------------------------------------------get |set methods
 
@@ -77,13 +80,7 @@ class Character {
     go(){
 
         document.addEventListener("keypress", (e) => {
-            // console.log('keypress');
-            this.acc.right = this.acc.temp;
-            this.acc.left = -this.acc.temp;
-            this.acc.down = this.acc.temp;
-            this.acc.top = -this.acc.temp;
-
-
+            console.log("pressed");
             if (e.key == "d" ) {
                 this.timeIncr.right = this.timeIncrTemp;
             }
@@ -122,7 +119,7 @@ class Character {
 
         });
 
-
+        
         if (!this.forward){
             this.forward = setInterval( () => {
                 this.hero.dispatchEvent(this.event);
@@ -133,9 +130,8 @@ class Character {
                 this.limitAcceleration("down");
 
                 this.setBoundaries();
-                this.rotate();
 
-                // console.log(this.t.right, this.t.left, this.t.top, this.t.down);
+                console.log(this.t.right, this.t.left, this.t.top, this.t.down);
 
                 this.totalDistance.x = this.totalDistance.x + (this.acc.right * Math.pow(this.t.right, 2)) / 2 + (this.acc.left * Math.pow(this.t.left, 2)) / 2;
                 this.totalDistance.y = this.totalDistance.y + (this.acc.down * Math.pow(this.t.down, 2)) / 2 + (this.acc.top * Math.pow(this.t.top, 2)) / 2;
@@ -180,17 +176,19 @@ class Character {
 
     }
 
-    rotate () {
+    focusOnCursor () {
         document.querySelector("body").addEventListener('mousemove', (e)=>{
-            let hero = this.hero.getBoundingClientRect();
-            let x = (hero.x) + hero.width /2;
-            let y = (hero.y) + hero.height /2;
-            let radians = Math.atan2(e.pageX - x,  e.pageY - y);
-            this.degree = (radians * (180 / Math.PI) * -1) + 90;
-
-
-            console.log(this.degree);
+            let g = new Promise(resolve => {
+                let hero = this.hero.getBoundingClientRect();
+                let x = (hero.x) + hero.width /2;
+                let y = (hero.y) + hero.height /2;
+                let radians = Math.atan2(e.pageX - x,  e.pageY - y);
+                let degree = (radians * (180 / Math.PI) * -1) + 90;
+                resolve (degree);
+            });
+            g.then(degree => this.degree = degree)
         });
+
     }
     
 }
