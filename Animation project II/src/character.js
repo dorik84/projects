@@ -1,3 +1,5 @@
+import $ from "jquery";
+
 class Character {
 
     constructor(x,y,a){
@@ -18,10 +20,6 @@ class Character {
 
 
         this.acc = {};
-        this.acc.right = a;
-        this.acc.left = -a;
-        this.acc.down = a;
-        this.acc.top = -a;
         this.acc.temp = a;
 
 
@@ -37,6 +35,7 @@ class Character {
         this.t.top=0;
 
         //----------------------------------------DOM element
+        //------outer div of the Character
         this.hero = document.createElement("div");
         this.hero.classList.add("hero");
         let cssStackHero = `
@@ -51,6 +50,7 @@ class Character {
         this.hero.style.cssText = cssStackHero;
         document.querySelectorAll("body")[0].appendChild(this.hero);
 
+        //-----inner div/body of the Character
         this.ship = document.createElement("div");
         let cssStackShip = `
             position:absolute;
@@ -60,12 +60,26 @@ class Character {
             height:100%;
             transition: all ${this.animationInterval}ms linear;
         `;
-
         this.ship.style.cssText = cssStackShip;
         this.hero.appendChild(this.ship);
 
+        //-----canon
+        this.canon = document.createElement("div");
+        let cssStackCanon = `
+            position:absolute;
+            background:black;
+            transform: translateY(9px);
+            width:150%;
+            height:2px;
+        `;
+        this.canon.style.cssText = cssStackCanon;
+        this.ship.appendChild(this.canon);
+
+
+        //start private inner functions to control the Character instance
         this.go();
         this.focusOnCursor();
+        this.shoot();
     }
 //-------------------------------------------------------get |set methods
 
@@ -80,7 +94,7 @@ class Character {
     go(){
 
         document.addEventListener("keypress", (e) => {
-            console.log("pressed");
+            // console.log("pressed");
             if (e.key == "d" ) {
                 this.timeIncr.right = this.timeIncrTemp;
             }
@@ -131,12 +145,13 @@ class Character {
 
                 this.setBoundaries();
 
-                console.log(this.t.right, this.t.left, this.t.top, this.t.down);
+                // console.log(this.t.right, this.t.left, this.t.top, this.t.down);
 
                 this.totalDistance.x = this.totalDistance.x + (this.acc.right * Math.pow(this.t.right, 2)) / 2 + (this.acc.left * Math.pow(this.t.left, 2)) / 2;
                 this.totalDistance.y = this.totalDistance.y + (this.acc.down * Math.pow(this.t.down, 2)) / 2 + (this.acc.top * Math.pow(this.t.top, 2)) / 2;
 
-                // console.log(`${this.totalDistance.x} = ${this.totalDistance.x} + ${this.acc.right} * Math.pow(${this.t.right})  + (${this.acc.left} * Math.pow(${this.t.left}, 2)) / 2`);
+                console.log(`${this.totalDistance.x} = ${this.totalDistance.x} + ${this.acc.right} * Math.pow(${this.t.right})  + (${this.acc.left} * Math.pow(${this.t.left})) / 2`);
+                console.log(`${this.totalDistance.y} = ${this.totalDistance.y} + ${this.acc.down} * Math.pow(${this.t.top})  + (${this.acc.down} * Math.pow(${this.t.top})) / 2`);
                 
                 this.hero.style.transform = `translate(${this.totalDistance.x}px, ${this.totalDistance.y}px)`;
                 this.ship.style.transform = `rotate(${this.degree}deg)`; 
@@ -149,6 +164,51 @@ class Character {
     }
     //-------------------------private methods
 
+    shoot () {
+        document.addEventListener("click",(e)=> {
+            if (!this.hero.isShooting){
+                //get ship position coordinates
+                let {top,left} = this.hero.getBoundingClientRect();
+
+                //-----creating missel DOM element
+                this.bullet = document.createElement("div");
+                this.bullet.classList.add("bullet");
+                let cssStackBullet = `
+                    position:absolute;
+                    background:green;
+                    border-radius: 50% 50%;
+                    width:5px;
+                    height:5px;
+                    left:${left}px;
+                    top:${top}px;
+                    transform: translate(8px,7.5px);
+                `;
+                this.bullet.style.cssText = cssStackBullet;
+                document.querySelectorAll("body")[0].appendChild(this.bullet);
+                this.hero.isShooting = true;
+
+                //launch missel
+                setTimeout(()=>{
+                    // this.bullet.style.transition = "all 1000ms ease-in";
+                    // this.bullet.style.left = `${e.pageX}px`;
+                    // this.bullet.style.top = `${e.pageY}px`;
+                    $(".bullet").css({
+                        "transition" : "all 1000ms ease-in",
+                        "left" : `${e.pageX}px`,
+                        "top" : `${e.pageY}px`
+                    });
+                },1);
+                
+                
+                setTimeout(() => { 
+                    this.bullet.remove();
+                    this.hero.isShooting = false;
+                }, 1000);
+            }
+        
+        })
+    };
+
     limitAcceleration(toward){
         this.t[toward] = this.t[toward] + this.timeIncr[toward]/1000;
         (this.t[toward] > this.accMax)? this.t[toward]=this.accMax : this.t[toward];
@@ -159,20 +219,23 @@ class Character {
 
         let body = document.querySelectorAll('body')[0].getBoundingClientRect();
         let hero = this.hero.getBoundingClientRect();
-        // console.log(body.width,body.height);
-        // console.log(hero.x,hero.y);
+
+        this.acc.right = this.acc.temp;
+        this.acc.left = -this.acc.temp;
+        this.acc.down = this.acc.temp;
+        this.acc.top = -this.acc.temp;
 
         if (hero.x > body.width - 2*hero.width) {
             this.acc.right = 0;
         } else if (hero.x < 0 + hero.width) {
             this.acc.left = 0;
-        }
+        } 
 
         if (hero.y > body.height - 2*hero.width) {
             this.acc.down = 0;
         } else if (hero.y < 0 + hero.width) {
             this.acc.top = 0;
-        }
+        } 
 
     }
 
