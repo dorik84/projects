@@ -75,6 +75,8 @@ class Character {
         this.canon.style.cssText = cssStackCanon;
         this.ship.appendChild(this.canon);
 
+        this.bullet = null;
+        this.shot = null;
 
         //start private inner functions to control the Character instance
         this.go();
@@ -89,6 +91,8 @@ class Character {
     get y(){
         return this.hero.getBoundingClientRect().y;
     }
+
+
 
 //-------------------------------------------------------public methods
     go(){
@@ -163,6 +167,10 @@ class Character {
 
     }
     //-------------------------private methods
+    isShooting(){
+        return this.hero.isShooting;
+    }
+
 
     shoot () {
         document.addEventListener("click",(e)=> {
@@ -200,19 +208,23 @@ class Character {
                 },1);
                 
                 
-                setTimeout(() => { 
-                    this.bullet.remove();
-                    this.hero.isShooting = false;
+                this.shot = setTimeout(() => { 
+                    this.removeBullet();
                 }, 1000);
             }
         
         })
     };
+    removeBullet(){
+        this.bullet.remove();
+        this.hero.isShooting = false;
+        clearTimeout(this.shot);
+    }
 
     limitAcceleration(toward){
         this.t[toward] = this.t[toward] + this.timeIncr[toward]/1000;
-        (this.t[toward] > this.accMax)? this.t[toward]=this.accMax : this.t[toward];
-        (this.t[toward] < 0)? this.t[toward]=0 : this.t[toward];
+        (this.t[toward] > this.accMax)? this.t[toward] = this.accMax : this.t[toward];
+        (this.t[toward] < 0)? this.t[toward] = 0 : this.t[toward];
     }
 
     setBoundaries(){

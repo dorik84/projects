@@ -1,3 +1,5 @@
+import $ from "jquery";
+
 class Gravity {
 
     constructor(x,y,a){
@@ -96,10 +98,23 @@ class Gravity {
                 }
             }, this.animationAndFunctionInterval);
         }
-
     }
     
+    remove(){
+        this.grav.remove();
+        clearInterval(this.repeat);
+    }
+
+    isHit(x,y){
+        if (( x >= this.x && x <= this.x+20 ) && ( y >= this.y && y <= this.y+20 ))
+            return true;
+    }
+
     //--------------------------------------------------------- private methods
+
+
+
+
     isClose(radius,elem){
         let rect = elem.getBoundingClientRect();
         let close = false;

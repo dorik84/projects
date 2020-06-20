@@ -15,23 +15,47 @@ import {Character} from "./character.js";
 
 let hero = new Character(500,100,10);
 
+function getRandom() {
+    return Math.floor(Math.random() * 450) + 1;
+}
 
-
-let obj1 = new Gravity(150,150,25);
-let obj2 = new Gravity(450,350,25);
-let obj3 = new Gravity(350,450,25);
-let obj4 = new Gravity(250,250,25);
+let asteroidObj ={};
+let asteroidArray = [];
+let n = 0;
+let generator = setInterval(()=>{
+    asteroidObj[n] = new Gravity(getRandom(),getRandom(),25);
+    asteroidArray.push(asteroidObj[n]);
+    asteroidObj[n].goTo(hero.x,hero.y);
+    n++;
+},5000)
 
 
 
 
 let heroNode = document.querySelectorAll('.hero')[0];
 heroNode.addEventListener('move', () => {
-    obj1.goTo(hero.x,hero.y);
-    obj2.goTo(hero.x,hero.y);
-    obj3.goTo(hero.x,hero.y);
-    obj4.goTo(hero.x,hero.y);
+    // asteroid1.goTo(hero.x,hero.y);
+    // asteroid2.goTo(hero.x,hero.y);
+    // asteroid3.goTo(hero.x,hero.y);
+    // asteroid4.goTo(hero.x,hero.y);
+
+    
+    
+    if (hero.isShooting()){
+        let {x,y} = document.querySelector(".bullet").getBoundingClientRect();
+
+        asteroidArray.forEach((asteroid,key)=>{
+            if (asteroid.isHit(x,y)) {
+                asteroid.remove(); 
+                hero.removeBullet();
+                asteroidArray.splice(key, 1);
+            }
+        });
+    }
+
 });
+
+
 
 
 
