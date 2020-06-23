@@ -6,7 +6,7 @@ class Character {
         //----------------------------------------parameters
         this.animationInterval = 100;
         this.timeIncrTemp = 100;
-        this.accMax = 2;
+        this.accMax = 2.5;
         this.forward = 0;
         this.event = new Event('move');
         this.degree = 0;
@@ -79,7 +79,7 @@ class Character {
         this.shot = null;
 
         //start private inner functions to control the Character instance
-        this.go();
+        this.steering();
         this.focusOnCursor();
         this.shoot();
     }
@@ -95,7 +95,7 @@ class Character {
 
 
 //-------------------------------------------------------public methods
-    go(){
+    steering(){
 
         document.addEventListener("keypress", (e) => {
             // console.log("pressed");
@@ -137,35 +137,31 @@ class Character {
 
         });
 
-        
-        if (!this.forward){
-            this.forward = setInterval( () => {
-                this.hero.dispatchEvent(this.event);
-
-                this.limitAcceleration("right");
-                this.limitAcceleration("left");
-                this.limitAcceleration("top");
-                this.limitAcceleration("down");
-
-                this.setBoundaries();
-
-                // console.log(this.t.right, this.t.left, this.t.top, this.t.down);
-
-                this.totalDistance.x = this.totalDistance.x + (this.acc.right * Math.pow(this.t.right, 2)) / 2 + (this.acc.left * Math.pow(this.t.left, 2)) / 2;
-                this.totalDistance.y = this.totalDistance.y + (this.acc.down * Math.pow(this.t.down, 2)) / 2 + (this.acc.top * Math.pow(this.t.top, 2)) / 2;
-
-                // console.log(`${this.totalDistance.x} = ${this.totalDistance.x} + ${this.acc.right} * Math.pow(${this.t.right})  + (${this.acc.left} * Math.pow(${this.t.left})) / 2`);
-                // console.log(`${this.totalDistance.y} = ${this.totalDistance.y} + ${this.acc.down} * Math.pow(${this.t.top})  + (${this.acc.down} * Math.pow(${this.t.top})) / 2`);
-                
-                this.hero.style.transform = `translate(${this.totalDistance.x}px, ${this.totalDistance.y}px)`;
-                this.ship.style.transform = `rotate(${this.degree}deg)`; 
-                
-            
-            }, this.animationInterval);
-            
-        }
-
     }
+
+    engine () {
+        this.hero.dispatchEvent(this.event);
+
+        this.limitAcceleration("right");
+        this.limitAcceleration("left");
+        this.limitAcceleration("top");
+        this.limitAcceleration("down");
+
+        this.setBoundaries();
+
+        // console.log(this.t.right, this.t.left, this.t.top, this.t.down);
+
+        this.totalDistance.x = this.totalDistance.x + (this.acc.right * Math.pow(this.t.right, 2)) / 2 + (this.acc.left * Math.pow(this.t.left, 2)) / 2;
+        this.totalDistance.y = this.totalDistance.y + (this.acc.down * Math.pow(this.t.down, 2)) / 2 + (this.acc.top * Math.pow(this.t.top, 2)) / 2;
+
+        // console.log(`${this.totalDistance.x} = ${this.totalDistance.x} + ${this.acc.right} * Math.pow(${this.t.right})  + (${this.acc.left} * Math.pow(${this.t.left})) / 2`);
+        // console.log(`${this.totalDistance.y} = ${this.totalDistance.y} + ${this.acc.down} * Math.pow(${this.t.top})  + (${this.acc.down} * Math.pow(${this.t.top})) / 2`);
+        
+        this.hero.style.transform = `translate(${this.totalDistance.x}px, ${this.totalDistance.y}px)`;
+        this.ship.style.transform = `rotate(${this.degree}deg)`;  
+    }
+
+    
     //-------------------------private methods
     isShooting(){
         return this.hero.isShooting;
@@ -202,8 +198,8 @@ class Character {
                     // this.bullet.style.top = `${e.pageY}px`;
                     $(".bullet").css({
                         "transition" : "all 1000ms ease-in",
-                        "left" : `${e.pageX}px`,
-                        "top" : `${e.pageY}px`
+                        "left" : `${e.pageX-8}px`,
+                        "top" : `${e.pageY-7.5}px`
                     });
                 },1);
                 

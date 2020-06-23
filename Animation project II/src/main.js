@@ -13,7 +13,7 @@ import "./../sass/styles.scss";
 import {Gravity} from "./gravity.js";
 import {Character} from "./character.js";
 
-let hero = new Character(500,100,10);
+let hero = new Character(500,100,1);
 
 function getRandom() {
     return Math.floor(Math.random() * 450) + 1;
@@ -22,30 +22,18 @@ function getRandom() {
 let asteroidObj ={};
 let asteroidArray = [];
 let n = 0;
-let generator = setInterval(()=>{
-  
+setInterval(()=>{
+    //create asteroids every 5 sec
     if (asteroidArray.length < 11){
-        asteroidObj[n] = new Gravity(getRandom(),getRandom(),25);
+        asteroidObj[n] = new Gravity(getRandom(),getRandom(),0.5);
         asteroidArray.push(asteroidObj[n]);
         n++;
     }
-},5000)
+},3000)
 
-
-
-
-let heroNode = document.querySelectorAll('.hero')[0];
-heroNode.addEventListener('move', () => {
-    asteroidArray.forEach(asteroid => {
-        asteroid.goTo(hero.x,hero.y);
-    })
-    
-
-    
-    
+function shooting(){
     if (hero.isShooting()){
         let {x,y} = document.querySelector(".bullet").getBoundingClientRect();
-
         asteroidArray.forEach((asteroid,key)=>{
             if (asteroid.isHit(x,y)) {
                 asteroid.remove(); 
@@ -54,8 +42,21 @@ heroNode.addEventListener('move', () => {
             }
         });
     }
+}
 
-});
+
+let renderer = setInterval(()=>{    
+
+    //follow spaceship
+    asteroidArray.forEach(asteroid => {
+        asteroid.goTo(hero.x,hero.y);
+    });
+
+    //shooting processor
+    hero.engine();
+    shooting();
+
+},20);
 
 
 

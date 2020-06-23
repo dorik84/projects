@@ -63,21 +63,16 @@ class Gravity {
         this.next.x = x;
         this.next.y = y;
 
-        if (!this.repeat){
-            this.repeat = setInterval(()=> {
-                this.grav.dispatchEvent(this.event);
-                this.changeDirection();
+        this.grav.dispatchEvent(this.event);
+        this.changeDirection();
 
-                this.totalDistance.x = this.totalDistance.x + this.speed.x + (this.acc.x * Math.pow(this.incrTime, 2)) / 2;
-                this.totalDistance.y = this.totalDistance.y + this.speed.y + (this.acc.y * Math.pow(this.incrTime, 2)) / 2;
-                this.grav.style.transform = `translate(${this.totalDistance.x}px, ${this.totalDistance.y}px)`;
-        
-                // console.log(`totalDistanceX ${this.totalDistance.x} =  ${this.speed.x} + (${this.acc.x} * ${this.incrTime}^2))/2 `); 
-                // console.log(`totalDistanceY ${this.totalDistance.y} =  ${this.speed.y} + (${this.acc.y} * ${this.incrTime}^2))/2 `); 
+        this.totalDistance.x = this.totalDistance.x + this.speed.x + (this.acc.x * Math.pow(this.incrTime, 2)) / 2;
+        this.totalDistance.y = this.totalDistance.y + this.speed.y + (this.acc.y * Math.pow(this.incrTime, 2)) / 2;
+        this.grav.style.transform = `translate(${this.totalDistance.x}px, ${this.totalDistance.y}px)`;
+
+        // console.log(`totalDistanceX ${this.totalDistance.x} =  ${this.speed.x} + (${this.acc.x} * ${this.incrTime}^2))/2 `); 
+        // console.log(`totalDistanceY ${this.totalDistance.y} =  ${this.speed.y} + (${this.acc.y} * ${this.incrTime}^2))/2 `); 
            
-                
-            }, this.animationAndFunctionInterval);
-        }
     }
 
     scanAndFollow(radius){
