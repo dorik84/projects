@@ -154,8 +154,8 @@ class Character {
                 this.totalDistance.x = this.totalDistance.x + (this.acc.right * Math.pow(this.t.right, 2)) / 2 + (this.acc.left * Math.pow(this.t.left, 2)) / 2;
                 this.totalDistance.y = this.totalDistance.y + (this.acc.down * Math.pow(this.t.down, 2)) / 2 + (this.acc.top * Math.pow(this.t.top, 2)) / 2;
 
-                console.log(`${this.totalDistance.x} = ${this.totalDistance.x} + ${this.acc.right} * Math.pow(${this.t.right})  + (${this.acc.left} * Math.pow(${this.t.left})) / 2`);
-                console.log(`${this.totalDistance.y} = ${this.totalDistance.y} + ${this.acc.down} * Math.pow(${this.t.top})  + (${this.acc.down} * Math.pow(${this.t.top})) / 2`);
+                // console.log(`${this.totalDistance.x} = ${this.totalDistance.x} + ${this.acc.right} * Math.pow(${this.t.right})  + (${this.acc.left} * Math.pow(${this.t.left})) / 2`);
+                // console.log(`${this.totalDistance.y} = ${this.totalDistance.y} + ${this.acc.down} * Math.pow(${this.t.top})  + (${this.acc.down} * Math.pow(${this.t.top})) / 2`);
                 
                 this.hero.style.transform = `translate(${this.totalDistance.x}px, ${this.totalDistance.y}px)`;
                 this.ship.style.transform = `rotate(${this.degree}deg)`; 

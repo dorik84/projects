@@ -23,10 +23,12 @@ let asteroidObj ={};
 let asteroidArray = [];
 let n = 0;
 let generator = setInterval(()=>{
-    asteroidObj[n] = new Gravity(getRandom(),getRandom(),25);
-    asteroidArray.push(asteroidObj[n]);
-    asteroidObj[n].goTo(hero.x,hero.y);
-    n++;
+  
+    if (asteroidArray.length < 11){
+        asteroidObj[n] = new Gravity(getRandom(),getRandom(),25);
+        asteroidArray.push(asteroidObj[n]);
+        n++;
+    }
 },5000)
 
 
@@ -34,10 +36,10 @@ let generator = setInterval(()=>{
 
 let heroNode = document.querySelectorAll('.hero')[0];
 heroNode.addEventListener('move', () => {
-    // asteroid1.goTo(hero.x,hero.y);
-    // asteroid2.goTo(hero.x,hero.y);
-    // asteroid3.goTo(hero.x,hero.y);
-    // asteroid4.goTo(hero.x,hero.y);
+    asteroidArray.forEach(asteroid => {
+        asteroid.goTo(hero.x,hero.y);
+    })
+    
 
     
     
