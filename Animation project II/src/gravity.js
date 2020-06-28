@@ -36,13 +36,8 @@ class Gravity {
         this.grav = document.createElement("div");
         this.grav.classList.add("grav");
         let cssStack = `
-            position:absolute;
-            background: black;
-            width:20px;
-            height:20px;
             left:${x}px;
             top:${y}px;
-            transition: all ${this.animationAndFunctionInterval}ms linear;
         `;
         this.grav.style.cssText = cssStack;
         document.querySelectorAll("body")[0].appendChild(this.grav);
@@ -95,21 +90,22 @@ class Gravity {
         }
     }
     
-    remove(){
-        this.grav.remove();
-        clearInterval(this.repeat);
-    }
+
 
     isHit(x,y){
-        if (( x >= this.x && x <= this.x+20 ) && ( y >= this.y && y <= this.y+20 ))
+        let {left, top, right, bottom} = this.grav.getBoundingClientRect();
+        if (( x >= left && x <= right ) && ( y >= top && y <= bottom ))
             return true;
     }
 
     //--------------------------------------------------------- private methods
 
+    remove(){
+        this.grav.remove();
+        clearInterval(this.repeat);
+    }
 
-
-
+/* 
     isClose(radius,elem){
         let rect = elem.getBoundingClientRect();
         let close = false;
@@ -126,10 +122,12 @@ class Gravity {
         let index = this.gravArray.indexOf(this.grav);
         this.gravArray.splice(index, 1);
     }
+*/
 
     defineAcceleration(){
         // find the intersection points of the line and the circle, where the radius of the circle is the acceleration,
-        // and the line connects the center of the circle and the point of final destination.
+        // and the line connects the center of the circle and the point of final destination. Returns acceleration parameters
+        // for x and y axises
         
         let differenceX = this.next.x - this.current.x; // + right
         let differenceY = this.next.y - this.current.y; // + down

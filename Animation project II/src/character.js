@@ -5,8 +5,8 @@ class Character {
     constructor(x,y,a){
         //----------------------------------------parameters
         this.animationInterval = 100;
-        this.timeIncrTemp = 100;
-        this.accMax = 2.5;
+        this.acceleration = 50;
+        this.speedMax = 3;
         this.forward = 0;
         this.event = new Event('move');
         this.degree = 0;
@@ -39,42 +39,19 @@ class Character {
         this.hero = document.createElement("div");
         this.hero.classList.add("hero");
         let cssStackHero = `
-            position:absolute;
-            position:relative;
-            width:20px;
-            height:20px;
             left:${x}px;
             top:${y}px;
-            transition: all ${this.animationInterval}ms linear;
         `;
         this.hero.style.cssText = cssStackHero;
         document.querySelectorAll("body")[0].appendChild(this.hero);
 
         //-----inner div/body of the Character
         this.ship = document.createElement("div");
-        let cssStackShip = `
-            position:absolute;
-            background:red;
-            border-radius: 0 5px 5px 0;
-            width:100%;
-            height:100%;
-            transition: all ${this.animationInterval}ms linear;
-        `;
-        this.ship.style.cssText = cssStackShip;
         this.hero.appendChild(this.ship);
 
         //-----canon
         this.canon = document.createElement("div");
-        let cssStackCanon = `
-            position:absolute;
-            background:black;
-            transform: translateY(9px);
-            width:150%;
-            height:2px;
-        `;
-        this.canon.style.cssText = cssStackCanon;
         this.ship.appendChild(this.canon);
-
         this.bullet = null;
         this.shot = null;
 
@@ -98,21 +75,22 @@ class Character {
     steering(){
 
         document.addEventListener("keypress", (e) => {
-            // console.log("pressed");
+            this.hero.dispatchEvent(this.event);
+
             if (e.key == "d" ) {
-                this.timeIncr.right = this.timeIncrTemp;
+                this.timeIncr.right = this.acceleration;
             }
 
             if (e.key == "a" ) {
-                this.timeIncr.left = this.timeIncrTemp;
+                this.timeIncr.left = this.acceleration;
             }
 
             if (e.key == "s" ) {
-                this.timeIncr.down = this.timeIncrTemp;
+                this.timeIncr.down = this.acceleration;
             }
 
             if (e.key == "w" ) {
-                this.timeIncr.top = this.timeIncrTemp;
+                this.timeIncr.top = this.acceleration;
             }
 
         });
@@ -120,27 +98,25 @@ class Character {
         document.addEventListener("keyup",(e) => {
             
             if (e.key == "d" ) {
-                this.timeIncr.right = -this.timeIncrTemp;
+                this.timeIncr.right = -this.acceleration;
             }
 
             if (e.key == "a" ) {
-                this.timeIncr.left = -this.timeIncrTemp;
+                this.timeIncr.left = -this.acceleration;
             }
 
             if (e.key == "s" ) {
-                this.timeIncr.down = -this.timeIncrTemp;
+                this.timeIncr.down = -this.acceleration;
             }
 
             if (e.key == "w" ) {
-                this.timeIncr.top = -this.timeIncrTemp;
+                this.timeIncr.top = -this.acceleration;
             }
-
         });
 
     }
 
     engine () {
-        this.hero.dispatchEvent(this.event);
 
         this.limitAcceleration("right");
         this.limitAcceleration("left");
@@ -161,13 +137,12 @@ class Character {
         this.ship.style.transform = `rotate(${this.degree}deg)`;  
     }
 
-    
-    //-------------------------private methods
     isShooting(){
         return this.hero.isShooting;
     }
 
 
+    //-------------------------private methods
     shoot () {
         document.addEventListener("click",(e)=> {
             if (!this.hero.isShooting){
@@ -178,14 +153,8 @@ class Character {
                 this.bullet = document.createElement("div");
                 this.bullet.classList.add("bullet");
                 let cssStackBullet = `
-                    position:absolute;
-                    background:green;
-                    border-radius: 50% 50%;
-                    width:5px;
-                    height:5px;
                     left:${left}px;
                     top:${top}px;
-                    transform: translate(8px,7.5px);
                 `;
                 this.bullet.style.cssText = cssStackBullet;
                 document.querySelectorAll("body")[0].appendChild(this.bullet);
@@ -193,9 +162,6 @@ class Character {
 
                 //launch missel
                 setTimeout(()=>{
-                    // this.bullet.style.transition = "all 1000ms ease-in";
-                    // this.bullet.style.left = `${e.pageX}px`;
-                    // this.bullet.style.top = `${e.pageY}px`;
                     $(".bullet").css({
                         "transition" : "all 1000ms ease-in",
                         "left" : `${e.pageX-8}px`,
@@ -211,17 +177,21 @@ class Character {
         
         })
     };
+
+
     removeBullet(){
         this.bullet.remove();
         this.hero.isShooting = false;
         clearTimeout(this.shot);
     }
 
+
     limitAcceleration(toward){
         this.t[toward] = this.t[toward] + this.timeIncr[toward]/1000;
-        (this.t[toward] > this.accMax)? this.t[toward] = this.accMax : this.t[toward];
+        (this.t[toward] > this.speedMax)? this.t[toward] = this.speedMax : this.t[toward];
         (this.t[toward] < 0)? this.t[toward] = 0 : this.t[toward];
     }
+
 
     setBoundaries(){
 

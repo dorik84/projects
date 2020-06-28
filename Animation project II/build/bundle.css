@@ -4461,3 +4461,40 @@ body {
   background: whitesmoke;
   position: relative;
   cursor: crosshair; }
+
+.hero {
+  position: absolute;
+  position: relative;
+  width: 20px;
+  height: 20px;
+  transition: all 200ms linear; }
+
+.hero > div {
+  position: absolute;
+  background: red;
+  border-radius: 0 5px 5px 0;
+  width: 100%;
+  height: 100%;
+  transition: all 200ms linear; }
+
+.hero > div > div {
+  position: absolute;
+  background: black;
+  transform: translateY(9px);
+  width: 150%;
+  height: 2px; }
+
+.bullet {
+  position: absolute;
+  background: green;
+  border-radius: 50% 50%;
+  width: 5px;
+  height: 5px;
+  transform: translate(10px, 7.5px); }
+
+.grav {
+  position: absolute;
+  background: black;
+  width: 50px;
+  height: 50px;
+  transition: all 500ms linear; }

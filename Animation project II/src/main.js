@@ -15,8 +15,8 @@ import {Character} from "./character.js";
 
 let hero = new Character(500,100,1);
 
-function getRandom() {
-    return Math.floor(Math.random() * 450) + 1;
+function getRandom(max) {
+    return (Math.random() * max);
 }
 
 let asteroidObj ={};
@@ -25,7 +25,7 @@ let n = 0;
 setInterval(()=>{
     //create asteroids every 5 sec
     if (asteroidArray.length < 11){
-        asteroidObj[n] = new Gravity(getRandom(),getRandom(),0.5);
+        asteroidObj[n] = new Gravity(getRandom(450),getRandom(450),getRandom(0.3));
         asteroidArray.push(asteroidObj[n]);
         n++;
     }
