@@ -163,7 +163,6 @@ class Character {
                 //launch missel
                 setTimeout(()=>{
                     $(".bullet").css({
-                        "transition" : "all 1000ms ease-in",
                         "left" : `${e.pageX-8}px`,
                         "top" : `${e.pageY-7.5}px`
                     });
@@ -172,7 +171,7 @@ class Character {
                 
                 this.shot = setTimeout(() => { 
                     this.removeBullet();
-                }, 1000);
+                }, 500);
             }
         
         })
@@ -196,22 +195,23 @@ class Character {
     setBoundaries(){
 
         let body = document.querySelectorAll('body')[0].getBoundingClientRect();
-        let hero = this.hero.getBoundingClientRect();
+        let {left, top, right, bottom, width, height} = this.hero.getBoundingClientRect();
 
         this.acc.right = this.acc.temp;
         this.acc.left = -this.acc.temp;
         this.acc.down = this.acc.temp;
         this.acc.top = -this.acc.temp;
 
-        if (hero.x > body.width - 2*hero.width) {
+        if (right > body.width - width) {
+            
             this.acc.right = 0;
-        } else if (hero.x < 0 + hero.width) {
+        } else if (left < 0 + width) {
             this.acc.left = 0;
         } 
 
-        if (hero.y > body.height - 2*hero.width) {
+        if (bottom > screen.height - height) {
             this.acc.down = 0;
-        } else if (hero.y < 0 + hero.width) {
+        } else if (top < 0 + height) {
             this.acc.top = 0;
         } 
 

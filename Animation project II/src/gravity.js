@@ -92,9 +92,9 @@ class Gravity {
     
 
 
-    isHit(x,y){
+    isHit(x,y,size){
         let {left, top, right, bottom} = this.grav.getBoundingClientRect();
-        if (( x >= left && x <= right ) && ( y >= top && y <= bottom ))
+        if (( x + size >= left && x <= right ) && ( y + size >= top && y <= bottom ))
             return true;
     }
 

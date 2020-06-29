@@ -14,39 +14,66 @@ import {Gravity} from "./gravity.js";
 import {Character} from "./character.js";
 
 let hero = new Character(500,100,1);
+let score1 = 0;
+let score2 = 0;
+const ASTEROID_MAX_NUMBER = 11;
+const ASTEROID_SPAM_INTERVAL = 2000;
+const RENDER_INTERVAL = 20;
 
 function getRandom(max) {
     return (Math.random() * max);
 }
 
-let asteroidObj ={};
+let asteroidObj = {};
 let asteroidArray = [];
 let n = 0;
-setInterval(()=>{
-    //create asteroids every 5 sec
-    if (asteroidArray.length < 11){
-        asteroidObj[n] = new Gravity(getRandom(450),getRandom(450),getRandom(0.3));
+
+setInterval(() => {
+    //create asteroids every 2 sec
+    if (asteroidArray.length < ASTEROID_MAX_NUMBER){
+        asteroidObj[n] = new Gravity(getRandom(450),getRandom(450),getRandom(0.5));
         asteroidArray.push(asteroidObj[n]);
         n++;
     }
-},3000)
+}, ASTEROID_SPAM_INTERVAL);
 
 function shooting(){
     if (hero.isShooting()){
-        let {x,y} = document.querySelector(".bullet").getBoundingClientRect();
-        asteroidArray.forEach((asteroid,key)=>{
-            if (asteroid.isHit(x,y)) {
+        let {x,y,width} = document.querySelector(".bullet").getBoundingClientRect();
+        asteroidArray.forEach((asteroid,key) => {
+            if (asteroid.isHit(x, y, width)) {
                 asteroid.remove(); 
                 hero.removeBullet();
                 asteroidArray.splice(key, 1);
+                $('#score1').text(function(){
+                    score1++;
+                    return score1;
+                });
             }
+
         });
     }
 }
 
+function collide(){
+
+    let {x,y,width} = document.querySelector(".hero").getBoundingClientRect();
+    asteroidArray.forEach((asteroid,key) => {
+        if (asteroid.isHit(x, y, width)) {
+            asteroid.remove(); 
+            // hero.removeBullet();
+            asteroidArray.splice(key, 1);
+            $('#score2').text(function(){
+                score2++;
+                return score2;
+            });
+        }
+    });
+}
+
 
 let renderer = setInterval(()=>{    
-
+    
     //follow spaceship
     asteroidArray.forEach(asteroid => {
         asteroid.goTo(hero.x,hero.y);
@@ -55,8 +82,9 @@ let renderer = setInterval(()=>{
     //shooting processor
     hero.engine();
     shooting();
+    collide();
 
-},20);
+}, RENDER_INTERVAL);
 
 
 

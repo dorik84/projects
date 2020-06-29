@@ -1,6 +1,6 @@
 $animationInterval: 200ms;
 $animationIntervalGrav: 500ms;
-$gravSize: 50px;
+$gravSize: 20px;
 $heroSize: 20px;
 $bulletSize: 5px;
 
@@ -48,6 +48,7 @@ body{
     width:$bulletSize;
     height:$bulletSize;
     transform: translate($heroSize/2,$heroSize/2-$bulletSize/2);
+    transition : all 500ms ease-in,
 }
 
 //gravity objects css
