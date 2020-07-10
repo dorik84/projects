@@ -165,6 +165,8 @@ class Character {
                     $(".bullet").css({
                         "left" : `${e.pageX-8}px`,
                         "top" : `${e.pageY-7.5}px`
+                        // "left" : `1000px`,
+                        // "top" : `${Math.tan(this.degree)*1000}px`
                     });
                 },1);
                 
@@ -225,6 +227,7 @@ class Character {
                 let y = (hero.y) + hero.height /2;
                 let radians = Math.atan2(e.pageX - x,  e.pageY - y);
                 let degree = (radians * (180 / Math.PI) * -1) + 90;
+                console.log(degree);
                 resolve (degree);
             });
             g.then(degree => this.degree = degree)

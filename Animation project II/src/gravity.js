@@ -8,9 +8,9 @@ class Gravity {
         this.incrTime = 0.1;
         this.animationAndFunctionInterval = 500;
         this.speedDecreaseIndex = 0.95;
-        this.repeat = 0;
-        this.scan = 0;
-        this.gravArray = [];
+        // this.repeat = 0;
+        // this.scan = 0;
+        // this.gravArray = [];
 
         this.current = {};
         this.next = {};
@@ -66,10 +66,10 @@ class Gravity {
         this.grav.style.transform = `translate(${this.totalDistance.x}px, ${this.totalDistance.y}px)`;
 
         // console.log(`totalDistanceX ${this.totalDistance.x} =  ${this.speed.x} + (${this.acc.x} * ${this.incrTime}^2))/2 `); 
-        // console.log(`totalDistanceY ${this.totalDistance.y} =  ${this.speed.y} + (${this.acc.y} * ${this.incrTime}^2))/2 `); 
-           
+        // console.log(`totalDistanceY ${this.totalDistance.y} =  ${this.speed.y} + (${this.acc.y} * ${this.incrTime}^2))/2 `);   
     }
 
+    /*
     scanAndFollow(radius){
         this.scanNcreateArray();
         
@@ -89,7 +89,7 @@ class Gravity {
             }, this.animationAndFunctionInterval);
         }
     }
-    
+    */
 
 
     isHit(x,y,size){
@@ -102,7 +102,7 @@ class Gravity {
 
     remove(){
         this.grav.remove();
-        clearInterval(this.repeat);
+        // clearInterval(this.repeat);
     }
 
 /* 
