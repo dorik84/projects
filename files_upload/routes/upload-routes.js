@@ -1,24 +1,10 @@
-const express = require("express");
-const fileUpload = require ("express-fileupload");
+const router = require('express').Router();
 const path = require('path');
 const util = require('util');
 
-const PORT = 5000;
-const app = express();
-
-//---------------------------------------midleware
-app.use(fileUpload());
-
-app.use(express.static("public"));
 
 
-//--------------------------------------get
-app.get("/",(req,res)=>{
-    res.sendFile(__dirname + '/index.html');
-});
-
-//--------------------------------------post
-app.post("/upload-files", async (req, res)=>{
+router.post("/", async (req, res)=>{
 
     try {
 
@@ -30,7 +16,6 @@ app.post("/upload-files", async (req, res)=>{
         const fileName = file.name;
         const fileSize = file.size;
         const extension = path.extname(fileName);
-        console.log(extension);
         const allowedExtensions = /jpg|jpeg|png|gif/;
         const md5 = file.md5;
         const url = "/uploads/"+ md5 + extension;
@@ -51,14 +36,10 @@ app.post("/upload-files", async (req, res)=>{
             message: 'File uploaded!',
             url: url});
         
-        
-
     } catch (err) {
         console.log (err);
         res.status(500).json({message: err})
     }
 });
 
-app.listen (PORT, ()=>{
-  console.log(`listening on port ${PORT}`);
-})
+module.exports = router;
