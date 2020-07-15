@@ -15,9 +15,16 @@ router.get('/logout', (req, res) => {
 });
 
 router.post('/login',
-  passport.authenticate('local', { successRedirect: '/profile',
-                                   failureRedirect: '/auth/login'
-                                })
+    // passport.authenticate('local'), (req,res) =>{
+    //     console.log("!!!!!!!!!!!!!!" + req);
+    //     if (!req.user) res.redirect('/login');
+    //     else {
+    //         res.redirect('/');
+    //     }
+    // });
+    passport.authenticate('local', { successRedirect: '/',
+                                   failureRedirect: '/auth/login',
+                                   failureFlash: true })
 );
 
 router.get('/register', (req, res) => {

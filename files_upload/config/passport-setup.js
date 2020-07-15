@@ -32,6 +32,7 @@ const verifyCallback = (email, password, done) => {
                 return done(null, user);
             }
         })
+        .catch(err=>console.log(err));
   };
 
   const customFields = {
