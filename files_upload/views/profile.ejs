@@ -24,7 +24,11 @@
             <h1>Welcome to your profile, <%= user.email %></h1>
         </header>
         <main>
-            <!-- <img src="<%= user.thumbnail %>" /> -->
+            <% user.images.forEach( img => { %>
+                <a href="#">
+                    <img src=<%= img %> alt="">
+                </a>
+            <% }) %>
 
         </main>
     </body>

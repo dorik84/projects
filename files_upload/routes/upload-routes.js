@@ -2,6 +2,7 @@ const router = require('express').Router();
 const path = require('path');
 const util = require('util');
 const fs = require('fs');
+const User = require('../config/user-model');
 
 router.get('/', (req,res) => res.render('upload', {user: req.user}));
 
@@ -44,7 +45,18 @@ router.post("/images", async (req, res)=>{
            
         res.json({
             message: 'File uploaded!',
-            url: url});
+            url: url
+        });
+
+        
+        User.findOne({ email: req.user.email }, (err, user)=>{
+            if (!user.images.includes(url)) {
+                user.images.push(url);
+                user.save();
+            }
+        });
+
+
         
     } catch (err) {
         console.log (err);

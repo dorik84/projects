@@ -5,7 +5,7 @@ const UserSchema = new mongoose.Schema({
     email: String,
     hash: String,
     salt: String,
-    admin: Boolean
+    images: Array
 });
 
 const User = connection.model('User', UserSchema);
