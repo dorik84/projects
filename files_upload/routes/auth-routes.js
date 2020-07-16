@@ -5,7 +5,7 @@ const genPassword = require('../lib/password-tools').genPassword;
 
 // auth login
 router.get('/login', (req, res) => {
-    res.render('login', { user: req.user });
+    res.render('login', { user: req.user, msg: null});
 });
 
 // auth logout
@@ -14,14 +14,8 @@ router.get('/logout', (req, res) => {
     res.redirect('/');
 });
 
+
 router.post('/login',
-    // passport.authenticate('local'), (req,res) =>{
-    //     console.log("!!!!!!!!!!!!!!" + req);
-    //     if (!req.user) res.redirect('/login');
-    //     else {
-    //         res.redirect('/');
-    //     }
-    // });
     passport.authenticate('local', { successRedirect: '/',
                                    failureRedirect: '/auth/login',
                                    failureFlash: true })
@@ -38,9 +32,9 @@ router.post('/register', (req,res) => {
     const newUser = new User({
         email: req.body.email,
         hash: hash,
-        salt: salt
+        salt: salt,
+        admin: false
     });
-    // console.log(newUser)
     newUser.save().then(user => console.log(user)).catch(err=>console.log(err));
     res.redirect('/auth/login');
 

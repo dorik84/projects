@@ -4,7 +4,6 @@ const passport = require('passport');
 const session = require('express-session');
 const MongoStore = require('connect-mongo')(session);
 
-
 const authRoutes = require('./routes/auth-routes');
 const profileRoutes = require('./routes/profile-routes');
 const uploadRoutes = require('./routes/upload-routes');
@@ -21,9 +20,6 @@ app.set('view engine', 'ejs');
 app.use(express.static("public"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-
-
-
 app.use(fileUpload());
 
 //----------------------------------------connect to mongodb and save sessions
@@ -32,6 +28,7 @@ const sessionStore = new MongoStore({
     collection: 'sessions'
 })
 
+//---------------------------------------midleware continue
 app.use(session({
     secret: 'some secret',
     resave: false,
@@ -42,12 +39,16 @@ app.use(session({
     }
 }))
 
+require('./config/passport-setup');
 app.use(passport.initialize());
 app.use(passport.session());
-require('./config/passport-setup');
+
 
 //---------------------------------------home route handeling
+
+
 app.get("/", (req,res) => {
+    // console.log (res);
     res.render('home', { user: req.user });
 });
 

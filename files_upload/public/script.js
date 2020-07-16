@@ -7,7 +7,7 @@ document.getElementsByTagName("form")[0].addEventListener("submit", (event)=>{
     const formData = new FormData();
     formData.append("image", image);
     axios({
-        url: "/upload-files",
+        url: "/upload/images",
         method: "post",
         data: formData
     }).then(res => {

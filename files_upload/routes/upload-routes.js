@@ -1,10 +1,11 @@
 const router = require('express').Router();
 const path = require('path');
 const util = require('util');
+const fs = require('fs');
 
+router.get('/', (req,res) => res.render('upload', {user: req.user}));
 
-
-router.post("/", async (req, res)=>{
+router.post("/images", async (req, res)=>{
 
     try {
 
@@ -19,16 +20,25 @@ router.post("/", async (req, res)=>{
         const allowedExtensions = /jpg|jpeg|png|gif/;
         const md5 = file.md5;
         const url = "/uploads/"+ md5 + extension;
-        const uploadDirectory = path.join("./public", url);
+        const uploadDirectory = path.join(__dirname, "../public", url);
 
+        // console.log(!allowedExtensions.test(extension));
+        // if (!allowedExtensions.test(extension)) {
+        //     return res.json({message: "Unsupported extension", url: "error.png"});
+        // }
 
-        if (!allowedExtensions.test(extension)) {
-            return res.json({message: "Unsupported extension", url: "error.png"});
-        }
-
-        if (fileSize > 2*1024*1024) {
+        if (fileSize > 5*1024*1024) {
             return res.json({message: "File size exceeds 5Mb", url: "error.png"});
         }
+
+
+        const myDir = path.join(__dirname, "../public", 'uploads');
+        const mkdir = util.promisify(fs.mkdir);
+            await mkdir(myDir)
+            .catch((err) => {
+                if (err && !err.code == 'EEXIST') console.log(err)
+            });
+       
 
         await util.promisify(file.mv)(uploadDirectory);
            
