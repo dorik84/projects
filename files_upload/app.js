@@ -20,6 +20,7 @@ app.set('view engine', 'ejs');
 app.use(express.static("public"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
 app.use(fileUpload());
 
 //----------------------------------------connect to mongodb and save sessions
