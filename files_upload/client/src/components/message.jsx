@@ -2,7 +2,7 @@
 
 function Message(props) {
     let msg;
-    switch (props.data.page) {
+    switch (props.msg) {
         case "home":
             msg = "Home Page";
             break;

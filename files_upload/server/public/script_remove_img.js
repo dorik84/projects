@@ -12,11 +12,6 @@ $('.close').on("click", function (){
             arrayOfImages.forEach(url=>{
                $('main').empty();
             });
-
-            
-
-
-
     });
 });
 

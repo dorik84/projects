@@ -57,7 +57,6 @@ router.post("/images", isAuth, async (req, res)=>{
             }
 
             res.json({
-                page: "upload",
                 user: user.email,
                 images: user.images     
             });

@@ -25,7 +25,6 @@ const validator = [
 router.get('/login', (req, res) => {
     // res.render('login', { user: req.user, msg: null});
     res.json(    {
-        page: "login",
         user: req.user ? req.user.email : null,
         images: req.user ? req.user.images : []     
     })
@@ -35,7 +34,6 @@ router.get('/login', (req, res) => {
 router.get('/logout', async (req, res) => {
     await req.logout();
     res.json(  {
-        page: "home",
         user: req.user ? req.user.email : null,
         images: req.user ? req.user.images : []      
     })
@@ -45,7 +43,6 @@ router.get('/logout', async (req, res) => {
 router.get('/register', (req, res) => {
     // res.render('register', { user: req.user });
     res.json(    {
-        page: "register",
         user: req.user ? req.user.email : null,
         images: req.user ? req.user.images : []           
     })
@@ -67,8 +64,7 @@ router.post('/login', validator, (req,res,next) => {
         // failureRedirect: '/auth/login',
         // failureFlash: true })
         (req,res) => {
-            res.json(    {
-                page: "home",
+            res.json({
                 user: req.user ? req.user.email : null,
                 images: req.user ? req.user.images : []      
             })
@@ -83,7 +79,7 @@ router.post('/register', validator, (req,res) => {
         }
 
     User.findOne({email: req.body.email}, (err,user) =>{
-        // console.log(user);
+
         if (user) 
             return res.json({msg: "this email is in use already"})
         else {
@@ -95,9 +91,7 @@ router.post('/register', validator, (req,res) => {
             });
     
             newUser.save().then(user => console.log(user)).catch(err => console.log(err));
-            // res.redirect('/auth/login');
             res.json(    {
-                page: "login",
                 user: req.user ? req.user.email : null,
                 images: req.user ? req.user.images : []      
             })

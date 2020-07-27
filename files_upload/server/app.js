@@ -57,7 +57,6 @@ app.get("/", (req,res) => {
     // res.render('home', { user: req.user });
     console.log(req.isAuthenticated());
     res.json(    {
-        page: "home",
         user: req.user ? req.user.email : null,
         images: req.user ? req.user.images : []      
     })

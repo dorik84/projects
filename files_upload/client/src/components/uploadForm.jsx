@@ -19,8 +19,8 @@ const onSubmit = async (e)=> {
 }
 
 const UploadForm = (props) => {
-    const page = props.data.page;
-    if (page === "upload") {
+    // const page = props.data.page;
+    // if (page === "upload") {
         return (
             <div className="container">
                 <form action="/upload/images" method="post" encType="multipart/form-data">
@@ -38,7 +38,7 @@ const UploadForm = (props) => {
             </div>
             
         )
-    } else return null;
+    // } else return null;
 }
 
 export default UploadForm;
