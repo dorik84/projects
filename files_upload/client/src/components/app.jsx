@@ -1,20 +1,22 @@
 import React, { useState, useEffect } from "react";
 import axios from 'axios';
-
+import Message from './message.jsx';
 import Navbar from './navbar.jsx';
 
 
 const App = () => {
     const [user, setUser] = useState(null);
     const [images, setImages] = useState([]);
+ 
     const state = { user, images};
 
-    const changeState = async(newState) => {
-        await setUser(newState.user);
-        await setImages(newState.images);
+    const changeState = (newState) => {
+        setUser(newState.user);
+        setImages(newState.images);
     }
 
 useEffect( ()=> {
+    let isFetching = true;
     const fetchingData = async () => {
         await axios({
             method: "GET",
@@ -23,10 +25,15 @@ useEffect( ()=> {
         })
         .then(res => {
             console.log(res.data);
-            changeState(res.data);
+            if (isFetching){
+                changeState(res.data)
+            };
         })
+        .catch (err => console.log(err));
     }
-    fetchingData()},[])
+    fetchingData();
+    return () => isFetching = false
+    },[])
     
     return (
         <React.Fragment>

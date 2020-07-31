@@ -24,7 +24,7 @@ const validator = [
 // auth login
 router.get('/login', (req, res) => {
     // res.render('login', { user: req.user, msg: null});
-    res.json(    {
+    res.json({
         user: req.user ? req.user.email : null,
         images: req.user ? req.user.images : []     
     })
@@ -33,9 +33,8 @@ router.get('/login', (req, res) => {
 // auth logout
 router.get('/logout', async (req, res) => {
     await req.logout();
-    res.json(  {
-        user: req.user ? req.user.email : null,
-        images: req.user ? req.user.images : []      
+    res.json({
+        msg: "You have logged out"     
     })
 
 });
@@ -65,6 +64,7 @@ router.post('/login', validator, (req,res,next) => {
         // failureFlash: true })
         (req,res) => {
             res.json({
+                msg: req.user? "You have successfully logged in" : "There is no match on your system",
                 user: req.user ? req.user.email : null,
                 images: req.user ? req.user.images : []      
             })
@@ -90,10 +90,13 @@ router.post('/register', validator, (req,res) => {
                 salt: salt,
             });
     
-            newUser.save().then(user => console.log(user)).catch(err => console.log(err));
-            res.json(    {
-                user: req.user ? req.user.email : null,
-                images: req.user ? req.user.images : []      
+            newUser
+                .save()
+                .then(user => console.log(user))
+                .catch(err => console.log(err));
+
+            res.json({
+                msg: "Your account has been successfully created"   
             })
         }
     });

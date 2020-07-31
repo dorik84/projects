@@ -55,8 +55,9 @@ app.use(passport.session());
 app.get("/", (req,res) => {
 
     // res.render('home', { user: req.user });
-    console.log(req.isAuthenticated());
-    res.json(    {
+    console.log("is Authenticated "+ req.isAuthenticated());
+    res.json({
+        msg: "Wellcome",
         user: req.user ? req.user.email : null,
         images: req.user ? req.user.images : []      
     })
