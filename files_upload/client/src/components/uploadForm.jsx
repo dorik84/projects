@@ -3,7 +3,9 @@ import axios from 'axios';
 import { CSSTransitionGroup } from 'react-transition-group'
 
 
-const UploadForm = () => {
+const UploadForm = (props) => {
+
+    const setIsLoading = props.setIsLoading;
 
     const [flashMsg, setFlashMsg] = useState ([]);
     const [lbl, setLbl] = useState("Choose File...");
@@ -12,6 +14,7 @@ const UploadForm = () => {
     
     
     const onSubmit = async (e)=> {
+        setIsLoading(true);
         e.preventDefault();
         const imgForm = new FormData();
         let image = document.querySelectorAll("input")[0].files[0];
@@ -34,10 +37,12 @@ const UploadForm = () => {
             if (isFetching) {
                 setFlashMsg([...flashMsg, res.data.msg]);
                 setLbl ("Choose File...");
+                setIsLoading(false);
             }
         }).catch(err => {
             console.log(err);
             setFlashMsg([...flashMsg, err.msg]);
+            setIsLoading(false);
         });
     }
         if(formData){

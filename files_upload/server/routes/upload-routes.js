@@ -30,13 +30,15 @@ router.post("/images", isAuth, async (req, res)=>{
         const url = "/uploads/"+ md5 + extension;
         const uploadDirectory = path.join(__dirname, "../public", url);
 
+        if (fileSize > 5*1024*1024) {
+            return res.json({msg: "File size exceeds 5Mb", url: "error.png"});
+        }
+
         if (!allowedExtensions.test(extension)) {
             return res.json({msg: "Unsupported extension", url: "error.png"});
         }
 
-        if (fileSize > 5*1024*1024) {
-            return res.json({msg: "File size exceeds 5Mb", url: "error.png"});
-        }
+
 
         //create folder and file
         const myDir = path.join(__dirname, "../public", 'uploads');
@@ -57,7 +59,7 @@ router.post("/images", isAuth, async (req, res)=>{
             }
 
             res.json({
-                msg: "The image is uploaded", 
+                msg: `${fileName} is uploaded`, 
                 // user: user.email,
                 // images: user.images   
             });

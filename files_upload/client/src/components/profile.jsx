@@ -3,7 +3,7 @@ import axios from 'axios';
 import { CSSTransitionGroup } from 'react-transition-group'
 
 function Profile (props) {
-    const {images, changeState} = props;
+    const {images, changeState, setIsLoading } = props;
 
     const [isAuthenticated, SetIsAuthenticated] = useState(false);
     // const [innerImages, setInnerImages] = useState (null);
@@ -17,7 +17,9 @@ function Profile (props) {
         setImgToDelete(link);
     };
 
+    //sending request to delete the image, then retrieving response and change state
     useEffect(()=>{
+        setIsLoading(true);
         let isFetching = true;
         const fetchData = async () =>
         await axios({
@@ -34,8 +36,16 @@ function Profile (props) {
                 // SetIsAuthenticated(true);
                 setFlashMsg([...flashMsg, res.data.msg]);
                 changeState(res.data);
+                setIsLoading(false);
             }
-        });
+        })
+        .catch(err=>{
+            console.log(err)
+            if (isFetching){
+                setIsLoading(false);
+            }
+
+        })
 
         if (imgToDelete){
             fetchData();
@@ -48,6 +58,7 @@ function Profile (props) {
     // it sends request upon initial rendering to pass autontication 
     // then it sets the global state with new data from the response
     useEffect(()=>{
+        setIsLoading(true);
         let isFetching = true;
         const fetchData = async () =>
             await axios({
@@ -60,9 +71,16 @@ function Profile (props) {
                 if(isFetching && res.data.user) {
                     SetIsAuthenticated(true);
                     changeState(res.data);
+                    setIsLoading(false);
                 }
             })
-            .catch (err => console.log(err));
+            .catch (err => {
+                console.log(err)
+                if(isFetching ) {
+
+                    setIsLoading(false);
+                }
+            });
         
             fetchData();
             

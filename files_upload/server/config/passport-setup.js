@@ -18,17 +18,18 @@ const verifyCallback = (email, password, done) => {
         .then ( user => {
             console.log(user);
             if (!user) {
-                console.log('!user');
-                return done(null, false);
+                console.log('wrong user name');
+                return done(null, false, 'wrong user name');
             }
 
             const isValid = validatePassword (password, user.hash, user.salt);
 
             if (!isValid) {
-                console.log('!isValid');
-                return done(null, false);
+                
+                console.log('wrong password');
+                return done(null, false, 'wrong password');
             } else {
-                console.log('isValid');
+                console.log('authentication passed');
                 return done(null, user);
             }
         })

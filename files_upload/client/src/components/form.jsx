@@ -1,20 +1,27 @@
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
-import { CSSTransitionGroup } from 'react-transition-group'
+import { CSSTransitionGroup } from 'react-transition-group';
+import {
+    BrowserRouter as Router,
+    Redirect
+  } from 'react-router-dom';
 
 function Form(props) {
-    let { page, changeState} = props;
+    let { user, page, changeState} = props;
 
     const [requestUrl, setRequestUrl] = useState(null);
     const [flashMsg, setFlashMsg] = useState([]);
     const [formRecords, setformRecords] = useState(null);
     
-    React.useEffect(() => {
+    useEffect(() => {
+        let isLoading = true;
         let url = "http://localhost:5000/auth/login"
         if (page === "register") {
             url = "http://localhost:5000/auth/register";
         }
-        setRequestUrl(url);
+        if (isLoading)
+            setRequestUrl(url);
+            return ()=> isLoading = false;
     }, [page]);
 
     //reset form function
@@ -42,16 +49,33 @@ function Form(props) {
             .then ((res) => {
                 console.log(res.data);
                 resetForm();
+
                 if (isFetching) {
-                    setFlashMsg([...flashMsg, res.data.msg || res.data.errors]);
-                    changeState(res.data);
+                    
+                    if(res.data.errors){
+
+                        if (!Array.isArray(res.data.errors)) {
+                            setFlashMsg([...flashMsg, res.data.errors]) 
+                        } else {
+                            let newFlashMsg = [...flashMsg];
+                            res.data.errors.forEach(err => {
+                                newFlashMsg.push(err.msg);
+                            });
+                            setFlashMsg(newFlashMsg);
+                            }
+
+                    } else {
+                        setFlashMsg([...flashMsg, res.data.msg]);
+                        changeState(res.data);
+                    }
                 }
             })
             .catch (err => {
-                if (isFetching) {
-                console.log(err);
-                setFlashMsg([...flashMsg, err]);
+                // console.log(err.response);
+                if (isFetching && err.response && err.response.status == 401) {
+                    setFlashMsg([...flashMsg, "No match with provided credentials"]);
                 }
+                
             });
         }
         if (formRecords) {
@@ -72,27 +96,33 @@ function Form(props) {
     };
 
     //render flash messages and delete them in 5 sec
-    const renderMessages = 
-    flashMsg.map((msg,index) => { 
-        let del = {};
-        del[index] = setTimeout(() => {
+    let renderMessages;
+    useEffect(() => {
+    let timer = {};
+    renderMessages = flashMsg.map((msg,index) => { 
+        timer[index] = setTimeout(() => {
             let temp = [...flashMsg].filter(element => element !== msg);
             setFlashMsg(temp);
         } ,5000);
-
             return <div key={index} className="alert alert-success" role="alert">{msg}</div>
         })
+        return () => clearTimeout(timer);
+    }, []);
 
+
+    
     return (
         <>
-                <CSSTransitionGroup
-                    transitionName="example"
-                    transitionEnterTimeout ={500}
-                    transitionLeaveTimeout ={500}
-                    transitionEnter={true}
-                    transitionLeave={true}>
-                    {renderMessages}
-                </CSSTransitionGroup>
+            {user? <Redirect to='/' /> : null}
+
+            <CSSTransitionGroup
+                transitionName="example"
+                transitionEnterTimeout ={500}
+                transitionLeaveTimeout ={500}
+                transitionEnter={true}
+                transitionLeave={true}>
+                {renderMessages}
+            </CSSTransitionGroup>
 
             <div className="container">
                 <form className="col-6 pt-3" action={requestUrl} method="post">

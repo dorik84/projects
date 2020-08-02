@@ -18,7 +18,7 @@ import {
 function Navbar(props) {
     
     const {user,images} = props.data;
-    const changeState = props.changeState;
+    const {setIsLoading, changeState} = props;
 
     const [flashMsg, setFlashMsg] = useState([]);
 
@@ -108,16 +108,16 @@ function Navbar(props) {
                     <h3>Homepage</h3>
                 </Route>
                 <Route  path="/auth/login">
-                    <Form page = {"login"} changeState = {changeState} />
+                    <Form page = {"login"} changeState = {changeState} user={user} />
                 </Route>
                 <Route  path="/auth/register">
-                    <Form page = {"register"} changeState = {changeState} setFlashMsg = {setFlashMsg} />
+                    <Form page = {"register"} changeState = {changeState} setFlashMsg = {setFlashMsg} user={user} />
                 </Route>
                 <Route  path="/upload">
-                    <UploadForm setFlashMsg = {setFlashMsg} />
+                    <UploadForm setIsLoading={setIsLoading} />
                 </Route>
                 <Route  path="/profile">
-                    <Profile images = {images} changeState = {changeState}/>
+                    <Profile images = {images} changeState = {changeState} setIsLoading = {setIsLoading}/>
                 </Route>
             </Switch>
 

@@ -50,33 +50,35 @@ router.get('/register', (req, res) => {
 //=================================================post routes
 
 router.post('/login', validator, (req,res,next) => {
+    //validator error handler
     const errors = validationResult(req);
     console.log (req.body)
-    if (!errors.isEmpty()) 
-        return res.json({ errors: errors.array()[0].msg });
-    else 
-        next();
-    },
+    if (!errors.isEmpty()) {
+        console.log(errors);
+        return res.json({ errors: errors.array() });   
+    }
+    next()
+},
 
-    passport.authenticate('local'),
-        // { successRedirect: '/',
-        // failureRedirect: '/auth/login',
-        // failureFlash: true })
-        (req,res) => {
-            res.json({
-                msg: req.user? "You have successfully logged in" : "There is no match on your system",
-                user: req.user ? req.user.email : null,
-                images: req.user ? req.user.images : []      
-            })
-        }
+    passport.authenticate('local'), (req,res) => {
+        return res.json({
+            msg: "You have successfully logged in",
+            user: req.user.email,
+            images: req.user.images      
+        })
+    
+    }
 );
 
 
 router.post('/register', validator, (req,res) => {
+    //validator error handler
     const errors = validationResult(req);
+    console.log (req.body)
     if (!errors.isEmpty()) {
-        return res.json({ errors: errors.array()[0].msg });
-        }
+        console.log(errors);
+        return res.json({ errors: errors.array() });   
+    }
 
     User.findOne({email: req.body.email}, (err,user) =>{
 

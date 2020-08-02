@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import axios from 'axios';
-import Message from './message.jsx';
 import Navbar from './navbar.jsx';
+import Loading from './loading.jsx';
 
 
 const App = () => {
     const [user, setUser] = useState(null);
     const [images, setImages] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
  
     const state = { user, images};
 
@@ -26,18 +27,21 @@ useEffect( ()=> {
         .then(res => {
             console.log(res.data);
             if (isFetching){
-                changeState(res.data)
+                changeState(res.data);
+                setIsLoading(false);
             };
         })
         .catch (err => console.log(err));
     }
+    setIsLoading(true);
     fetchingData();
     return () => isFetching = false
     },[])
     
     return (
         <React.Fragment>
-            <Navbar data = {state} changeState = {changeState} /> 
+            <Navbar data = {state} changeState = {changeState} setIsLoading = {setIsLoading}/>
+            {isLoading ? <Loading />: null}
         </React.Fragment>
     )
 }
