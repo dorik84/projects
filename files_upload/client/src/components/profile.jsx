@@ -1,13 +1,13 @@
 import React, {useState, useEffect} from 'react';
 import axios from 'axios';
-import { CSSTransitionGroup } from 'react-transition-group'
+
 
 function Profile (props) {
-    const {images, changeState, setIsLoading } = props;
+    const {images, flashMsg} = props.state;
+    const {setIsLoading, changeState, setFlashMsg} = props;
 
+    // const {images, changeState, setIsLoading, setFlashMsg } = props;
     const [isAuthenticated, SetIsAuthenticated] = useState(false);
-    // const [innerImages, setInnerImages] = useState (null);
-    const [flashMsg, setFlashMsg] = useState([]);
     const [imgToDelete, setImgToDelete] = useState(null);
 
     //onDelete it sends request and gets new array of images and msg to display
@@ -31,10 +31,11 @@ function Profile (props) {
         .then(res => { 
             console.log(res.data)
             
-            // setInnerImages(res.data.images);
             if (isFetching){
-                // SetIsAuthenticated(true);
-                setFlashMsg([...flashMsg, res.data.msg]);
+                setFlashMsg([...flashMsg, {
+                    text : res.data.msg,
+                    timeStamp : Date.now() 
+                }]);
                 changeState(res.data);
                 setIsLoading(false);
             }
@@ -44,7 +45,6 @@ function Profile (props) {
             if (isFetching){
                 setIsLoading(false);
             }
-
         })
 
         if (imgToDelete){
@@ -77,7 +77,6 @@ function Profile (props) {
             .catch (err => {
                 console.log(err)
                 if(isFetching ) {
-
                     setIsLoading(false);
                 }
             });
@@ -106,32 +105,9 @@ function Profile (props) {
         return content
     }
 
-    //renders massages and deletes them in 5 sec
-    const renderMessages = 
-        flashMsg.map((msg,index) => { 
-            let del = {};
-            del[index] = setTimeout(() => {
-                let temp = [...flashMsg].filter(element => element !== msg);
-                setFlashMsg(temp);
-            } ,5000);
-
-                return <div key={index} className="alert alert-success" role="alert">{msg}</div>
-            })
-    
-
 
     return (
         <>
-            <h4>Your Profile Page</h4>
-            <CSSTransitionGroup
-                transitionName="example"
-                transitionEnterTimeout ={500}
-                transitionLeaveTimeout ={500}
-                transitionEnter={true}
-                transitionLeave={true}>
-                {renderMessages}
-            </CSSTransitionGroup>
-            
             <div className="d-flex flex-row">{renderImages()}</div>
         </>
     )

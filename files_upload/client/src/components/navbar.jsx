@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from 'react';
 import axios from "axios";
-import { CSSTransitionGroup } from 'react-transition-group'
 
 import Form from './form.jsx';
 import UploadForm from "./uploadForm.jsx";
@@ -17,46 +16,51 @@ import {
 
 function Navbar(props) {
     
-    const {user,images} = props.data;
-    const {setIsLoading, changeState} = props;
-
-    const [flashMsg, setFlashMsg] = useState([]);
-
-    let greeting = "";
-    let content = "";
+    const {user, flashMsg} = props.state;
+    const {setIsLoading, changeState, setFlashMsg} = props;
+    const [isLoggingOut, setIsLoggingOut] = useState(false);
 
     const logout = (e) => {
-        let url = e.target.href.replace("3000", "5000");
         e.preventDefault();
-        axios({
-            method: "GET",
-            withCredentials: true,
-            url: url
-        })
-        .then(res => {
-            console.log(res.data);
-            setFlashMsg([...flashMsg, res.data.msg]);
-            changeState(res.data);
-        })
+        setIsLoggingOut(true);
     }
 
-    if (user){
-        greeting = `Hi, ${user}`;
-        content = 
-            <React.Fragment>
-                <li className="nav-item">
-                    <Link className="text-warning nav-link" to="/profile" >Profile</Link>
-                </li>
-                <li className="nav-item">
-                    <Link className="text-warning nav-link" to="/upload" >Upload</Link>
-                </li>
-                <li className="nav-item">
-                    <Link className="text-warning nav-link" to="/auth/logout" onClick={(e)=>logout(e)}>Log out</Link>
-                </li>
-            </React.Fragment>
-    } else {
-        greeting = "Please log in";
-        content =
+    useEffect(()=>{
+        let isLoading = true;
+        const fetching = async () => {
+            await axios({
+                method: "GET",
+                withCredentials: true,
+                url: "http://localhost:5000/auth/logout"
+            })
+            .then(res => {
+                if (isLoading) {
+                    console.log(res.data);
+                    setFlashMsg([...flashMsg, {
+                        text : res.data.msg,
+                        timeStamp : Date.now() 
+                    }]);
+                    changeState(res.data);
+                    setIsLoggingOut(false);
+                }
+            })
+            .catch(err=>{
+                console.log(err)
+                if (isLoading){
+                    setIsLoggingOut(false);
+                }
+            }) 
+        }
+        if (isLoggingOut) 
+            fetching();
+            
+        return () => isLoading = false;
+    },[isLoggingOut])
+
+    const showMenuAndGreeting = () => {
+        let greeting = "Please log in";
+
+        let content =
             <React.Fragment>
                 <li className="nav-item">
                     <Link className="text-warning nav-link" to="/auth/login">Login</Link>
@@ -65,20 +69,24 @@ function Navbar(props) {
                     <Link className="text-warning nav-link" to="/auth/register">Register</Link>
                 </li>
             </React.Fragment>
+
+        if (user){
+            greeting = `Hi, ${user}`;
+            content = 
+                <React.Fragment>
+                    <li className="nav-item">
+                        <Link className="text-warning nav-link" to="/profile" >Profile</Link>
+                    </li>
+                    <li className="nav-item">
+                        <Link className="text-warning nav-link" to="/upload" >Upload</Link>
+                    </li>
+                    <li className="nav-item">
+                        <Link className="text-warning nav-link" to="/auth/logout" onClick={(e)=>logout(e)}>Log out</Link>
+                    </li>
+                </React.Fragment>
+        }
+        return [greeting, content];
     }
-    
-        //renders massages and deletes them in 5 sec
-        const renderMessages = 
-        flashMsg.map((msg,index) => { 
-            let del = {};
-            del[index] = setTimeout(() => {
-                let temp = [...flashMsg].filter(element => element !== msg);
-                setFlashMsg(temp);
-            } ,5000);
-
-                return <div key={index} className="alert alert-success" role="alert">{msg}</div>
-            })
-
 
     return (
         <Router>
@@ -87,37 +95,28 @@ function Navbar(props) {
                 <li className="nav-item active">
                     <Link className="text-warning nav-link" to="/" >Home<span className="sr-only">(current)</span></Link>
                 </li>
-                {content}
+                {showMenuAndGreeting()[1]}
                 <span className="ml-auto p-2 text-white navbar-text">
-                    {greeting}
+                    {showMenuAndGreeting()[0]}
                 </span>
             </ul>
 
 
-            <CSSTransitionGroup
-                transitionName="example"
-                transitionEnterTimeout ={500}
-                transitionLeaveTimeout ={500}
-                transitionEnter={true}
-                transitionLeave={true}>
-                {renderMessages}
-            </CSSTransitionGroup>
-
             <Switch>
-                <Route exact path="/">
+                <Route exact path = "/">
                     <h3>Homepage</h3>
                 </Route>
-                <Route  path="/auth/login">
-                    <Form page = {"login"} changeState = {changeState} user={user} />
+                <Route  path = "/auth/login">
+                    <Form page = {"login"} changeState = {changeState} setFlashMsg = {setFlashMsg} flashMsg = {flashMsg} user = {user} />
                 </Route>
-                <Route  path="/auth/register">
-                    <Form page = {"register"} changeState = {changeState} setFlashMsg = {setFlashMsg} user={user} />
+                <Route  path ="/auth/register">
+                    <Form page = {"register"} changeState = {changeState} setFlashMsg = {setFlashMsg} flashMsg = {flashMsg} user = {user} />
                 </Route>
                 <Route  path="/upload">
-                    <UploadForm setIsLoading={setIsLoading} />
+                    <UploadForm setIsLoading = {setIsLoading} setFlashMsg = {setFlashMsg} flashMsg = {flashMsg}/>
                 </Route>
-                <Route  path="/profile">
-                    <Profile images = {images} changeState = {changeState} setIsLoading = {setIsLoading}/>
+                <Route  path = "/profile">
+                    <Profile {...props} />
                 </Route>
             </Switch>
 

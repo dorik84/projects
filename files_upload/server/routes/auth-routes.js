@@ -34,7 +34,9 @@ router.get('/login', (req, res) => {
 router.get('/logout', async (req, res) => {
     await req.logout();
     res.json({
-        msg: "You have logged out"     
+        msg: "You have logged out",   
+        user: null,
+        images:[]
     })
 
 });
