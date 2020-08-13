@@ -33,7 +33,17 @@ useEffect( ()=> {
                 setIsLoading(false);
             };
         })
-        .catch (err => console.log(err));
+        // .catch (err => console.log(err));
+        .catch (err => {
+            // console.log(err.response);
+            if (isFetching && err.response && err.response.status === 500) {
+                setFlashMsg([...flashMsg, {
+                    text : "Problem with database connection",
+                    timeStamp : Date.now() 
+                }]);
+                setIsLoading(false);
+            }  
+        });
     }
     setIsLoading(true);
     fetchingData();

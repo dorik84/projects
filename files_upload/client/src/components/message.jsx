@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import { CSSTransitionGroup } from 'react-transition-group';
+// import { CSSTransitionGroup } from 'react-transition-group';
 
 
 
@@ -23,13 +23,13 @@ function Message(props) {
 
 
     return (
-        <>
-        { flashMsg.map((msg,key)=> {
-            return (
-                <div key = {key} className = "alert alert-success" role = "alert">{msg.text}</div>
-            )
-        })}
-        </>
+        <div className = "flashMsgContainer">
+            { flashMsg.map((msg,key)=> {
+                return (
+                    <div key = {key} className = "alert alert-success" role = "alert">{msg.text}</div>
+                )
+            })}
+        </div>
         // <CSSTransitionGroup
         //     transitionName="example"
         //     transitionEnterTimeout ={500}

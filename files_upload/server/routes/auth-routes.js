@@ -23,7 +23,6 @@ const validator = [
 //============================================get routes
 // auth login
 router.get('/login', (req, res) => {
-    // res.render('login', { user: req.user, msg: null});
     res.json({
         user: req.user ? req.user.email : null,
         images: req.user ? req.user.images : []     
@@ -62,9 +61,15 @@ router.post('/login', validator, (req,res,next) => {
     next()
 },
 
-    passport.authenticate('local'), (req,res) => {
+
+
+
+
+
+    passport.authenticate('local'), 
+    (req,res) => {
         return res.json({
-            msg: "You have successfully logged in",
+            msg: "You have logged in successfully" ,
             user: req.user.email,
             images: req.user.images      
         })

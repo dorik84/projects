@@ -19,7 +19,7 @@ const verifyCallback = (email, password, done) => {
             console.log(user);
             if (!user) {
                 console.log('wrong user name');
-                return done(null, false, 'wrong user name');
+                return done(null, false);
             }
 
             const isValid = validatePassword (password, user.hash, user.salt);
@@ -27,13 +27,16 @@ const verifyCallback = (email, password, done) => {
             if (!isValid) {
                 
                 console.log('wrong password');
-                return done(null, false, 'wrong password');
+                return done(null, false);
             } else {
                 console.log('authentication passed');
                 return done(null, user);
             }
         })
-        .catch(err=>console.log(err));
+        .catch(err=>{
+            console.log(err);
+            return done(null, false);
+        });
   };
 
   const customFields = {

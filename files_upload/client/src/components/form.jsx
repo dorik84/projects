@@ -3,7 +3,7 @@ import axios from 'axios';
 import { Redirect} from 'react-router-dom';
 
 function Form(props) {
-    let { user, page, changeState, setFlashMsg, flashMsg} = props;
+    let { user, page, changeState, setFlashMsg, flashMsg, setIsLoading} = props;
 
     const [requestUrl, setRequestUrl] = useState(null);
     const [formRecords, setformRecords] = useState(null);
@@ -26,6 +26,7 @@ function Form(props) {
 
     //event handler upon clicking on submit button
     const onSubmit = (e) => {
+        setIsLoading(true);
         e.preventDefault();
         let myForm = document.getElementsByTagName('form')[0];
         const formData = new FormData(myForm);
@@ -71,17 +72,25 @@ function Form(props) {
                         }]);
                         changeState(res.data);
                     }
+                    
                 }
+                setIsLoading(false);
             })
             .catch (err => {
                 // console.log(err.response);
-                if (isFetching && err.response && err.response.status === 401) {
+                if (isFetching && err.response){
+                    let errMsg = "";
+                    if ( err.response.status === 401) {
+                        errMsg =  "No match with provided credentials";
+                    } else if ( err.response.status === 500) {
+                        errMsg = "Connection problem has occured";
+                    }
                     setFlashMsg([...flashMsg, {
-                        text : "No match with provided credentials",
+                        text : errMsg,
                         timeStamp : Date.now() 
                     }]);
+                    setIsLoading(false);
                 }
-                
             });
         }
         if (formRecords) {

@@ -53,7 +53,7 @@ function Navbar(props) {
         }
         if (isLoggingOut) 
             fetching();
-            
+
         return () => isLoading = false;
     },[isLoggingOut])
 
@@ -107,10 +107,10 @@ function Navbar(props) {
                     <h3>Homepage</h3>
                 </Route>
                 <Route  path = "/auth/login">
-                    <Form page = {"login"} changeState = {changeState} setFlashMsg = {setFlashMsg} flashMsg = {flashMsg} user = {user} />
+                    <Form page = {"login"} setIsLoading = {setIsLoading} changeState = {changeState} setFlashMsg = {setFlashMsg} flashMsg = {flashMsg} user = {user} />
                 </Route>
                 <Route  path ="/auth/register">
-                    <Form page = {"register"} changeState = {changeState} setFlashMsg = {setFlashMsg} flashMsg = {flashMsg} user = {user} />
+                    <Form page = {"register"} setIsLoading = {setIsLoading} changeState = {changeState} setFlashMsg = {setFlashMsg} flashMsg = {flashMsg} user = {user} />
                 </Route>
                 <Route  path="/upload">
                     <UploadForm setIsLoading = {setIsLoading} setFlashMsg = {setFlashMsg} flashMsg = {flashMsg}/>

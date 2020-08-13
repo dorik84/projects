@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import axios from 'axios';
+import Model_viewer from './model_viewer.jsx';
 
 
 function Profile (props) {
@@ -9,13 +10,23 @@ function Profile (props) {
     // const {images, changeState, setIsLoading, setFlashMsg } = props;
     const [isAuthenticated, SetIsAuthenticated] = useState(false);
     const [imgToDelete, setImgToDelete] = useState(null);
+    const [imgToModel, setImgToModel] = useState(null);
 
     //onDelete it sends request and gets new array of images and msg to display
     const onDelete = (e) => {
+        e.preventDefault();
         let link = e.target.parentNode.previousSibling.src.replace("http://localhost:5000", "");
         console.log("url to delete "+link);
         setImgToDelete(link);
     };
+
+    //handler to show selected image on 3d Model
+    const onImage = (e) => {
+        e.preventDefault();
+        let link = e.target.parentNode.previousSibling.src;
+        console.log("url to model" + link);
+        setImgToModel(link);
+    }
 
     //sending request to delete the image, then retrieving response and change state
     useEffect(()=>{
@@ -93,10 +104,16 @@ function Profile (props) {
         if (images && images.length > 0) {
             content = images.map( (img, key) => {
                 return (
-                <div className="card" style={{width: 180}} key = {key}>
-                    <img src = {"http://localhost:5000" + img} alt = "" className="card-img-top" style={{width: 170, height: 170, objectFit: "cover"}}/>
-                    <div className="card-body">
-                        <div className="btn btn-primary" onClick = {(e) => {onDelete(e)}}>Delete</div>
+                <div className="card d-flex flex-column" style={{width: 150}} key = {key}>
+                    <img 
+                        src = {"http://localhost:5000" + img} 
+                        alt = "" 
+                        className="card-img-top mx-auto d-block p-1 pb-0 rounded" 
+                        style={{ height: 100, objectFit: "cover"}}
+                    />
+                    <div className="card-body d-flex justify-content-between p-1 ">
+                        <div className="btn btn-primary btn-sm" onClick = {(e) => {onImage(e)}}>Show</div>
+                        <div className="btn btn-danger btn-sm" onClick = {(e) => {onDelete(e)}}>Delete</div>
                     </div> 
                 </div>
                 )
@@ -109,6 +126,7 @@ function Profile (props) {
     return (
         <>
             <div className="d-flex flex-row">{renderImages()}</div>
+            {imgToModel ? <Model_viewer imgToModel={imgToModel}/> : null}
         </>
     )
 }
