@@ -35,18 +35,21 @@ const UploadForm = (props) => {
             if (isFetching) {
                 setFlashMsg([...flashMsg, {
                     text : res.data.msg,
-                    timeStamp : Date.now() 
+                    timeStamp : Date.now(),
+                    error: res.data.error
                 }]);
                 setLbl ("Choose File...");
                 setIsLoading(false);
             }
         }).catch(err => {
-            if (isFetching) {
-                console.log(err);
-                setFlashMsg([...flashMsg, {
-                    text : err.msg,
-                    timeStamp : Date.now() 
-                }]);
+            if (isFetching && err.response){
+                if ( err.response.status === 500) {
+                    setFlashMsg([...flashMsg, {
+                        text : "Connection problem has occured",
+                        timeStamp : Date.now(),
+                        error: true
+                    }]);
+                }
                 setIsLoading(false);
             }
         });

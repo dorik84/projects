@@ -47,19 +47,22 @@ function Form(props) {
                 resetForm();
 
                 if (isFetching) {
-                    
+                    //error handler for express validator errors
                     if(res.data.errors){
 
                         if (!Array.isArray(res.data.errors)) {
-                            setFlashMsg([...flashMsg, 
-                                {text : res.data.errors,
-                                 timeStamp : Date.now() }]);
+                            setFlashMsg([...flashMsg, {
+                                text : res.data.errors,
+                                timeStamp : Date.now(),
+                                error: true
+                                }]);
                         } else {
                             let newFlashMsg = [...flashMsg];
                             res.data.errors.forEach(err => {
                                 newFlashMsg.push({
                                     text : err.msg,
-                                    timeStamp : Date.now()
+                                    timeStamp : Date.now(),
+                                    error: true
                                 });
                             });
                             setFlashMsg(newFlashMsg);
@@ -68,7 +71,8 @@ function Form(props) {
                     } else {
                         setFlashMsg([...flashMsg, {
                             text : res.data.msg,
-                            timeStamp : Date.now() 
+                            timeStamp : Date.now(),
+                            error: false
                         }]);
                         changeState(res.data);
                     }
@@ -77,7 +81,8 @@ function Form(props) {
                 setIsLoading(false);
             })
             .catch (err => {
-                // console.log(err.response);
+                //error handler for anauthorized access or connection problem
+                console.log(err.response);
                 if (isFetching && err.response){
                     let errMsg = "";
                     if ( err.response.status === 401) {
@@ -87,7 +92,8 @@ function Form(props) {
                     }
                     setFlashMsg([...flashMsg, {
                         text : errMsg,
-                        timeStamp : Date.now() 
+                        timeStamp : Date.now(),
+                        error: true
                     }]);
                     setIsLoading(false);
                 }

@@ -1,13 +1,17 @@
 import React, {useState, useEffect} from 'react';
 import axios from 'axios';
-import Model_viewer from './model_viewer.jsx';
+// import Model_viewer from './model_viewer.jsx';
+import Model_viewer from './model_viewer_three_fiber.jsx';
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTimesCircle, faCubes, faTrashAlt} from '@fortawesome/free-solid-svg-icons'
+
 
 
 function Profile (props) {
     const {images, flashMsg} = props.state;
     const {setIsLoading, changeState, setFlashMsg} = props;
 
-    // const {images, changeState, setIsLoading, setFlashMsg } = props;
     const [isAuthenticated, SetIsAuthenticated] = useState(false);
     const [imgToDelete, setImgToDelete] = useState(null);
     const [imgToModel, setImgToModel] = useState(null);
@@ -15,17 +19,19 @@ function Profile (props) {
     //onDelete it sends request and gets new array of images and msg to display
     const onDelete = (e) => {
         e.preventDefault();
-        let link = e.target.parentNode.previousSibling.src.replace("http://localhost:5000", "");
+        let link = e.currentTarget.parentNode.previousSibling.src.replace("http://localhost:5000", "");
         console.log("url to delete "+link);
         setImgToDelete(link);
     };
 
     //handler to show selected image on 3d Model
-    const onImage = (e) => {
+    const onShow = (e) => {
         e.preventDefault();
-        let link = e.target.parentNode.previousSibling.src;
+        
+        let link = e.currentTarget.parentNode.previousSibling.src;
         console.log("url to model" + link);
         setImgToModel(link);
+        
     }
 
     //sending request to delete the image, then retrieving response and change state
@@ -45,7 +51,8 @@ function Profile (props) {
             if (isFetching){
                 setFlashMsg([...flashMsg, {
                     text : res.data.msg,
-                    timeStamp : Date.now() 
+                    timeStamp : Date.now(),
+                    error: false
                 }]);
                 changeState(res.data);
                 setIsLoading(false);
@@ -53,8 +60,15 @@ function Profile (props) {
         })
         .catch(err=>{
             console.log(err)
-            if (isFetching){
+            if (isFetching && err.response){
+                if ( err.response.status === 500) {
+                    setFlashMsg([...flashMsg, {
+                        text : "Connection problem has occured",
+                        timeStamp : Date.now(),
+                        error: true
+                    }]);
                 setIsLoading(false);
+                }
             }
         })
 
@@ -85,12 +99,19 @@ function Profile (props) {
                     setIsLoading(false);
                 }
             })
-            .catch (err => {
+            .catch(err=>{
                 console.log(err)
-                if(isFetching ) {
+                if (isFetching && err.response){
+                    if ( err.response.status === 500) {
+                        setFlashMsg([...flashMsg, {
+                            text : "Connection problem has occured",
+                            timeStamp : Date.now(),
+                            error: true
+                        }]);
                     setIsLoading(false);
+                    }
                 }
-            });
+            })
         
             fetchData();
             
@@ -99,8 +120,10 @@ function Profile (props) {
 
     //function that renders images or null
     const renderImages = () => {
-        let content = "no images";
+        let content = <h5><FontAwesomeIcon icon={faTimesCircle} /> no images</h5>;
+
         if (!isAuthenticated) content = "You are not authorized for this content. Please login first.";
+
         if (images && images.length > 0) {
             content = images.map( (img, key) => {
                 return (
@@ -112,8 +135,8 @@ function Profile (props) {
                         style={{ height: 100, objectFit: "cover"}}
                     />
                     <div className="card-body d-flex justify-content-between p-1 ">
-                        <div className="btn btn-primary btn-sm" onClick = {(e) => {onImage(e)}}>Show</div>
-                        <div className="btn btn-danger btn-sm" onClick = {(e) => {onDelete(e)}}>Delete</div>
+                        <div className="btn btn-primary btn-sm" onClick = {(e) => {onShow(e)}}><FontAwesomeIcon icon={faCubes} /> Show</div>
+                        <div className="btn btn-danger btn-sm" onClick = {(e) => {onDelete(e)}}><FontAwesomeIcon icon={faTrashAlt} /> Delete</div>
                     </div> 
                 </div>
                 )

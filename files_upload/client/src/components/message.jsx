@@ -1,5 +1,7 @@
 import React, {useEffect} from 'react';
 // import { CSSTransitionGroup } from 'react-transition-group';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons'
 
 
 
@@ -12,7 +14,7 @@ function Message(props) {
             timer = setInterval(()=>{
                 setFlashMsg(
                     [...flashMsg].filter(msg => {
-                        return Date.now() - msg.timeStamp <= 5000 
+                        return Date.now() - msg.timeStamp <= 20000 
                     })
                 )
             },1000)
@@ -26,7 +28,13 @@ function Message(props) {
         <div className = "flashMsgContainer">
             { flashMsg.map((msg,key)=> {
                 return (
-                    <div key = {key} className = "alert alert-success" role = "alert">{msg.text}</div>
+                    <div 
+                        key = {key}
+                        className = {msg.error? "alert alert-danger p-1 m-1" : "alert alert-success p-1 m-1"} 
+                        style={{ fontSize: 10}}
+                        role = "alert">
+                            {(msg.error)?<FontAwesomeIcon icon={faTimes} />:<FontAwesomeIcon icon={faCheck} />} { msg.text}
+                    </div>
                 )
             })}
         </div>

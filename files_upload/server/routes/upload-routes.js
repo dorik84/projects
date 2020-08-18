@@ -31,11 +31,11 @@ router.post("/images", isAuth, async (req, res)=>{
         const uploadDirectory = path.join(__dirname, "../public", url);
 
         if (fileSize > 5*1024*1024) {
-            return res.json({msg: "File size exceeds 5Mb", url: "error.png"});
+            return res.json({msg: "File size exceeds 5Mb", error: true});
         }
 
         if (!allowedExtensions.test(extension)) {
-            return res.json({msg: "Unsupported extension", url: "error.png"});
+            return res.json({msg: "Unsupported extension",  error: true});
         }
 
 
@@ -59,9 +59,8 @@ router.post("/images", isAuth, async (req, res)=>{
             }
 
             res.json({
-                msg: `${fileName} is uploaded`, 
-                // user: user.email,
-                // images: user.images   
+                msg: `${fileName} is uploaded`,
+                error: false  
             });
 
         });
@@ -70,7 +69,10 @@ router.post("/images", isAuth, async (req, res)=>{
 
     } catch (err) {
         console.log (err);
-        res.json({message: err})
+        res.json({
+            msg: err,
+            error: true
+        })
     }
 });
 

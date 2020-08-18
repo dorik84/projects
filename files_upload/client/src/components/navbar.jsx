@@ -1,6 +1,9 @@
 import React, {useEffect, useState} from 'react';
 import axios from "axios";
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUserPlus, faAddressCard, faSignOutAlt, faHome, faFileUpload, faSignInAlt, faUserCircle } from '@fortawesome/free-solid-svg-icons'
+
 import Form from './form.jsx';
 import UploadForm from "./uploadForm.jsx";
 import Profile from './profile.jsx';
@@ -38,7 +41,8 @@ function Navbar(props) {
                     console.log(res.data);
                     setFlashMsg([...flashMsg, {
                         text : res.data.msg,
-                        timeStamp : Date.now() 
+                        timeStamp : Date.now(),
+                        error: false
                     }]);
                     changeState(res.data);
                     setIsLoggingOut(false);
@@ -63,25 +67,25 @@ function Navbar(props) {
         let content =
             <React.Fragment>
                 <li className="nav-item">
-                    <Link className="text-warning nav-link" to="/auth/login">Login</Link>
+                    <Link className="text-warning nav-link" to="/auth/register"><FontAwesomeIcon icon={faUserPlus} /> Register</Link>
                 </li>
                 <li className="nav-item">
-                    <Link className="text-warning nav-link" to="/auth/register">Register</Link>
+                    <Link className="text-warning nav-link" to="/auth/login"><FontAwesomeIcon icon={faSignInAlt} /> Login</Link>
                 </li>
             </React.Fragment>
 
         if (user){
-            greeting = `Hi, ${user}`;
+            greeting = <span><FontAwesomeIcon icon={faUserCircle} /> You are {user}</span>;
             content = 
                 <React.Fragment>
                     <li className="nav-item">
-                        <Link className="text-warning nav-link" to="/profile" >Profile</Link>
+                        <Link className="text-warning nav-link" to="/profile" ><FontAwesomeIcon icon={faAddressCard} /> Profile</Link>
                     </li>
                     <li className="nav-item">
-                        <Link className="text-warning nav-link" to="/upload" >Upload</Link>
+                        <Link className="text-warning nav-link" to="/upload" ><FontAwesomeIcon icon={faFileUpload} /> Upload</Link>
                     </li>
                     <li className="nav-item">
-                        <Link className="text-warning nav-link" to="/auth/logout" onClick={(e)=>logout(e)}>Log out</Link>
+                        <Link className="text-warning nav-link" to="/auth/logout" onClick={(e)=>logout(e)}><FontAwesomeIcon icon={faSignOutAlt} /> Log out</Link>
                     </li>
                 </React.Fragment>
         }
@@ -93,7 +97,10 @@ function Navbar(props) {
 
             <ul className=" d-flex nav nav-tabs bg-dark">
                 <li className="nav-item active">
-                    <Link className="text-warning nav-link" to="/" >Home<span className="sr-only">(current)</span></Link>
+                    <Link className="text-warning nav-link" to="/" >
+                        <FontAwesomeIcon icon={faHome} /> Home
+                        <span className="sr-only">(current)</span>
+                    </Link>
                 </li>
                 {showMenuAndGreeting()[1]}
                 <span className="ml-auto p-2 text-white navbar-text">

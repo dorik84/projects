@@ -39,7 +39,8 @@ useEffect( ()=> {
             if (isFetching && err.response && err.response.status === 500) {
                 setFlashMsg([...flashMsg, {
                     text : "Problem with database connection",
-                    timeStamp : Date.now() 
+                    timeStamp : Date.now(),
+                    error: true
                 }]);
                 setIsLoading(false);
             }  
