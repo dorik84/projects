@@ -1,6 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
-import { Redirect} from 'react-router-dom';
+
+import {useSpring, useTransition, animated} from 'react-spring';
+import { Redirect } from 'react-router-dom';
 
 function Form(props) {
     let { user, page, changeState, setFlashMsg, flashMsg, setIsLoading} = props;
@@ -8,6 +10,8 @@ function Form(props) {
     const [requestUrl, setRequestUrl] = useState(null);
     const [formRecords, setformRecords] = useState(null);
     
+
+   // applies some changes on initial page load depending on whether it is a "login" or "register" page
     useEffect(() => {
         let isLoading = true;
         let url = "http://localhost:5000/auth/login"
@@ -59,6 +63,7 @@ function Form(props) {
                         } else {
                             let newFlashMsg = [...flashMsg];
                             res.data.errors.forEach(err => {
+                                if (err.msg!=="Invalid value")
                                 newFlashMsg.push({
                                     text : err.msg,
                                     timeStamp : Date.now(),
@@ -75,6 +80,7 @@ function Form(props) {
                             error: false
                         }]);
                         changeState(res.data);
+
                     }
                     
                 }
@@ -119,7 +125,7 @@ function Form(props) {
 
     return (
         <>
-            {user? <Redirect to='/' /> : null}
+            {user? <Redirect to="/" />: null}
 
             <div className="container">
                 <form className="col-6 pt-3" action={requestUrl} method="post">
@@ -135,6 +141,7 @@ function Form(props) {
                     <input type="submit" className="btn btn-primary" onClick={(e)=>onSubmit(e)} value={btnMsg} />
                 </form>
             </div>
+
         </>
     );
 

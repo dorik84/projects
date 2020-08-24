@@ -1,8 +1,15 @@
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
+import {
+    BrowserRouter as Router,
+    useLocation
+  } from 'react-router-dom';
 
 
 const UploadForm = (props) => {
+ 
+    // const loc = useLocation();
+    // console.log(loc);
 
     const {setIsLoading, setFlashMsg, flashMsg} = props;
 
@@ -41,7 +48,8 @@ const UploadForm = (props) => {
                 setLbl ("Choose File...");
                 setIsLoading(false);
             }
-        }).catch(err => {
+        })
+        .catch(err => {
             if (isFetching && err.response){
                 if ( err.response.status === 500) {
                     setFlashMsg([...flashMsg, {

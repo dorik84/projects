@@ -1,12 +1,14 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useContext} from 'react';
 import axios from "axios";
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserPlus, faAddressCard, faSignOutAlt, faHome, faFileUpload, faSignInAlt, faUserCircle } from '@fortawesome/free-solid-svg-icons'
+import {useSpring, useTransition, animated} from 'react-spring';
 
 import Form from './form.jsx';
 import UploadForm from "./uploadForm.jsx";
 import Profile from './profile.jsx';
+import Editor from './imageEditor.jsx';
 
 
 import {
@@ -14,20 +16,25 @@ import {
     Link,
     Route,
     Switch,
+    useParams, useLocation, useHistory, useRouteMatch
   } from 'react-router-dom';
+
+
 
 
 function Navbar(props) {
     
-    const {user, flashMsg} = props.state;
-    const {setIsLoading, changeState, setFlashMsg} = props;
+    const {setIsLoading, changeState, flashMsg, setFlashMsg, user } = props;
     const [isLoggingOut, setIsLoggingOut] = useState(false);
 
+
+    //event handler on Logout button
     const logout = (e) => {
         e.preventDefault();
         setIsLoggingOut(true);
     }
 
+    //hook which triggers when the logout button is pressed
     useEffect(()=>{
         let isLoading = true;
         const fetching = async () => {
@@ -61,18 +68,19 @@ function Navbar(props) {
         return () => isLoading = false;
     },[isLoggingOut])
 
+    //function which switches content of the menu depending on whether user is logged in or not
     const showMenuAndGreeting = () => {
         let greeting = "Please log in";
 
         let content =
-            <React.Fragment>
+            <>
                 <li className="nav-item">
                     <Link className="text-warning nav-link" to="/auth/register"><FontAwesomeIcon icon={faUserPlus} /> Register</Link>
                 </li>
                 <li className="nav-item">
                     <Link className="text-warning nav-link" to="/auth/login"><FontAwesomeIcon icon={faSignInAlt} /> Login</Link>
                 </li>
-            </React.Fragment>
+            </>
 
         if (user){
             greeting = <span><FontAwesomeIcon icon={faUserCircle} /> You are {user}</span>;
@@ -87,13 +95,28 @@ function Navbar(props) {
                     <li className="nav-item">
                         <Link className="text-warning nav-link" to="/auth/logout" onClick={(e)=>logout(e)}><FontAwesomeIcon icon={faSignOutAlt} /> Log out</Link>
                     </li>
+                    <li className="nav-item">
+                        <Link className="text-warning nav-link" to="/editor" > Editor</Link>
+                    </li>
                 </React.Fragment>
         }
         return [greeting, content];
     }
 
+    // const location = [{pathname:'/upload'}, {pathname:'/'}, {pathname:'/profile'}, {pathname:'/auth/register'}, {pathname:'/auth/login'}];
+    // const transitions = useTransition(location, null, {
+    //     from: { opacity: 0 },
+    //     enter: { opacity: 1 },
+    //     leave: { opacity: 0 }
+    // })
+
+
+
+
+
     return (
         <Router>
+
 
             <ul className=" d-flex nav nav-tabs bg-dark">
                 <li className="nav-item active">
@@ -108,25 +131,30 @@ function Navbar(props) {
                 </span>
             </ul>
 
-
-            <Switch>
-                <Route exact path = "/">
-                    <h3>Homepage</h3>
-                </Route>
-                <Route  path = "/auth/login">
-                    <Form page = {"login"} setIsLoading = {setIsLoading} changeState = {changeState} setFlashMsg = {setFlashMsg} flashMsg = {flashMsg} user = {user} />
-                </Route>
-                <Route  path ="/auth/register">
-                    <Form page = {"register"} setIsLoading = {setIsLoading} changeState = {changeState} setFlashMsg = {setFlashMsg} flashMsg = {flashMsg} user = {user} />
-                </Route>
-                <Route  path="/upload">
-                    <UploadForm setIsLoading = {setIsLoading} setFlashMsg = {setFlashMsg} flashMsg = {flashMsg}/>
-                </Route>
-                <Route  path = "/profile">
-                    <Profile {...props} />
-                </Route>
-            </Switch>
-
+            {/* {transitions.map(({ item, key, props }) => 
+              item && <animated.div key={key} style={props}>*/}
+              {/* <animated.div style={propys}> */}
+                    <Switch > 
+                        <Route exact path = "/">
+                            <h3>Homepage</h3>
+                        </Route>
+                        <Route  path = "/auth/login">
+                            <Form page = {"login"} {...props} />
+                        </Route>
+                        <Route  path ="/auth/register">
+                            <Form page = {"register"} {...props} />
+                        </Route>
+                        <Route  path="/upload">
+                            <UploadForm {...props}/>
+                        </Route>
+                        <Route  path = "/profile">
+                            <Profile {...props} />
+                        </Route>
+                        <Route  path = "/editor">
+                            <Editor {...props} />
+                        </Route>
+                    </Switch>
+                {/* </animated.div> */}
         </Router>
     )
 }

@@ -2,21 +2,27 @@ import React, { useState, useEffect } from "react";
 import axios from 'axios';
 import Navbar from './navbar.jsx';
 import Loading from './loading.jsx';
-import Message from './message.jsx';
-
+import Messages from './messages.jsx';
+import {
+    BrowserRouter as Router,
+    useLocation
+  } from 'react-router-dom';
 
 const App = () => {
     const [user, setUser] = useState(null);
     const [images, setImages] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [flashMsg, setFlashMsg] = useState([]);
- 
-    const state = { user, images, flashMsg };
+
+
+    
 
     const changeState = (newState) => {
         setUser(newState.user);
         setImages(newState.images);
     }
+
+    const props = {user, setUser, images, setImages, isLoading, setIsLoading, flashMsg, setFlashMsg, changeState};
 
 useEffect( ()=> {
     let isFetching = true;
@@ -53,8 +59,8 @@ useEffect( ()=> {
     
     return (
         <React.Fragment>
-            <Message flashMsg = {flashMsg} setFlashMsg = {setFlashMsg} />
-            <Navbar state = {state} changeState = {changeState} setIsLoading = {setIsLoading} setFlashMsg = {setFlashMsg} flashMsg = {flashMsg} />
+            <Messages flashMsg = {flashMsg} setFlashMsg = {setFlashMsg} />
+            <Navbar {...props} /> 
             {isLoading ? <Loading />: null}
         </React.Fragment>
     )

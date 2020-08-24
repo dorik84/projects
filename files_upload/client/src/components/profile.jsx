@@ -1,20 +1,21 @@
 import React, {useState, useEffect} from 'react';
 import axios from 'axios';
-// import Model_viewer from './model_viewer.jsx';
+
 import Model_viewer from './model_viewer_three_fiber.jsx';
+import Editor from './imageEditor.jsx';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTimesCircle, faCubes, faTrashAlt} from '@fortawesome/free-solid-svg-icons'
+import { faTimesCircle, faCubes, faTrashAlt, faEdit} from '@fortawesome/free-solid-svg-icons'
 
 
 
 function Profile (props) {
-    const {images, flashMsg} = props.state;
-    const {setIsLoading, changeState, setFlashMsg} = props;
+    const {setIsLoading, changeState, setFlashMsg, images, flashMsg} = props;
 
     const [isAuthenticated, SetIsAuthenticated] = useState(false);
     const [imgToDelete, setImgToDelete] = useState(null);
     const [imgToModel, setImgToModel] = useState(null);
+    const [imgToEdit, setImgToEdit] = useState(null);
 
     //onDelete it sends request and gets new array of images and msg to display
     const onDelete = (e) => {
@@ -31,6 +32,15 @@ function Profile (props) {
         let link = e.currentTarget.parentNode.previousSibling.src;
         console.log("url to model" + link);
         setImgToModel(link);
+    }
+
+    //handler to edit selected image
+    const onEdit = (e) => {
+        e.preventDefault();
+        
+        let link = e.currentTarget.parentNode.previousSibling.src;
+        console.log("url to edit" + link);
+        setImgToEdit(link);
         
     }
 
@@ -137,6 +147,7 @@ function Profile (props) {
                     <div className="card-body d-flex justify-content-between p-1 ">
                         <div className="btn btn-primary btn-sm" onClick = {(e) => {onShow(e)}}><FontAwesomeIcon icon={faCubes} /> Show</div>
                         <div className="btn btn-danger btn-sm" onClick = {(e) => {onDelete(e)}}><FontAwesomeIcon icon={faTrashAlt} /> Delete</div>
+                        <div className="btn btn-info btn-sm" onClick = {(e) => {onEdit(e)}}><FontAwesomeIcon icon={faEdit} /> Edit</div>
                     </div> 
                 </div>
                 )
@@ -150,6 +161,7 @@ function Profile (props) {
         <>
             <div className="d-flex flex-row">{renderImages()}</div>
             {imgToModel ? <Model_viewer imgToModel={imgToModel}/> : null}
+            {imgToEdit ? <Editor imgToEdit={imgToEdit}/> : null}
         </>
     )
 }
