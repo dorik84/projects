@@ -31,7 +31,7 @@ router.delete('/delete', (req,res) => {
 
     const myDir = path.join(__dirname, "../public");
     fs.unlink(myDir + imgToDelete, (err) => {
-            if (err) throw err;
+            if (err && err.code =='ENOENT') console.log(err) ;
             console.log('successfully deleted  '+ myDir + imgToDelete);
         });
 

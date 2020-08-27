@@ -61,11 +61,6 @@ router.post('/login', validator, (req,res,next) => {
     next()
 },
 
-
-
-
-
-
     passport.authenticate('local'), 
     (req,res) => {
         return res.json({

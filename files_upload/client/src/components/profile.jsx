@@ -10,7 +10,7 @@ import { faTimesCircle, faCubes, faTrashAlt, faEdit} from '@fortawesome/free-sol
 
 
 function Profile (props) {
-    const {setIsLoading, changeState, setFlashMsg, images, flashMsg} = props;
+    const {setIsLoading, changeState, setFlashMsg, flashMsg, images} = props;
 
     const [isAuthenticated, SetIsAuthenticated] = useState(false);
     const [imgToDelete, setImgToDelete] = useState(null);
@@ -27,21 +27,19 @@ function Profile (props) {
 
     //handler to show selected image on 3d Model
     const onShow = (e) => {
-        e.preventDefault();
-        
+        e.preventDefault();  
         let link = e.currentTarget.parentNode.previousSibling.src;
-        console.log("url to model" + link);
+        console.log("url to model " + link);
         setImgToModel(link);
+        setIsLoading(true);
     }
 
     //handler to edit selected image
     const onEdit = (e) => {
-        e.preventDefault();
-        
+        e.preventDefault();  
         let link = e.currentTarget.parentNode.previousSibling.src;
-        console.log("url to edit" + link);
-        setImgToEdit(link);
-        
+        console.log("url to edit " + link);
+        setImgToEdit(link);   
     }
 
     //sending request to delete the image, then retrieving response and change state
@@ -137,7 +135,7 @@ function Profile (props) {
         if (images && images.length > 0) {
             content = images.map( (img, key) => {
                 return (
-                <div className="card d-flex flex-column" style={{width: 150}} key = {key}>
+                <div className="card d-flex flex-column ml-2" style={{width: 180}} key = {key}>
                     <img 
                         src = {"http://localhost:5000" + img} 
                         alt = "" 
@@ -146,8 +144,8 @@ function Profile (props) {
                     />
                     <div className="card-body d-flex justify-content-between p-1 ">
                         <div className="btn btn-primary btn-sm" onClick = {(e) => {onShow(e)}}><FontAwesomeIcon icon={faCubes} /> Show</div>
-                        <div className="btn btn-danger btn-sm" onClick = {(e) => {onDelete(e)}}><FontAwesomeIcon icon={faTrashAlt} /> Delete</div>
                         <div className="btn btn-info btn-sm" onClick = {(e) => {onEdit(e)}}><FontAwesomeIcon icon={faEdit} /> Edit</div>
+                        <div className="btn btn-danger btn-sm" onClick = {(e) => {onDelete(e)}}><FontAwesomeIcon icon={faTrashAlt} /> Delete</div>
                     </div> 
                 </div>
                 )
@@ -156,12 +154,11 @@ function Profile (props) {
         return content
     }
 
-
     return (
         <>
             <div className="d-flex flex-row">{renderImages()}</div>
-            {imgToModel ? <Model_viewer imgToModel={imgToModel}/> : null}
-            {imgToEdit ? <Editor imgToEdit={imgToEdit}/> : null}
+            {imgToModel ? <Model_viewer imgToModel={imgToModel} setImgToModel={setImgToModel} setIsLoading={setIsLoading} /> : null}
+            <Editor changeState={changeState} setImgToEdit={setImgToEdit} imgToEdit={imgToEdit} setFlashMsg={setFlashMsg} flashMsg={flashMsg} setIsLoading={setIsLoading} />
         </>
     )
 }

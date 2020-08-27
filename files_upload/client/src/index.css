@@ -38,6 +38,7 @@ body {
 #root {
     width:100%;
     height: 100%;
+    position: relative;
 }
 
 .flashMsgContainer{
@@ -51,6 +52,12 @@ body {
     width: 30%;
     z-index: 10;
 }
-.tui-image-editor-container{
-    height: 100%;
+.wrapper {
+    position: absolute;
+    border: 1px solid gray;
+    left: 50px;
+    right: 50px;
+    top:50px;
+    bottom:50px;
+
 }

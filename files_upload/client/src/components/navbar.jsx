@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useContext} from 'react';
+import React, {useEffect, useState} from 'react';
 import axios from "axios";
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -16,7 +16,6 @@ import {
     Link,
     Route,
     Switch,
-    useParams, useLocation, useHistory, useRouteMatch
   } from 'react-router-dom';
 
 
@@ -95,9 +94,9 @@ function Navbar(props) {
                     <li className="nav-item">
                         <Link className="text-warning nav-link" to="/auth/logout" onClick={(e)=>logout(e)}><FontAwesomeIcon icon={faSignOutAlt} /> Log out</Link>
                     </li>
-                    <li className="nav-item">
+                    {/* <li className="nav-item">
                         <Link className="text-warning nav-link" to="/editor" > Editor</Link>
-                    </li>
+                    </li> */}
                 </React.Fragment>
         }
         return [greeting, content];
@@ -117,8 +116,7 @@ function Navbar(props) {
     return (
         <Router>
 
-
-            <ul className=" d-flex nav nav-tabs bg-dark">
+            <ul className=" d-flex nav nav-tabs bg-dark mb-3">
                 <li className="nav-item active">
                     <Link className="text-warning nav-link" to="/" >
                         <FontAwesomeIcon icon={faHome} /> Home
@@ -150,9 +148,9 @@ function Navbar(props) {
                         <Route  path = "/profile">
                             <Profile {...props} />
                         </Route>
-                        <Route  path = "/editor">
+                        {/* <Route  path = "/editor">
                             <Editor {...props} />
-                        </Route>
+                        </Route> */}
                     </Switch>
                 {/* </animated.div> */}
         </Router>
