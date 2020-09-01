@@ -3,10 +3,6 @@ import axios from 'axios';
 import Navbar from './navbar.jsx';
 import Loading from './loading.jsx';
 import Messages from './messages.jsx';
-import {
-    BrowserRouter as Router,
-    useLocation
-  } from 'react-router-dom';
 
 const App = () => {
     const [user, setUser] = useState(null);

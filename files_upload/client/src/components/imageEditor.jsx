@@ -3,6 +3,7 @@ import React, {useEffect, useState, useRef} from 'react';
 import FilerobotImageEditor from 'filerobot-image-editor';
 import axios from 'axios';
 
+
 const Editor = (props) => {
     const {changeState, setImgToEdit, imgToEdit,setFlashMsg,flashMsg,setIsLoading} = props;
     const [data, setData]=useState();
@@ -62,7 +63,7 @@ const Editor = (props) => {
             setIsLoading(false);
             setImgToEdit(false);
         }}
-        config={{isLowQualityPreview: true, reduceBeforeEdit : {mode: 'auto'}, language:'en'
+        config={{isLowQualityPreview: true, reduceBeforeEdit : {mode: 'auto'}, language:'en', tools:['adjust', 'effects', 'filters', 'rotate', 'crop', 'resize','shapes', 'image']
         }}
         onBeforeComplete={(img) => {applyChanges(img); return false}}
         onComplete ={()=> false}

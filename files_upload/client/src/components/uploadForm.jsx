@@ -1,17 +1,12 @@
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
-import {
-    BrowserRouter as Router,
-    useLocation
-  } from 'react-router-dom';
-
+import './uploadForm.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 
 const UploadForm = (props) => {
  
-    // const loc = useLocation();
-    // console.log(loc);
-
-    const {setIsLoading, setFlashMsg, flashMsg} = props;
+    const {setIsLoading, setFlashMsg, flashMsg, changeState} = props;
 
     const [lbl, setLbl] = useState("Choose File...");
     const [formData, setFormData] = useState (null);
@@ -47,6 +42,7 @@ const UploadForm = (props) => {
                 }]);
                 setLbl ("Choose File...");
                 setIsLoading(false);
+                changeState(res.data);
             }
         })
         .catch(err => {
@@ -78,8 +74,8 @@ const UploadForm = (props) => {
 
         return (
             <>
-                <div className=" pt-3 container">
-                    <form action="/upload/images" method="post" encType="multipart/form-data">
+                {/* <div className=" pt-3 container ">
+                    <form action="/upload/images" method="post" encType="multipart/form-data" >
                         <div className="input-group">
                             <div className="custom-file">
                                 <input name ="image" type="file" className="custom-file-input" id="inputGroupFile04" aria-describedby="inputGroupFileAddon04" onChange ={(e)=>{changeLbl(e)}}></input>
@@ -91,7 +87,11 @@ const UploadForm = (props) => {
                         </div>
                     </form>
                     <img src="" alt=""/>
-                </div>
+                </div> */}
+                <form action="/upload/images" method="post" encType="multipart/form-data" className="ml-2">
+                    <input name ="image" type="file" className="file_input" id="inputGroupFile04" aria-describedby="inputGroupFileAddon04" onChange ={(e)=>{changeLbl(e); onSubmit(e) }}></input>
+                    <label className="file_label" htmlFor="inputGroupFile04"><FontAwesomeIcon icon={faPlusCircle} /></label>
+                </form>
             </>
         )
 }

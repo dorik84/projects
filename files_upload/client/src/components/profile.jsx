@@ -3,16 +3,18 @@ import axios from 'axios';
 
 import Model_viewer from './model_viewer_three_fiber.jsx';
 import Editor from './imageEditor.jsx';
+import UploadForm from "./uploadForm.jsx";
 
+import { Redirect } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimesCircle, faCubes, faTrashAlt, faEdit} from '@fortawesome/free-solid-svg-icons'
 
 
 
 function Profile (props) {
-    const {setIsLoading, changeState, setFlashMsg, flashMsg, images} = props;
-
-    const [isAuthenticated, SetIsAuthenticated] = useState(false);
+    const {user, setIsLoading, changeState, setFlashMsg, flashMsg, images} = props;
+    const [stateImages, setStateImages] = useState(images);
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [imgToDelete, setImgToDelete] = useState(null);
     const [imgToModel, setImgToModel] = useState(null);
     const [imgToEdit, setImgToEdit] = useState(null);
@@ -102,7 +104,7 @@ function Profile (props) {
             .then(res => {
                 console.log(res.data);
                 if(isFetching && res.data.user) {
-                    SetIsAuthenticated(true);
+                    setIsAuthenticated(true);
                     changeState(res.data);
                     setIsLoading(false);
                 }
@@ -124,7 +126,7 @@ function Profile (props) {
             fetchData();
             
             return ()=> isFetching = false;
-    }, [])
+    }, [stateImages])
 
     //function that renders images or null
     const renderImages = () => {
@@ -135,7 +137,7 @@ function Profile (props) {
         if (images && images.length > 0) {
             content = images.map( (img, key) => {
                 return (
-                <div className="card d-flex flex-column ml-2" style={{width: 180}} key = {key}>
+                <div className="card d-flex flex-column ml-2 mb-2" style={{width: 180}} key = {key}>
                     <img 
                         src = {"http://localhost:5000" + img} 
                         alt = "" 
@@ -151,12 +153,18 @@ function Profile (props) {
                 )
             })
         }
-        return content
+        return (
+            <>
+                {content}
+                <UploadForm {...props}/>
+            </>)
     }
 
     return (
         <>
-            <div className="d-flex flex-row">{renderImages()}</div>
+            {!user? <Redirect to="/" />: null}
+            <div className="d-flex flex-row flex-wrap">{renderImages()}</div>
+            
             {imgToModel ? <Model_viewer imgToModel={imgToModel} setImgToModel={setImgToModel} setIsLoading={setIsLoading} /> : null}
             <Editor changeState={changeState} setImgToEdit={setImgToEdit} imgToEdit={imgToEdit} setFlashMsg={setFlashMsg} flashMsg={flashMsg} setIsLoading={setIsLoading} />
         </>

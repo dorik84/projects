@@ -58,6 +58,7 @@ const Box = (props) => {
 
     return ( 
         <mesh 
+            position={[0,0,0]}
             ref = {meshRef}
             castShadow>
                 <boxBufferGeometry attach="geometry" args={[3, 3, 3]} />
@@ -96,31 +97,48 @@ const Plane = () => {
 }
  
 
+// function Camera(props) {
+//     const camera = useRef()
+//     const { size, setDefaultCamera, viewport } = useThree()
+//     useEffect(() => void setDefaultCamera(camera.current), [])
+//     useFrame(() => camera.current.updateMatrixWorld())
+
+//     return( 
+//         <perspectiveCamera
+//             {...props}
+//             ref={camera}
+//             aspect={viewport.width / viewport.height}
+//             radius={(viewport.width + viewport.height) / 4}
+//             onUpdate={self => self.updateProjectionMatrix()}
+//         />
+//     )
+//   }
+
 
 //=========================================general SFC for Three js instance
 const Model_viewer = (props) => {
     const { imgToModel,setImgToModel,setIsLoading} = props;
-    
+    // const wrapper = document.querySelector(".wrapper");
+    // const refer = useRef()
     return ( 
-        <div className="wrapper">
+        <div className="wrapper" >
             <CloseBtn setImgToModel={setImgToModel} />
             <Canvas 
-                className="model_viewer"
-                camera={{position:[0,5,5]}} 
+                camera = {{position:[2,5,10]}}
                 onCreated={({gl})=>{
                     gl.setPixelRatio( window.devicePixelRatio )
-                    gl.setSize( window.innerWidth, window.innerHeight )
                     gl.setClearColor('white')
                     gl.shadowMap.enabled = true
                     gl.shadowMap.type = THREE.PCFSoftShadowMap}}>
                         <fog 
                             attach="fog" 
-                            args={["black", 15,30 ]}/>
+                            args={["white", 25,50 ]}/>
+
                         <Controls />
-                        <ambientLight intensity={0.2}/>
-                        <group position ={[0,7,20]} >
+                        <ambientLight intensity={0.5}/>
+                        <group position ={[0,15,20]} >
                             <spotLight
-                                intensity={1}
+                                intensity={0.7}
                                 castShadow 
                                 penumbra={0.5}/>
                             <Spere />

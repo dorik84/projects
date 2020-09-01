@@ -64,7 +64,9 @@ router.post("/images", isAuth, async (req, res)=>{
 
             res.json({
                 msg: `${fileName} is uploaded`,
-                error: false  
+                error: false,                    
+                user: user.email,
+                images: user.images  
             });
 
         });

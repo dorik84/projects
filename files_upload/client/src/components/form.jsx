@@ -1,7 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
+import './form.css';
 
-import {useSpring, useTransition, animated} from 'react-spring';
+import {useSpring, animated} from 'react-spring';
 import { Redirect } from 'react-router-dom';
 
 function Form(props) {
@@ -9,6 +10,7 @@ function Form(props) {
 
     const [requestUrl, setRequestUrl] = useState(null);
     const [formRecords, setformRecords] = useState(null);
+
     
 
    // applies some changes on initial page load depending on whether it is a "login" or "register" page
@@ -25,7 +27,9 @@ function Form(props) {
 
     //reset form function
     const resetForm = () => {
-        document.querySelectorAll('form')[0].reset()
+        document.querySelectorAll('form')[0].reset();
+        setFocusOnEmail(false);
+        setFocusOnPassword (false);
     }
 
     //event handler upon clicking on submit button
@@ -123,11 +127,57 @@ function Form(props) {
     };
 
 
+    //-----------------animation for input fields
+    const [focusOnEmail,setFocusOnEmail]=useState(false);
+    const [focusOnPassword,setFocusOnPassword]=useState(false);
+
+    const emailProps = useSpring({
+            transform:  focusOnEmail? 'translateY(-20px)':'translateY(0px)',
+            color: focusOnEmail?'#03e9f4':'#fff' ,
+            fontSize: focusOnEmail? '12px': '16px'
+        })
+
+    const passwordProps = useSpring({
+            transform:  focusOnPassword? 'translateY(-20px)':'translateY(0px)',
+            color: focusOnPassword?'#03e9f4':'#fff' ,
+            fontSize: focusOnPassword? '12px': '16px'
+        })
+        
+    const onBlurHandler = (e)=>{
+        if(!e.currentTarget.value) {
+            if(e.currentTarget.name == 'email')
+                setFocusOnEmail(false);
+            else
+                setFocusOnPassword (false);
+        }
+    }
+
+
     return (
         <>
             {user? <Redirect to="/" />: null}
-
-            <div className="container">
+            <div className="login-box">
+                <h2>{btnMsg}</h2>
+                <form action={requestUrl} method="post">
+                    <div className="user-box">
+                        <input type="text" name="email" required="" onFocus={()=>setFocusOnEmail(true)} onBlur={(e)=>onBlurHandler(e)} />
+                        <label ><animated.div style={emailProps}>Email</animated.div></label>
+                    </div>
+                    <div className="user-box">
+                        <input type="password" name="password" required="" onFocus={()=>setFocusOnPassword(true)} onBlur={(e)=>onBlurHandler(e)} />
+                        <label><animated.div style={passwordProps}>Password</animated.div></label>
+                    </div>
+                    <div type="submit" className="btn" onClick={(e)=>onSubmit(e)}  >
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        Submit
+                    </div>
+                </form>
+            </div>
+{/* //============================================================================= */}
+            {/* <div className="container">
                 <form className="col-6 pt-3" action={requestUrl} method="post">
                 <div className="form-group">
                     <label htmlFor="email">Email address</label>
@@ -140,7 +190,7 @@ function Form(props) {
 
                     <input type="submit" className="btn btn-primary" onClick={(e)=>onSubmit(e)} value={btnMsg} />
                 </form>
-            </div>
+            </div> */}
 
         </>
     );

@@ -3,12 +3,10 @@ import axios from "axios";
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserPlus, faAddressCard, faSignOutAlt, faHome, faFileUpload, faSignInAlt, faUserCircle } from '@fortawesome/free-solid-svg-icons'
-import {useSpring, useTransition, animated} from 'react-spring';
+// import {useSpring, useTransition, animated} from 'react-spring';
 
 import Form from './form.jsx';
-import UploadForm from "./uploadForm.jsx";
 import Profile from './profile.jsx';
-import Editor from './imageEditor.jsx';
 
 
 import {
@@ -89,28 +87,12 @@ function Navbar(props) {
                         <Link className="text-warning nav-link" to="/profile" ><FontAwesomeIcon icon={faAddressCard} /> Profile</Link>
                     </li>
                     <li className="nav-item">
-                        <Link className="text-warning nav-link" to="/upload" ><FontAwesomeIcon icon={faFileUpload} /> Upload</Link>
-                    </li>
-                    <li className="nav-item">
                         <Link className="text-warning nav-link" to="/auth/logout" onClick={(e)=>logout(e)}><FontAwesomeIcon icon={faSignOutAlt} /> Log out</Link>
                     </li>
-                    {/* <li className="nav-item">
-                        <Link className="text-warning nav-link" to="/editor" > Editor</Link>
-                    </li> */}
                 </React.Fragment>
         }
         return [greeting, content];
     }
-
-    // const location = [{pathname:'/upload'}, {pathname:'/'}, {pathname:'/profile'}, {pathname:'/auth/register'}, {pathname:'/auth/login'}];
-    // const transitions = useTransition(location, null, {
-    //     from: { opacity: 0 },
-    //     enter: { opacity: 1 },
-    //     leave: { opacity: 0 }
-    // })
-
-
-
 
 
     return (
@@ -142,15 +124,9 @@ function Navbar(props) {
                         <Route  path ="/auth/register">
                             <Form page = {"register"} {...props} />
                         </Route>
-                        <Route  path="/upload">
-                            <UploadForm {...props}/>
-                        </Route>
                         <Route  path = "/profile">
                             <Profile {...props} />
                         </Route>
-                        {/* <Route  path = "/editor">
-                            <Editor {...props} />
-                        </Route> */}
                     </Switch>
                 {/* </animated.div> */}
         </Router>
