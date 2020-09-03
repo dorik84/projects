@@ -48,7 +48,7 @@ useEffect( ()=> {
             }  
         });
     }
-    setIsLoading(true);
+    // setIsLoading(true);
     fetchingData();
     return () => isFetching = false
     },[])

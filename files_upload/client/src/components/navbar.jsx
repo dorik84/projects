@@ -116,7 +116,7 @@ function Navbar(props) {
               {/* <animated.div style={propys}> */}
                     <Switch > 
                         <Route exact path = "/">
-                            <h3>Homepage</h3>
+                            <h3 style={{color:"white"}}>Homepage</h3>
                         </Route>
                         <Route  path = "/auth/login">
                             <Form page = {"login"} {...props} />

@@ -8,14 +8,20 @@
 }
 
 .file_label {
+
+
     margin: 0;
     cursor: pointer;
-    font-size: 3em;
-    font-weight: 700;
+    font-size: 5em;
+
     color: white;
     background-color: transparent;
     display: inline-block;
 }
-form {
-    align-self: center;
+.upload_form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 180px;
+    height: 162px;
 }

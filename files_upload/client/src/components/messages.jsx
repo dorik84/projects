@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons'
-import {useTransition, animated} from 'react-spring'
+import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
+import {useTransition, animated} from 'react-spring';
 
 const SingleMsg = (props) => {
     const {msg} = props;
@@ -10,6 +10,12 @@ const SingleMsg = (props) => {
         enter: { opacity: 1 },
         leave: { opacity: 0 }
     })
+    
+    useEffect(()=> {
+        let audio = new Audio("http://localhost:5000/PopUpSound.mp3")
+        audio.play();
+    },[])
+
     return transitions.map(({ item, key, props }) => 
             <animated.div 
                 key={key} 
@@ -29,7 +35,7 @@ function Messages(props) {
             timer = setInterval(()=>{
                 setFlashMsg(
                     [...flashMsg].filter(msg => {
-                        return Date.now() - msg.timeStamp <= 20000 
+                        return Date.now() - msg.timeStamp <= 5000 
                     })
                 )
             },1000)

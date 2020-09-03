@@ -8,13 +8,13 @@ const UploadForm = (props) => {
  
     const {setIsLoading, setFlashMsg, flashMsg, changeState} = props;
 
-    const [lbl, setLbl] = useState("Choose File...");
+    // const [lbl, setLbl] = useState("Choose File...");
     const [formData, setFormData] = useState (null);
     // create form and fetch data
     
     
     const onSubmit = (e) => {
-        setIsLoading(true);
+        
         e.preventDefault();
         const imgForm = new FormData();
         let image = document.querySelectorAll("input")[0].files[0];
@@ -23,6 +23,7 @@ const UploadForm = (props) => {
     }
 
     useEffect( ()=>{
+        setIsLoading(true);
         let isFetching = true;
         
         const fetchingData = async() => {
@@ -40,9 +41,11 @@ const UploadForm = (props) => {
                     timeStamp : Date.now(),
                     error: res.data.error
                 }]);
-                setLbl ("Choose File...");
-                setIsLoading(false);
-                changeState(res.data);
+                
+                if (!res.data.error) {
+                    changeState(res.data);
+                }
+                setIsLoading(false);  
             }
         })
         .catch(err => {
@@ -57,43 +60,40 @@ const UploadForm = (props) => {
                 setIsLoading(false);
             }
         });
-    }
+        }
         if(formData){
             fetchingData();
         }
         
-        return () => isFetching = false;
+        return () => {isFetching = false;
+                        setIsLoading(false);} 
     },[formData])
 
-    //set name of the uploading file in the input field
-    const changeLbl = (e) => {
-        const fileName = e.target.value;
-        setLbl (fileName);
-    }
 
 
-        return (
-            <>
-                {/* <div className=" pt-3 container ">
-                    <form action="/upload/images" method="post" encType="multipart/form-data" >
-                        <div className="input-group">
-                            <div className="custom-file">
-                                <input name ="image" type="file" className="custom-file-input" id="inputGroupFile04" aria-describedby="inputGroupFileAddon04" onChange ={(e)=>{changeLbl(e)}}></input>
-                                <label className="custom-file-label" htmlFor="inputGroupFile04">{lbl}</label>
-                            </div>   
-                            <div className="input-group-append">
-                                <input className="btn btn-outline-secondary" type="submit" id="inputGroupFileAddon04" onClick={(e)=>onSubmit(e)} />
-                            </div>
-                        </div>
-                    </form>
-                    <img src="" alt=""/>
-                </div> */}
-                <form action="/upload/images" method="post" encType="multipart/form-data" className="ml-2">
-                    <input name ="image" type="file" className="file_input" id="inputGroupFile04" aria-describedby="inputGroupFileAddon04" onChange ={(e)=>{changeLbl(e); onSubmit(e) }}></input>
-                    <label className="file_label" htmlFor="inputGroupFile04"><FontAwesomeIcon icon={faPlusCircle} /></label>
-                </form>
-            </>
-        )
+    return (
+        <>
+            <form 
+                action="/upload/images" 
+                method="post" 
+                encType="multipart/form-data" 
+                className="ml-2 upload_form">
+                    <input 
+                        name ="image" 
+                        type="file" 
+                        className="file_input" 
+                        id="inputGroupFile04" 
+                        aria-describedby="inputGroupFileAddon04" 
+                        onChange ={(e)=>{ onSubmit(e) }}>
+                    </input>
+                    <label 
+                        className="file_label" 
+                        htmlFor="inputGroupFile04">
+                            <FontAwesomeIcon icon={faPlusCircle} />
+                    </label>
+            </form>
+        </>
+    )
 }
 
 export default UploadForm;
