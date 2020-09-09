@@ -1,0 +1,61 @@
+$animationInterval: 200ms;
+$animationIntervalGrav: 500ms;
+$gravSize: 20px;
+$heroSize: 20px;
+$bulletSize: 5px;
+
+body{
+    height: 100vh;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    background: whitesmoke;
+    position:relative;
+    cursor: crosshair;
+
+}
+
+// hero css
+.hero {
+    position:absolute;
+    position:relative;
+    width:$heroSize;
+    height:$heroSize;
+    transition: all $animationInterval linear;
+}
+
+.hero>div {
+    position:absolute;
+    background:red;
+    border-radius: 0 5px 5px 0;
+    width:100%;
+    height:100%;
+    transition: all $animationInterval linear;
+}
+
+.hero>div>div {
+    position:absolute;
+    background:black;
+    transform: translateY(9px);
+    width:150%;
+    height:2px;
+}
+
+.bullet {
+    position:absolute;
+    background:green;
+    border-radius: 50% 50%;
+    width:$bulletSize;
+    height:$bulletSize;
+    transform: translate($heroSize/2,$heroSize/2-$bulletSize/2);
+    transition : all 500ms ease-in,
+}
+
+//gravity objects css
+.grav{
+    position:absolute;
+    background: black;
+    width:$gravSize;
+    height:$gravSize;
+    transition: all $animationIntervalGrav linear;
+}

@@ -1,0 +1,42 @@
+
+
+.certificates-container{
+    display: grid;
+    grid-template-columns:repeat(auto-fit,minmax(14em,1fr));
+    grid-template-rows:auto;
+    box-sizing: border-box;
+    border:solid 2px black;
+    border-radius: .33em;
+    margin:1em;
+    padding:1em;
+    ;
+}
+
+.certificates-container>div{
+    border: 2px solid black;
+    border-radius: .33em;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    grid-column: 18em;
+    grid-row:10em;
+    background-color: gray;
+    margin:1em;
+    height:10em;
+    display: flex;
+    justify-content: center;
+    }
+
+.certificates-container>div>a{
+    display: flex;
+    width:100%;
+    justify-content: center;
+    
+}
+
+.certificates-container>div>a>img {
+    object-fit: cover;
+    overflow: clip;
+    height: 100%;
+    max-width: 95%;
+} 

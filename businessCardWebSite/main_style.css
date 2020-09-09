@@ -1,0 +1,231 @@
+*{
+    box-sizing: border-box;
+    /* border:1px solid black */
+}
+
+html{
+    height: 100vh;
+}
+
+body{
+    position: relative;
+    background-size: auto 100% ;
+    background-repeat: no-repeat;
+    min-height: 100%;
+    width:100%;
+    display:grid;
+    margin: 0;
+    grid-template-columns: min-content repeat(11,1fr);
+    grid-template-rows: min-content 1fr min-content 5em;
+    grid-template-areas: 
+        "h h h h h h h h h h h h"
+        "s s s s s s s s s s s s"
+        ". . . . . . . . . . . ."
+        "f f f f f f f f f f f f"
+        ;
+}
+
+header{
+    grid-area: h;
+    background-color: #133337;
+    font-family: 'Luckiest Guy', cursive;
+    font-size: 2em;
+    text-align: center;
+    padding: 0.5em;
+
+}
+
+fieldset {
+    display: flex;
+    
+}
+
+section{
+    grid-area: s;
+    display: grid;
+    grid-template-columns:  repeat(12,1fr);
+    grid-template-rows: min-content auto min-content;
+}
+    .contenthead{
+        text-decoration: underline;
+        font-family: 'Luckiest Guy';
+        font-size: 2em;
+    }
+
+    div.content {
+        grid-row-start: 1;
+        grid-row-end: 2;
+        grid-column-start: 2;
+        grid-column-end: 12;
+        background-color: rgba(225, 225, 225, 0.8);
+        justify-self: center;
+        border-radius: 1em;
+        padding: 1em;
+        margin: 1em;
+        font-family: 'Righteous';
+    }
+
+aside{
+    
+    display: flex;
+    grid-row-start: 3;
+    grid-row-end: -1;
+    grid-column-start: 1;
+    grid-column-end: -1;
+    z-index: 2;
+    justify-content: center;
+    position: -webkit-sticky;
+    position: sticky;
+    bottom:0;
+}
+
+nav{
+    display: flex;
+    width: 100%;
+    justify-content: space-evenly;
+    padding: 1em;
+}
+
+a.linkonly {
+    display: flex;
+}
+
+a{
+    width: 11em;
+    display: flex;
+    padding: 1em;
+    flex-flow: column nowrap;
+    border-radius: 5px; 
+    text-decoration: none;
+    justify-content: space-between;
+    font-family: 'Permanent Marker', cursive;
+    font-size:1em;
+    text-align: center;
+    color: yellow;
+    font-weight: 50;
+    -webkit-box-shadow: 0px 0px 5px 3px rgba(255,255,255,0.39); 
+    box-shadow: 0px 0px 5px 3px rgba(255,255,255,0.39);
+}
+
+nav>a>img {
+width: 100%;
+border-radius: 5px; 
+}
+
+footer{
+    grid-area: f;
+    background-color: #133337;
+}
+
+a.one{ 
+    background-color:#45B8AC;
+}
+a.two{ 
+    background-color:#88B04B;
+}
+a.three{ 
+    background-color:#5B5EA6;
+}
+a.four{ 
+    background-color:#9B2335;
+}
+a.five{ 
+    background-color:#55B4B0;
+}
+a.six{ 
+    background-color:#E15D44;
+}
+
+a.active{
+    -webkit-box-shadow: 5px 5px 10px 5px #FF8080, -9px 5px 10px 5px #FFE488, -7px -5px 10px 5px #8CFF85, 12px -5px 10px 5px #80C7FF, 12px 10px 10px 7px #E488FF, -10px 10px 10px 7px #FF616B, -10px -7px 10px 1px #8E5CFF, 0px 0px 8px 6px rgba(255,255,255,0); 
+    box-shadow: 5px 5px 10px 5px #FF8080, -9px 5px 10px 5px #FFE488, -7px -5px 10px 5px #8CFF85, 12px -5px 10px 5px #80C7FF, 12px 10px 10px 7px #E488FF, -10px 10px 10px 7px #FF616B, -10px -7px 10px 1px #8E5CFF, 0px 0px 8px 6px rgba(255,255,255,0);
+    transform: scale(1.1);
+    background-color:rgba(225, 225, 225, 0.8);
+    color: black;
+    
+}
+
+
+
+@media only screen and (max-width: 1080px){
+
+    a{
+        font-size: 0.8em;
+        width: 120px;
+        padding: 0.5em;
+    }
+}
+
+
+@media only screen and (max-width: 830px) {
+    body{
+
+        grid-template-areas: 
+            "h h h h h h h h h h h h"
+            "a s s s s s s s s s s s"
+            "a . . . . . . . . . . ."
+            "f f f f f f f f f f f f"
+            ;
+    }
+
+    aside{
+        
+        display: block;
+        height: 100%;
+        grid-area: a;
+        z-index: 2;
+        position: relative;
+        
+    }
+
+    nav{
+        display: flex;
+        justify-content: flex-start;
+        flex-flow: column;
+        padding: 1em; 
+        position: -webkit-sticky;
+        position: sticky;
+        top: 0;
+        
+    }
+
+
+    header {
+        font-size: 100%;
+    }
+
+    div.content {
+        grid-row-start: 1;
+        grid-row-end: 2;
+        grid-column-start: 1;
+        grid-column-end: 13;
+    }
+
+}
+
+@media only screen and (max-width: 560px) {
+
+    header{
+        font-size: 3vw;
+    }
+    div.content{
+        font-size: 3vw;
+
+    }
+
+
+    nav>a>img {
+        display:none;
+    }
+
+    nav{
+        padding:0;
+        justify-content: flex-start;
+    }
+
+    a {
+        width: 100%;
+        font-size: 2vw;
+        margin: 1em 0;
+    }
+}

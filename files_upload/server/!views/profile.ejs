@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Profile Page</title>
+        <link rel="stylesheet" href="../styles.css">
+        
+    </head>
+    <body>
+        <nav>
+            <ul>
+                <li><a href="/">Homepage</a></li>
+                <% if (user) { %>
+                    <li><a href="/profile">Profile</a></li>
+                    <li><a href="/auth/logout">Log out</a></li>
+                    <li><a href="/upload">Upload</a></li>
+                <% } else { %>
+                    <li><a href="/auth/login">Login</a></li>
+                    <li><a href="/auth/register">Register</a></li>
+                <% } %>
+            </ul>
+        </nav>
+        <header>
+            <h1>Welcome to your profile, <%= user.email %></h1>
+        </header>
+        <main>
+            <% user.images.forEach( img => { %>
+                <a href="#">
+                    <img src=<%= img %> alt="">
+                    <div class="close">X</div>
+                </a>
+            <% }) %>
+
+        </main>
+        <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+        <script src="script_remove_img.js"></script>
+    </body>
+</html>
