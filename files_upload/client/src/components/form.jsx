@@ -120,7 +120,7 @@ function Form(props) {
 
 
     //----------------------rendering either register or login page
-    let btnMsg = "Log In";
+    let btnMsg = "Login";
 
     if (page === "register")  {
         btnMsg = "Register";
@@ -133,13 +133,13 @@ function Form(props) {
 
     const emailProps = useSpring({
             transform:  focusOnEmail? 'translateY(-20px)':'translateY(0px)',
-            color: focusOnEmail?'#03e9f4':'#fff' ,
+            color: focusOnEmail?'#ffc107':'#fff' ,
             fontSize: focusOnEmail? '12px': '16px'
         })
 
     const passwordProps = useSpring({
             transform:  focusOnPassword? 'translateY(-20px)':'translateY(0px)',
-            color: focusOnPassword?'#03e9f4':'#fff' ,
+            color: focusOnPassword?'#ffc107':'#fff' ,
             fontSize: focusOnPassword? '12px': '16px'
         })
         
@@ -176,21 +176,6 @@ function Form(props) {
                     </div>
                 </form>
             </div>
-{/* //============================================================================= */}
-            {/* <div className="container">
-                <form className="col-6 pt-3" action={requestUrl} method="post">
-                <div className="form-group">
-                    <label htmlFor="email">Email address</label>
-                    <input type="email" name="email" className="form-control" id="email" aria-describedby="emailHelp" />
-                </div>
-                <div className="form-group">
-                    <label htmlFor="password">Password</label>
-                    <input type="password" name="password" className="form-control" id="exampleInputPassword1" />
-                </div>
-
-                    <input type="submit" className="btn btn-primary" onClick={(e)=>onSubmit(e)} value={btnMsg} />
-                </form>
-            </div> */}
 
         </>
     );

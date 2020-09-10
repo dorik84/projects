@@ -14,16 +14,10 @@ import { Redirect } from 'react-router-dom';
 
 function Profile (props) {
     const {user, setIsLoading, changeState, setFlashMsg, flashMsg, images} = props;
-    const [stateImages, setStateImages] = useState();
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [imgToModel, setImgToModel] = useState(null);
     const [imgToEdit, setImgToEdit] = useState(null);
 
-    // useEffect(()=>{
-    //     setStateImages(images);
-    // },[])
-    // it sends request upon initial rendering to pass autontication 
-    // then it sets the global state with new data from the response
     useEffect(()=>{
         setIsLoading(true);
         let isFetching = true;

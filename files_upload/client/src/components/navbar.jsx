@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import axios from "axios";
+import './navbar.css'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserPlus, faAddressCard, faSignOutAlt, faHome, faFileUpload, faSignInAlt, faUserCircle } from '@fortawesome/free-solid-svg-icons'
@@ -65,15 +66,7 @@ function Navbar(props) {
         return () => isLoading = false;
     },[isLoggingOut])
 
-    //--------animation
-    const [onHover,setOnHover] = useState(false);
-    const propys = useSpring({
-        // transform:  onHover? 'scale(1.1)': 'scale(1)',
-        filter: onHover? 'blur(5rem)': 'blur(0px)',
-        letterSpacing: onHover? '10rem': '0px'
-    
-    }
-    )
+
 
     //function which switches content of the menu depending on whether user is logged in or not
     const showMenuAndGreeting = () => {
@@ -81,11 +74,11 @@ function Navbar(props) {
 
         let content =
             <>
-                <li className="nav-item" onMouseEnter={()=>setOnHover(true)} onMouseLeave={()=>setOnHover(false)} >
-                <Link className="text-warning nav-link" to="/auth/register"><FontAwesomeIcon icon={faUserPlus} /><animated.div style={propys}> <span style={{position:"absolute"}}>Register</span></animated.div></Link>
+                <li className="nav-item"  >
+                <Link className="text-warning nav-link col" to="/auth/register"><FontAwesomeIcon icon={faUserPlus} />&#160;<span>Register</span></Link>
                 </li>
                 <li className="nav-item">
-                    <Link className="text-warning nav-link" to="/auth/login"><FontAwesomeIcon icon={faSignInAlt} /> Login</Link>
+                    <Link className="text-warning nav-link" to="/auth/login"><FontAwesomeIcon icon={faSignInAlt} />&#160;<span>Login</span></Link>
                 </li>
             </>
 
@@ -94,10 +87,10 @@ function Navbar(props) {
             content = 
                 <React.Fragment>
                     <li className="nav-item">
-                        <Link className="text-warning nav-link" to="/profile" ><FontAwesomeIcon icon={faAddressCard} /> Profile</Link>
+                        <Link className="text-warning nav-link" to="/profile" ><FontAwesomeIcon icon={faAddressCard} />&#160;<span>Profile</span></Link>
                     </li>
                     <li className="nav-item">
-                        <Link className="text-warning nav-link" to="/auth/logout" onClick={(e)=>logout(e)}><FontAwesomeIcon icon={faSignOutAlt} /> Log out</Link>
+                        <Link className="text-warning nav-link" to="/auth/logout" onClick={(e)=>logout(e)}><FontAwesomeIcon icon={faSignOutAlt} />&#160;<span>Log out</span></Link>
                     </li>
                 </React.Fragment>
         }
@@ -111,7 +104,7 @@ function Navbar(props) {
             <ul className=" d-flex nav nav-tabs bg-dark mb-3">
                 <li className="nav-item active">
                     <Link className="text-warning nav-link" to="/" >
-                        <FontAwesomeIcon icon={faHome} /> Home
+                        <FontAwesomeIcon icon={faHome} />&#160;<span>Home</span>
                         <span className="sr-only">(current)</span>
                     </Link>
                 </li>

@@ -49,21 +49,14 @@ router.post("/images", isAuth, async (req, res)=>{
         const ThumbNailUrl = "/uploads/thumbnail/"+ md5 + extension;
         const ThumbNailUploadDirectory = path.join(__dirname, "../public", ThumbNailUrl);
 
-
-        const SaveSendRes = (user)=> {
+    //save thumbnail and send the response
+        const SaveSendRes = (sendRes)=> {
             Jimp.read(uploadDirectory)
             .then(thumbnail => {
                 return thumbnail
                 .resize(170, Jimp.AUTO) // resize
                 .quality(100) // set JPEG quality
-                .write(ThumbNailUploadDirectory, ()=>{
-                    res.json({
-                        msg: `${fileName} is uploaded`,
-                        error: false,                    
-                        user: user.email,
-                        images: user.images  
-                    });
-                }); // save
+                .write(ThumbNailUploadDirectory, sendRes()); // save
             })
             .catch(err => {
                 console.error(err);
@@ -75,8 +68,16 @@ router.post("/images", isAuth, async (req, res)=>{
                 user.images.push(url);
                 user.save();
             }
+            const sendRes = ()=>{
+                res.json({
+                    msg: `${fileName} is uploaded`,
+                    error: false,                    
+                    user: user.email,
+                    images: user.images  
+                });
+            }
 
-            SaveSendRes(user);
+            SaveSendRes(sendRes);
         });
 
 
