@@ -9,8 +9,8 @@ const EditBtn = (props) => {
     //handler to edit selected image
     const onEdit = (e) => {
         e.preventDefault();  
-        console.log("url to edit " + img);
-        setImgToEdit(img);   
+        console.log("url to edit " + img.original);
+        setImgToEdit({url: img.original, name: img.name});   
     }
 
     return ( <div className="btn btn-info btn-sm" onClick = {(e) => {onEdit(e)}}><FontAwesomeIcon icon={faEdit} /> Edit</div> );

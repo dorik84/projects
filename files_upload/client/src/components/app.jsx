@@ -8,6 +8,7 @@ const App = () => {
     const [user, setUser] = useState(null);
     const [images, setImages] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
+    const [progress, setProgress] = useState();
     const [flashMsg, setFlashMsg] = useState([]);
 
 
@@ -57,7 +58,7 @@ useEffect( ()=> {
         <React.Fragment>
             <Messages flashMsg = {flashMsg} setFlashMsg = {setFlashMsg} />
             <Navbar {...props} /> 
-            {isLoading ? <Loading />: null}
+            {isLoading ? <Loading progress = {progress} />: null}
         </React.Fragment>
     )
 }

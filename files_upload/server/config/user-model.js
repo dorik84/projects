@@ -5,7 +5,8 @@ const UserSchema = new mongoose.Schema({
     email: String,
     hash: String,
     salt: String,
-    images: Array
+    images: [Object]
+    // images: Array
 });
 
 const User = connection.model('User', UserSchema);

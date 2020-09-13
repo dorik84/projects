@@ -1,6 +1,7 @@
 import React from 'react';
 
-const Loading = () => {
+const Loading = (props) => {
+    const {progress} = props;
     return ( 
         <div className="loading d-flex justify-content-center align-items-center">
             <button className="btn btn-link" type="button" disabled>

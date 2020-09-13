@@ -41,7 +41,6 @@ router.get('/logout', async (req, res) => {
 });
 
 router.get('/register', (req, res) => {
-    // res.render('register', { user: req.user });
     res.json(    {
         user: req.user ? req.user.email : null,
         images: req.user ? req.user.images : []           
@@ -53,7 +52,7 @@ router.get('/register', (req, res) => {
 router.post('/login', validator, (req,res,next) => {
     //validator error handler
     const errors = validationResult(req);
-    console.log (req.body)
+    // console.log (req.body)
     if (!errors.isEmpty()) {
         console.log(errors);
         return res.json({ errors: errors.array() });   

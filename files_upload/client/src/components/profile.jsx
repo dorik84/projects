@@ -9,15 +9,13 @@ import SingleImage from './singleImage.jsx';
 import { Redirect } from 'react-router-dom';
 
 
-
-
-
 function Profile (props) {
     const {user, setIsLoading, changeState, setFlashMsg, flashMsg, images} = props;
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [imgToModel, setImgToModel] = useState(null);
-    const [imgToEdit, setImgToEdit] = useState(null);
+    const [imgToEdit, setImgToEdit] = useState({});
 
+    //initial fetching data upon opening profile page
     useEffect(()=>{
         setIsLoading(true);
         let isFetching = true;
@@ -56,6 +54,7 @@ function Profile (props) {
 
     //function that renders images or null
     const renderImages = () => {
+
         let content =  
             <div className="card d-flex flex-column ml-2 mb-2" style={{width: 180}} >
                 <img 
@@ -69,12 +68,10 @@ function Profile (props) {
 
         if (!isAuthenticated) content = "You are not authorized for this content. Please login first.";
          
-        if (images && images.length > 0) {
 
+        if (images && images.length > 0) {
             content = images.map( (img, key) => { 
-                return (
-                    <SingleImage img={img} key={img} setImgToModel={setImgToModel} setImgToEdit={setImgToEdit} {...props} />
-                )
+                return <SingleImage img={img} key={img.original} setImgToModel={setImgToModel} setImgToEdit={setImgToEdit} {...props} />
             })
         }
 

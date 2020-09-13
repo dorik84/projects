@@ -5,21 +5,21 @@ import axios from 'axios';
 
 
 const Editor = (props) => {
-    const {changeState, setImgToEdit, imgToEdit,setFlashMsg,flashMsg,setIsLoading} = props;
+    const {changeState, setImgToEdit, imgToEdit, setFlashMsg, flashMsg, setIsLoading} = props;
     const [data, setData]=useState();
 
 
     const applyChanges = async (obj) => {
         console.log(obj.canvas);
-        console.log("Editor after press "+imgToEdit);
 
         let imageBlob =  await new Promise(resolve => obj.canvas.toBlob(resolve, 'image/jpeg'))
         const formData = new FormData();
-        // console.log(imgToEdit);
-        formData.append("url", imgToEdit);
-        formData.append("image", imageBlob, 'updated_image.jpeg');
+        console.log("line 18 editor "+ JSON.stringify(imgToEdit));
+        formData.append("url", imgToEdit.url);
+        formData.append("image", imageBlob, imgToEdit.name);
+        
+        console.log( JSON.stringify(formData ))
         setData(formData);
-        console.log( formData )
     }
 
     useEffect( ()=>{
@@ -43,12 +43,11 @@ const Editor = (props) => {
                 }]);
                 changeState(res.data);
                 setIsLoading(false);
-                setImgToEdit(false);
+                setImgToEdit({});
             }
         })
 
         if (data ){
-            console.log("isFetching")
             fetchData();
         }
 
@@ -59,12 +58,14 @@ const Editor = (props) => {
 
     return ( 
         <FilerobotImageEditor
-        show={imgToEdit}
-        src={"http://localhost:5000"+imgToEdit}
+        show={imgToEdit.url}
+        
+        src={"http://localhost:5000" + imgToEdit.url  }
         
         onClose={() => { 
             setIsLoading(false);
-            setImgToEdit(false);
+            setImgToEdit({});
+
         }}
         config={{isLowQualityPreview: true, reduceBeforeEdit : {mode: 'auto'}, language:'en', tools:['adjust', 'effects', 'filters', 'rotate', 'crop', 'resize','shapes', 'image']
         }}

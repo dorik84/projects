@@ -59,9 +59,9 @@ const DeleteBtn = (props) => {
     const onDelete = (e) => {
         setIsLoading(true);
         e.preventDefault();
-        let link = img;
-        console.log("url to delete "+link);
-        setImgToDelete(link);
+        let link = img.original;
+        console.log("url to delete "+imgToDelete);
+        setImgToDelete(img.original);
     };
     
     return ( 

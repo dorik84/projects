@@ -6,7 +6,7 @@ import {useTransition, animated} from 'react-spring';
 
 const SingleImage = (props) => {
 
-    const { img, setImgToModel, setIsLoading, setImgToEdit, flashMsg, setFlashMsg, changeState } = props;
+    const { img, setImgToModel, setIsLoading, setImgToEdit, flashMsg, setFlashMsg, changeState, setShow } = props;
 
     useEffect(()=>console.log (img),[])
     
@@ -25,14 +25,14 @@ const SingleImage = (props) => {
                 style={{width: 180}} >
                 
                     <img 
-                        src = {"http://localhost:5000" + img.replace('/uploads', '/uploads/thumbnail')} 
+                        src = {"http://localhost:5000" + img.thumbnail} 
                         alt = "" 
                         className="card-img-top mx-auto d-block p-1 pb-0 rounded" 
                         style={{ height: "100px", objectFit: "cover"}}
                     />
                     <div className="card-body d-flex justify-content-between p-1 ">
                         <ShowBtn  img={img} setImgToModel={setImgToModel} setIsLoading={setIsLoading} />
-                        <EditBtn img={img} setImgToEdit={setImgToEdit} />
+                        <EditBtn img={img} setImgToEdit={setImgToEdit} setShow={setShow} />
                         <DeleteBtn img={img} setIsLoading={setIsLoading} flashMsg={flashMsg} setFlashMsg={setFlashMsg} changeState={changeState}/>
                     </div> 
             </div>

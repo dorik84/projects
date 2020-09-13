@@ -12,7 +12,7 @@ const ShowBtn = (props) => {
     //handler to show selected image on 3d Model
     const onShow = (e) => {
         e.preventDefault();  
-        let link = `http://localhost:5000/` + img;
+        let link = `http://localhost:5000/` + img.original;
         console.log("url to model " + link);
         setImgToModel(link);
         setIsLoading(true);

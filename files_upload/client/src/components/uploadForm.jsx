@@ -8,13 +8,10 @@ const UploadForm = (props) => {
  
     const {setIsLoading, setFlashMsg, flashMsg, changeState} = props;
 
-    // const [lbl, setLbl] = useState("Choose File...");
     const [formData, setFormData] = useState (null);
+
     // create form and fetch data
-    
-    
     const onSubmit = (e) => {
-        
         e.preventDefault();
         const imgForm = new FormData();
         let image = document.querySelectorAll("input")[0].files[0];
@@ -31,7 +28,10 @@ const UploadForm = (props) => {
             url: "http://localhost:5000/upload/images",
             method: "post",
             data: formData,
-            withCredentials: true
+            withCredentials: true,
+            onUploadProgress: function (e) {
+                console.log(e);
+            },
         })
         .then(res => {
             console.log(res.data);
