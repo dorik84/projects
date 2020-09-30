@@ -22,7 +22,6 @@ const DeleteBtn = (props) => {
         })
         .then(res => { 
             console.log(res.data)
-            
             if (isFetching){
                 setFlashMsg([...flashMsg, {
                     text : res.data.msg,
@@ -59,9 +58,9 @@ const DeleteBtn = (props) => {
     const onDelete = (e) => {
         setIsLoading(true);
         e.preventDefault();
-        let link = img.original;
-        console.log("url to delete "+imgToDelete);
+        // let link = img.original;
         setImgToDelete(img.original);
+        console.log("url to delete " + img.original);
     };
     
     return ( 

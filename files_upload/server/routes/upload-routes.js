@@ -66,7 +66,7 @@ router.post("/images", isAuth, async (req, res)=>{
         //add record of new image in database
         const imageObj = {original: url, thumbnail: ThumbNailUrl, name: fileName };
         User.findOne({ email: req.user.email }, (err, user)=>{
-            if (!user.images.includes(imageObj)) {
+            if (!user.images.some(obg => obg.original == url)) {
                 user.images.push(imageObj);
                 user.save();
             }
@@ -170,13 +170,7 @@ router.patch("/images", isAuth, async (req, res)=>{
         }
 
         //find record of old image in DB and replace with new one
-        const OldImageObj = {original: oldFileUrl, thumbnail: oldThumbnailUrl, name: fileName };
         const NewImageObj = {original: url, thumbnail: ThumbNailUrl, name: fileName };
-
-        console.log("OldImageObj");
-        console.log(OldImageObj);
-        console.log("NewImageObj");
-        console.log(NewImageObj);
 
         User.findOne({ email: req.user.email }, (err, user)=>{
 

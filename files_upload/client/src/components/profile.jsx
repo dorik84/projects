@@ -78,7 +78,7 @@ function Profile (props) {
         return (
             <>
                 {content}
-                <UploadForm setIsLoading={setIsLoading} {...props}/>
+                <UploadForm  {...props}/>
             </>)
     }
 

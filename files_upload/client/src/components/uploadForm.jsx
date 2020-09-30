@@ -6,7 +6,7 @@ import { faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 
 const UploadForm = (props) => {
  
-    const {setIsLoading, setFlashMsg, flashMsg, changeState} = props;
+    const {setIsLoading, setFlashMsg, flashMsg, changeState, setProgress} = props;
 
     const [formData, setFormData] = useState (null);
 
@@ -30,7 +30,10 @@ const UploadForm = (props) => {
             data: formData,
             withCredentials: true,
             onUploadProgress: function (e) {
-                console.log(e);
+                if (e.lengthComputable) {
+                    let percent = Math.round((e.loaded/e.total) * 100, 2 );
+                    setProgress(percent);
+                }
             },
         })
         .then(res => {
@@ -46,6 +49,7 @@ const UploadForm = (props) => {
                     changeState(res.data);
                 }
                 setIsLoading(false);  
+                setProgress();
             }
         })
         .catch(err => {

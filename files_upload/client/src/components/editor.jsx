@@ -14,11 +14,10 @@ const Editor = (props) => {
 
         let imageBlob =  await new Promise(resolve => obj.canvas.toBlob(resolve, 'image/jpeg'))
         const formData = new FormData();
-        console.log("line 18 editor "+ JSON.stringify(imgToEdit));
+        // console.log("line 18 editor "+ JSON.stringify(imgToEdit));
         formData.append("url", imgToEdit.url);
         formData.append("image", imageBlob, imgToEdit.name);
-        
-        console.log( JSON.stringify(formData ))
+        // console.log( JSON.stringify(formData ))
         setData(formData);
     }
 

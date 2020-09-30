@@ -19,7 +19,7 @@ const App = () => {
         setImages(newState.images);
     }
 
-    const props = {user, setUser, images, setImages, isLoading, setIsLoading, flashMsg, setFlashMsg, changeState};
+    const props = {user, setUser, images, setImages, isLoading, setIsLoading, flashMsg, setFlashMsg, changeState, setProgress};
 
 useEffect( ()=> {
     let isFetching = true;

@@ -3,9 +3,7 @@ import axios from "axios";
 import './navbar.css'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUserPlus, faAddressCard, faSignOutAlt, faHome, faFileUpload, faSignInAlt, faUserCircle } from '@fortawesome/free-solid-svg-icons'
-// import {useSpring, useTransition, animated} from 'react-spring';
-import {useSpring, animated} from 'react-spring';
+import { faUserPlus, faAddressCard, faSignOutAlt, faHome, faSignInAlt, faUserCircle } from '@fortawesome/free-solid-svg-icons'
 import Form from './form.jsx';
 import Profile from './profile.jsx';
 
@@ -22,7 +20,7 @@ import {
 
 function Navbar(props) {
     
-    const {setIsLoading, changeState, flashMsg, setFlashMsg, user } = props;
+    const { changeState, flashMsg, setFlashMsg, user } = props;
     const [isLoggingOut, setIsLoggingOut] = useState(false);
 
 
@@ -114,24 +112,21 @@ function Navbar(props) {
                 </span>
             </ul>
 
-            {/* {transitions.map(({ item, key, props }) => 
-              item && <animated.div key={key} style={props}>*/}
-              {/* <animated.div style={propys}> */}
-                    <Switch > 
-                        <Route exact path = "/">
-                            <h3 style={{color:"white"}}>Homepage</h3>
-                        </Route>
-                        <Route  path = "/auth/login">
-                            <Form page = {"login"} {...props} />
-                        </Route>
-                        <Route  path ="/auth/register">
-                            <Form page = {"register"} {...props} />
-                        </Route>
-                        <Route  path = "/profile">
-                            <Profile {...props} />
-                        </Route>
-                    </Switch>
-                {/* </animated.div> */}
+                <Switch > 
+                    <Route exact path = "/">
+                        <h3 style={{color:"white"}}>Homepage</h3>
+                    </Route>
+                    <Route  path = "/auth/login">
+                        <Form page = {"login"} {...props} />
+                    </Route>
+                    <Route  path ="/auth/register">
+                        <Form page = {"register"} {...props} />
+                    </Route>
+                    <Route  path = "/profile">
+                        <Profile {...props} />
+                    </Route>
+                </Switch>
+
         </Router>
     )
 }

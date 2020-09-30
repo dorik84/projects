@@ -19,10 +19,10 @@ router.get('/', isAuth, (req, res) => {
 router.delete('/delete', (req,res) => {
     //delete record from database
     let imgToDelete = req.body.image;
-    console.log('line 22 ' + imgToDelete)
+    console.log('imgToDelete ' + imgToDelete)
     User.findOne({email : req.user.email},(err,user) => {
-        console.log(user);
-        const index = user.images.indexOf(imgToDelete);
+        // console.log(user);
+        const index = user.images.findIndex(obj => obj.original == imgToDelete);
         user.images.splice(index,1);
         user.save();
         res.json({

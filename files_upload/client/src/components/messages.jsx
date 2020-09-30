@@ -38,7 +38,7 @@ function Messages(props) {
                         return Date.now() - msg.timeStamp <= 5000 
                     })
                 )
-            },1000)
+            },200)
         }
         return  () => clearTimeout(timer);
     },[flashMsg])
