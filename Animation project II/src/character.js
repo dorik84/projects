@@ -204,16 +204,16 @@ class Character {
         this.acc.down = this.acc.temp;
         this.acc.top = -this.acc.temp;
 
-        if (right > body.width - width) {
+        if (right > body.width - 2* width) {
             
             this.acc.right = 0;
-        } else if (left < 0 + width) {
+        } else if (left < 0 + 2* width) {
             this.acc.left = 0;
         } 
 
-        if (bottom > screen.height - height) {
+        if (bottom > body.height - 2* height) {
             this.acc.down = 0;
-        } else if (top < 0 + height) {
+        } else if (top < 0 + 2* height) {
             this.acc.top = 0;
         } 
 
@@ -227,7 +227,7 @@ class Character {
                 let y = (hero.y) + hero.height /2;
                 let radians = Math.atan2(e.pageX - x,  e.pageY - y);
                 let degree = (radians * (180 / Math.PI) * -1) + 90;
-                console.log(degree);
+                // console.log(degree);
                 resolve (degree);
             });
             g.then(degree => this.degree = degree)

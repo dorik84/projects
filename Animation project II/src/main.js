@@ -2,7 +2,7 @@
 import "./../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import "./../node_modules/bootstrap/dist/js/bootstrap.min.js";
 import $ from "jquery";
-import dragula from "dragula";
+
 
 
 import "./../node_modules/popper.js/dist/popper.min.js";
@@ -19,6 +19,16 @@ let score2 = 0;
 const ASTEROID_MAX_NUMBER = 11;
 const ASTEROID_SPAM_INTERVAL = 2000;
 const RENDER_INTERVAL = 20;
+let windowWidth = window.innerWidth;
+let windowHeight = window.innerHeight;
+
+
+function changeWindowSize() {
+    windowWidth = window.innerWidth;
+    windowHeight = window.innerHeight;
+    console.log(windowWidth+' '+ windowHeight);
+}
+window.addEventListener('resize', changeWindowSize);
 
 function getRandom(max) {
     return (Math.random() * max);
@@ -31,7 +41,7 @@ let n = 0;
 setInterval(() => {
     //create asteroids every 2 sec
     if (asteroidArray.length < ASTEROID_MAX_NUMBER){
-        asteroidObj[n] = new Gravity(getRandom(450),getRandom(450),getRandom(0.5));
+        asteroidObj[n] = new Gravity(getRandom(windowWidth),getRandom(windowHeight),getRandom(0.5));
         asteroidArray.push(asteroidObj[n]);
         n++;
     }
