@@ -19,7 +19,7 @@
     "dragula": "^3.7.2",
     "jquery": "^3.4.1",
     "popper.js": "^1.16.1",
-    "three": "^0.114.0",
+    "three": "^0.125.0",
     "three-js": "^79.0.0"
   },
   "devDependencies": {
